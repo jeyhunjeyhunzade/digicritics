@@ -1,13 +1,13 @@
-import { LoginData, SignUpData } from "@app/types/types";
+// import { LoginData, SignUpData } from "@app/types/types";
 import axios from "axios";
 import { getConfig, serverUrl } from "./apiClient";
 
-export const loginAccount = async (loginData: LoginData) => {
+export const loginAccount = async (loginData: any) => {
   const res = await axios.post(`${serverUrl}/login`, loginData);
   return res?.data;
 };
 
-export const createAccount = async (signUpData: SignUpData) => {
+export const createAccount = async (signUpData: any) => {
   const res = await axios.post(`${serverUrl}/signUp`, signUpData);
   return res?.data;
 };
