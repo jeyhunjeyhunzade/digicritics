@@ -8,4 +8,10 @@ export default {
     english: "English",
     russian: "Russian",
   },
+  Auth: {
+    email: "Email address",
+    password: "Password",
+    emailPlaceholder: "Enter your email",
+    passwordPlaceholder: "Enter password",
+  },
 };

@@ -24,7 +24,7 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
   return (
-    <nav className="mb-9 flex h-20 items-center justify-end border-b-2 border-b-zinc-200 bg-[#013549] px-20">
+    <nav className="flex h-20 items-center justify-end bg-[#013549] px-20">
       <div className="flex w-[30%] text-4xl font-semibold text-white">
         Digicritics
       </div>

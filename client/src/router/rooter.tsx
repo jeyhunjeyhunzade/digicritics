@@ -1,15 +1,13 @@
 import { ReactElement } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "@app/pages/App";
-import Login from "@app/pages/auth/Login";
-import Signup from "@app/pages/auth/Signup";
+import AuthPage from "@app/pages/auth/AuthPage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { checkAuth } from "@app/utils";
 
 export enum Routes {
   homepage = "/",
-  login = "/login",
-  signup = "/signup",
+  auth = "/auth",
 }
 
 interface PrivateRoute {
@@ -18,7 +16,7 @@ interface PrivateRoute {
 
 const PrivateRoute = ({ children }: PrivateRoute) => {
   const isAuthenticated = checkAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/auth" />;
 };
 
 export const router = createBrowserRouter([
@@ -32,11 +30,7 @@ export const router = createBrowserRouter([
     errorElement: <RouterErrorPage />,
   },
   {
-    path: Routes.login,
-    element: <Login />,
-  },
-  {
-    path: Routes.signup,
-    element: <Signup />,
+    path: Routes.auth,
+    element: <AuthPage />,
   },
 ]);
