@@ -1,12 +1,13 @@
+import Layout from "@app/components/Layout";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-center justify-center">
-      <div>{t("Login.title")}</div>
-    </div>
+    <Layout>
+      <div className="jutify-center flex items-center">Login</div>
+    </Layout>
   );
 };
 
