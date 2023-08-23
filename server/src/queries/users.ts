@@ -95,7 +95,9 @@ const Users = {
         },
       });
 
-      response.status(200).json({ message: "Successfully created" });
+      const token = Auth.generateToken(newUser.id);
+
+      response.status(200).json({ token, message: "Successfully created" });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
@@ -281,11 +283,9 @@ const Users = {
         },
       });
 
-      response
-        .status(200)
-        .send({
-          message: `Selected users are now admins: ${userIds.join(", ")}`,
-        });
+      response.status(200).send({
+        message: `Selected users are now admins: ${userIds.join(", ")}`,
+      });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
