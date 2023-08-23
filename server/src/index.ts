@@ -25,6 +25,11 @@ app.get("/users", Auth.authenticateToken, queries.Users.getUsers);
 app.delete("/users", Auth.authenticateToken, queries.Users.deleteUser);
 app.patch("/users/block", Auth.authenticateToken, queries.Users.blockUser);
 app.patch("/users/unblock", Auth.authenticateToken, queries.Users.unBlockUser);
+app.patch(
+  "/users/setAdmin",
+  Auth.authenticateToken,
+  queries.Users.makeUsersAdmin
+);
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}.`);
