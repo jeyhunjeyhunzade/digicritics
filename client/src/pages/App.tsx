@@ -6,7 +6,7 @@ const App = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
-    navigate(Routes.login);
+    navigate(Routes.auth);
   };
 
   return (
@@ -34,9 +34,7 @@ const App = () => {
           </button>
         </nav>
       </header>
-      <main className="flex items-center justify-center">
-        App
-      </main>
+      <main className="flex items-center justify-center">App</main>
     </div>
   );
 };
