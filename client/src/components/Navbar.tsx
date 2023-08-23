@@ -5,7 +5,7 @@ import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "@app/router/rooter";
 
 const Navbar = () => {
@@ -37,7 +37,7 @@ const Navbar = () => {
   return (
     <nav className="flex h-20 items-center justify-end bg-[#013549] px-20">
       <div className="flex w-[30%] text-4xl font-semibold text-white">
-        Digicritics
+        <Link to={Routes.homepage}>Digicritics</Link>
       </div>
       <div className="flex w-[70%] items-center justify-end">
         <SearchInput />

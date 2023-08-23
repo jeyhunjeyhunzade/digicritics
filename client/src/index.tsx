@@ -6,12 +6,17 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/rooter";
 import "@app/services/i18n";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <div>
-      <Toaster />
-    </div>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <div>
+        <Toaster />
+      </div>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
