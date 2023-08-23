@@ -1,10 +1,10 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
 var helmet = require("helmet");
 var compression = require("compression");
-const queries = require("./queries");
-const Auth = require("./helpers/auth.js");
+import queries from "./queries";
+import Auth from "./helpers/auth";
 
 //port
 const port = 8000;
