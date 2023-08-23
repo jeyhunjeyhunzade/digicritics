@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // TODO: DEV only?
+  url      = env("POSTGRES_URL_DEV")
+}
+
+enum user_status {
+  BLOCKED
+  ACTIVE
+}
+
+model users {
+  id            Int         @id @default(autoincrement())
+  full_name     String      @db.VarChar(255)
+  email         String      @unique @db.VarChar(255)
+  password      String      @db.VarChar(255)
+  status        user_status
+  isAdmin       Boolean     @default(false)
+  register_time DateTime    @default(now())
+}
