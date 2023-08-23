@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       boxShadow: {
@@ -8,6 +9,7 @@ module.exports = {
       },
       backgroundImage: {
         gradientBlue: "linear-gradient(135deg, #03425B 0%, #0386BA 100%)",
+        gradientBtnBlue: "linear-gradient(135deg, #034159 0%, #0385B9 100%)",
       },
     },
   },

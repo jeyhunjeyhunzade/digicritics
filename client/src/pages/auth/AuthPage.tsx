@@ -1,8 +1,12 @@
+import FbIcon from "@app/assets/icons/FbIcon";
+import GoogleIcon from "@app/assets/icons/GoogleIcon";
 import Layout from "@app/components/Layout";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { t } = useTranslation();
+  const [isSignUp, setIsSignUp] = useState(false);
 
   return (
     <Layout>
@@ -26,16 +30,39 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="flex h-[90vh] w-[50%] items-center justify-center">
+        <div className="flex h-[90vh] w-[50%] items-center justify-center dark:bg-[#1B1B1B]">
           <div className="flex flex-col ">
-            <div className="mb-[112px] text-6xl font-semibold text-[#006F9C]">
-              {t("Navbar.login")}
+            <div className="mb-6 text-6xl font-semibold text-[#006F9C]">
+              {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
             </div>
-            <div className="mb-8">
+            {isSignUp && (
+              <div className="mb-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                  >
+                    {t("Auth.name")}
+                  </label>
+                </div>
+                <div className="mt-1">
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder={t("Auth.namePlaceholder")}
+                    required
+                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mb-2">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
                 >
                   {t("Auth.email")}
                 </label>
@@ -48,15 +75,15 @@ const Login = () => {
                   placeholder={t("Auth.emailPlaceholder")}
                   autoComplete="email"
                   required
-                  className="block h-[48px] w-[368px] rounded-md border-0 py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset  sm:text-sm sm:leading-6"
+                  className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
-            <div>
+            <div className="mb-2">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
                 >
                   {t("Auth.password")}
                 </label>
@@ -68,10 +95,91 @@ const Login = () => {
                   type="password"
                   placeholder={t("Auth.passwordPlaceholder")}
                   required
-                  className="block h-[48px] w-[368px] rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset  sm:text-sm sm:leading-6"
+                  className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
+            {isSignUp && (
+              <div>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="passwordAgain"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                  >
+                    {t("Auth.passwordConfirm")}
+                  </label>
+                </div>
+                <div className="mt-1">
+                  <input
+                    id="passwordAgain"
+                    name="passwordAgain"
+                    type="password"
+                    placeholder={t("Auth.passwordConfirmPlaceholder")}
+                    required
+                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6">
+              <button
+                type="submit"
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   mutate({
+                //     password,
+                //     email,
+                //   });
+                // }}
+                // disabled={isLoading}
+                className="flex h-[48px] w-full items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
+              </button>
+            </div>
+            <div className="my-6 flex justify-between">
+              <hr className="h-px w-[40%] self-center border-0 bg-gray-200 dark:bg-[#DEDEDEED]" />
+              <div className="flex dark:text-[#9D9D9D]">{t("Auth.or")}</div>
+              <hr className="h-px w-[40%] self-center border-0 bg-gray-200 dark:bg-[#DEDEDEED]" />
+            </div>
+            <div className="flex justify-center">
+              <div className="mr-[30px] cursor-pointer rounded-[6.545px] border-2 border-gray-300 px-[9px] py-2">
+                <GoogleIcon />
+              </div>
+              <div className="cursor-pointer rounded-[6.545px] border-2 border-gray-300 px-[9px] py-2">
+                <FbIcon />
+              </div>
+            </div>
+            {isSignUp ? (
+              <div className="mt-6 flex justify-center">
+                <div className="mr-2 text-[#2C2C2C] dark:text-white">
+                  {t("Auth.alreadyHaveAccount")}
+                </div>
+                <div
+                  role="buton"
+                  tabIndex={0}
+                  className="cursor-pointer font-semibold text-[#006F9C]"
+                  onClick={() => setIsSignUp(false)}
+                >
+                  {t("Navbar.login")}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 flex justify-center">
+                <div className="mr-2 text-[#2C2C2C] dark:text-white">
+                  {t("Auth.notHaveAccount")}
+                </div>
+                <div
+                  role="buton"
+                  tabIndex={0}
+                  className="cursor-pointer font-semibold text-[#006F9C]"
+                  onClick={() => setIsSignUp(true)}
+                >
+                  {t("Auth.signUp")}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

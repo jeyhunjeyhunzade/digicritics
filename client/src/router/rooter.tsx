@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "@app/pages/App";
+import Homepage from "@app/pages/Homepage";
 import AuthPage from "@app/pages/auth/AuthPage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { checkAuth } from "@app/utils";
@@ -22,11 +22,7 @@ const PrivateRoute = ({ children }: PrivateRoute) => {
 export const router = createBrowserRouter([
   {
     path: Routes.homepage,
-    element: (
-      <PrivateRoute>
-        <App />
-      </PrivateRoute>
-    ),
+    element: <Homepage />,
     errorElement: <RouterErrorPage />,
   },
   {
