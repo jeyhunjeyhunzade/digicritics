@@ -260,6 +260,40 @@ const Users = {
       }
     }
   },
+  makeUsersAdmin: async (request: Request, response: Response) => {
+    try {
+      const userIds = request.body.userIds;
+
+      if (!userIds || !userIds.length) {
+        return response
+          .status(400)
+          .send({ message: "Please provide at least one id" });
+      }
+
+      await prisma.users.updateMany({
+        where: {
+          id: {
+            in: userIds,
+          },
+        },
+        data: {
+          isAdmin: true,
+        },
+      });
+
+      response
+        .status(200)
+        .send({
+          message: `Selected users are now admins: ${userIds.join(", ")}`,
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "unknown error" });
+      }
+    }
+  },
 };
 
 export default Users;
