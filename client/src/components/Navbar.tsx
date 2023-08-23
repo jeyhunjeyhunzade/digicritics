@@ -1,18 +1,19 @@
 import WorldIcon from "@app/assets/icons/WorldIcon";
 import { Languages } from "@app/types/enums";
 import { checkAuth, classNames } from "@app/utils";
-import { t } from "i18next";
 import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "@app/router/rooter";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const isAuthenticated = checkAuth();
-  const { t, i18n } = useTranslation();
-  console.log("isAuthenticated: ", isAuthenticated);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -23,6 +24,16 @@ const Navbar = () => {
     i18n.changeLanguage(language);
     setIsMenuOpen(false);
   };
+
+  const handleAuthBtn = () => {
+    if (isAuthenticated) {
+      localStorage.removeItem("token");
+      navigate(Routes.auth);
+    } else {
+      navigate(Routes.auth);
+    }
+  };
+
   return (
     <nav className="flex h-20 items-center justify-end bg-[#013549] px-20">
       <div className="flex w-[30%] text-4xl font-semibold text-white">
@@ -39,13 +50,13 @@ const Navbar = () => {
           <WorldIcon />
         </button>
         {isMenuOpen && (
-          <div className="absolute right-[7%]	top-[10%] mt-2 w-32 bg-white shadow-lg">
+          <div className="absolute right-[7%]	top-[8%] mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
             <button
               onClick={() => handleLanguageChange(Languages.EN)}
               className={classNames(
-                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none",
+                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
                 selectedLanguage === Languages.EN
-                  ? "bg-[#046085] font-semibold text-[#fff]"
+                  ? "bg-[#046085] font-semibold text-white"
                   : null
               )}
             >
@@ -54,9 +65,9 @@ const Navbar = () => {
             <button
               onClick={() => handleLanguageChange(Languages.RU)}
               className={classNames(
-                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none",
+                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
                 selectedLanguage === Languages.RU
-                  ? "bg-[#046085] font-semibold text-[#fff]"
+                  ? "bg-[#046085] font-semibold text-white"
                   : null
               )}
             >
@@ -66,7 +77,7 @@ const Navbar = () => {
         )}
         <button
           className="mr-6 flex h-5 h-[32px] w-[80px] items-center justify-center whitespace-nowrap rounded border-2 border-white px-1 py-2 text-base text-white"
-          onClick={() => console.log("log out")}
+          onClick={handleAuthBtn}
         >
           {isAuthenticated ? t("Navbar.logout") : t("Navbar.login")}
         </button>

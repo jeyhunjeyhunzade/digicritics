@@ -46,7 +46,7 @@ const ToggleTheme = () => {
       id="theme-toggle"
       onClick={handleToggle}
       type="button"
-      className="rounded-lg p-2.5 text-sm text-white hover:bg-gray-100 hover:text-gray-500 focus:outline-none  dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+      className="rounded-lg p-2.5 text-sm text-white hover:bg-gray-100 hover:text-gray-500 focus:outline-none dark:focus:ring-gray-700"
     >
       <svg
         id="theme-toggle-dark-icon"

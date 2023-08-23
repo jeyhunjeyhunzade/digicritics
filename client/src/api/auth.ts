@@ -37,3 +37,12 @@ export const deleteAccounts = async (userIds: string[]) => {
   });
   return res?.data;
 };
+
+export const makeAdmin = async (userIds: string[]) => {
+  const res = await axios.patch(
+    `${serverUrl}/users/setAdmin`,
+    { userIds },
+    getConfig()
+  );
+  return res?.data;
+};
