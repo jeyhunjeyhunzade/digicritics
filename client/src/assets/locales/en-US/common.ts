@@ -9,6 +9,7 @@ export default {
     russian: "Russian",
     profile: "Profile",
     newReview: "New Review",
+    search: "Search",
   },
   Auth: {
     email: "Email address",
@@ -36,5 +37,22 @@ export default {
     createdby: "Created by",
     yourComment: "Your comment",
     postComment: "Post comment",
+  },
+  Profile: {
+    admin: "Admin panel",
+    email: "Email",
+    likes: "Likes",
+    created: "Created",
+  },
+  ProfileTable: {
+    search: "Search",
+    reviewName: "Review name",
+    category: "Category",
+    createdDate: "Created date",
+    authorGrade: "Author grade",
+    rating: "Rating",
+    like: "Like",
+    actions: "Actions",
+    sortBy: "Sort by",
   },
 };
