@@ -54,8 +54,8 @@ const Homepage = () => {
 
   return (
     <Layout>
-      <div className="my-10 flex h-full w-full flex-col px-20">
-        <div className="flex items-start text-2xl">
+      <div className="flex h-full w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
+        <div className="flex items-start text-2xl dark:text-white">
           {t("Homepage.popularReviews")}
         </div>
         <div className="mt-6 flex justify-between">
@@ -66,7 +66,7 @@ const Homepage = () => {
           ))}
         </div>
 
-        <div className="mt-10 flex items-start text-2xl">
+        <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.recentlyAdded")}
         </div>
         <div className="mt-6 flex justify-between">
@@ -76,7 +76,7 @@ const Homepage = () => {
             </div>
           ))}
         </div>
-        <div className="mt-10 flex items-start text-2xl">
+        <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.popularTags")}
         </div>
         <div className="mt-6">
