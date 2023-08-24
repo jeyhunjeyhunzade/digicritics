@@ -96,7 +96,7 @@ const Navbar = () => {
             {isProfileMenuOpen && (
               <div className="absolute right-[1%]	top-[8%] mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
                 <button
-                  onClick={() => console.log("navigat to profile")}
+                  onClick={() => navigate(Routes.profile)}
                   className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
                 >
                   {t("Navbar.profile")}

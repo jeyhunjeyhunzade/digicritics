@@ -39,7 +39,7 @@ const ReviewPage = () => {
               <span className="font-medium	 dark:text-white">
                 {`${t("Review.createdby")}:`}
               </span>
-              <span className="ml-1 dark:text-white">#photo #art #fashion</span>
+              <span className="ml-1 dark:text-white">Henry Adams</span>
             </div>
             <div className="ml-4 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
               22/08/2023

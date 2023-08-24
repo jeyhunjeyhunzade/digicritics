@@ -1,3 +1,4 @@
+import HeartIcon from "@app/assets/icons/HeartIcon";
 import ReviewStar from "@app/assets/icons/ReviewStar";
 import { useTranslation } from "react-i18next";
 
@@ -6,11 +7,19 @@ const ReviewCard = () => {
 
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
-      <img
-        className="h-[194px] w-full"
-        src="/testimage.jpg"
-        alt="Sunset in the mountains"
-      />
+      <div className="relative">
+        <img
+          className="h-[194px] w-full"
+          src="/testimage.jpg"
+          alt="Sunset in the mountains"
+        />
+        <div className="absolute right-[16px] top-[16px] mr-2 mt-2">
+          <div className="flex items-center">
+            <span className="mr-1 text-white">19</span>
+            <HeartIcon size={16} />
+          </div>
+        </div>
+      </div>
       <div className="flex flex-col p-4">
         <div className="mb-1 flex justify-between">
           <div className="flex text-base font-bold dark:text-white">
