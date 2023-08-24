@@ -7,6 +7,8 @@ export default {
     logout: "Log out",
     english: "English",
     russian: "Russian",
+    profile: "Profile",
+    newReview: "New Review",
   },
   Auth: {
     email: "Email address",
@@ -21,5 +23,14 @@ export default {
     notHaveAccount: "Don’t have an account?",
     alreadyHaveAccount: "Already have an account?",
     signUp: "Sign up",
+  },
+  Homepage: {
+    popularReviews: "Popular reviews",
+    popularTags: "Popular Tags",
+    recentlyAdded: "Recently Added",
+  },
+  Review: {
+    category: "Category",
+    createdby: "Created by",
   },
 };
