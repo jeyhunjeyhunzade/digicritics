@@ -2,12 +2,15 @@ import { ReactElement } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Homepage from "@app/pages/Homepage";
 import AuthPage from "@app/pages/auth/AuthPage";
+import ReviewPage from "@app/pages/ReviewPage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { checkAuth } from "@app/utils";
 
 export enum Routes {
-  homepage = "/",
   auth = "/auth",
+  homepage = "/",
+  reviewpage = "/review",
+  reviewById = "/review/:id",
 }
 
 interface PrivateRoute {
@@ -21,12 +24,18 @@ const PrivateRoute = ({ children }: PrivateRoute) => {
 
 export const router = createBrowserRouter([
   {
+    path: Routes.auth,
+    element: <AuthPage />,
+    errorElement: <RouterErrorPage />,
+  },
+  {
     path: Routes.homepage,
     element: <Homepage />,
     errorElement: <RouterErrorPage />,
   },
   {
-    path: Routes.auth,
-    element: <AuthPage />,
+    path: Routes.reviewById,
+    element: <ReviewPage />,
+    errorElement: <RouterErrorPage />,
   },
 ]);

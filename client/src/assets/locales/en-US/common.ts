@@ -31,6 +31,10 @@ export default {
   },
   Review: {
     category: "Category",
+    tags: "Tags",
+    authorGrade: "Author grade",
     createdby: "Created by",
+    yourComment: "Your comment",
+    postComment: "Post comment",
   },
 };

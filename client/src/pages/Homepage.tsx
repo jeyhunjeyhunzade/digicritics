@@ -4,6 +4,7 @@ import Layout from "@app/components/Layout";
 import ReviewCard from "@app/components/ReviewCard";
 import { useTranslation } from "react-i18next";
 import { TagCloud } from "react-tagcloud";
+import { Link } from "react-router-dom";
 
 const Homepage = () => {
   const { t } = useTranslation();
@@ -61,7 +62,9 @@ const Homepage = () => {
         <div className="mt-6 flex justify-between">
           {Array.from({ length: 4 }).map((item: any, i) => (
             <div key={i}>
-              <ReviewCard />
+              <Link to={`${Routes.reviewpage}/2`}>
+                <ReviewCard />
+              </Link>
             </div>
           ))}
         </div>

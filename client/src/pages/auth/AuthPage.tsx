@@ -77,7 +77,7 @@ const AuthPage = () => {
             <div className="mb-4 text-left text-4xl font-semibold text-white">
               Digicritics: Unveiling the Art of Review
             </div>
-            <div className="box-shadow-customBlue h-[306px] w-[619px] rounded-br-[100px] bg-[#045C7E] px-6 py-7">
+            <div className="h-[306px] w-[619px] rounded-br-[100px] bg-[#045C7E] px-6 py-7 shadow-customBlue">
               <div className="mb-6 text-left text-4xl tracking-[19.2px]">
                 ⭐⭐⭐⭐⭐️
               </div>
