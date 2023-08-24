@@ -38,7 +38,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="mb-8 flex h-20 items-center justify-end bg-[#013549] px-20">
+    <nav className="flex h-20 items-center justify-end bg-[#013549] px-20">
       <div className="flex w-[30%] text-4xl font-semibold text-white">
         <Link to={Routes.homepage}>Digicritics</Link>
       </div>

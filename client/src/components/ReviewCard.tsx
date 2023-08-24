@@ -4,7 +4,7 @@ const ReviewCard = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded shadow-lg transition ease-in hover:scale-105">
+    <div className="delay-30 box-shadow-cardShadow w-[320px] transform cursor-pointer overflow-hidden rounded shadow-lg transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
       <img
         className="h-[194px] w-full"
         src="/testimage.jpg"
@@ -12,7 +12,9 @@ const ReviewCard = () => {
       />
       <div className="flex flex-col p-4">
         <div className="mb-1 flex justify-between">
-          <div className="flex text-base font-bold">Polaroid Land Camer...</div>
+          <div className="flex text-base font-bold dark:text-white">
+            Polaroid Land Camer...
+          </div>
           <div className="flex items-center space-x-1">
             <svg
               className="h-4 w-4 text-yellow-300"
@@ -61,21 +63,29 @@ const ReviewCard = () => {
             </svg>
           </div>
         </div>
-        <div className="flex justify-start font-medium">Movies</div>
-        <div className="flex justify-start text-sm">
-          <span className="font-medium">{`${t("Review.category")}:`}</span>
-          <span className="ml-1">Photo</span>
+        <div className="flex justify-start font-medium dark:text-white">
+          Movies
         </div>
         <div className="flex justify-start text-sm">
-          <span className="font-medium">Tags:</span>
-          <span className="ml-1">#photo #art #fashion</span>
+          <span className="font-medium dark:text-white">{`${t(
+            "Review.category"
+          )}:`}</span>
+          <span className="ml-1 dark:text-white">Photo</span>
+        </div>
+        <div className="flex justify-start text-sm">
+          <span className="font-medium dark:text-white">Tags:</span>
+          <span className="ml-1 dark:text-white">#photo #art #fashion</span>
         </div>
         <div className="flex justify-between">
           <div className="flex justify-start text-sm">
-            <span className="font-medium">{`${t("Review.createdby")}:`}</span>
-            <span className="ml-1">Henry Adams</span>
+            <span className="font-medium dark:text-white">{`${t(
+              "Review.createdby"
+            )}:`}</span>
+            <span className="ml-1 dark:text-white">Henry Adams</span>
           </div>
-          <div className="self-end text-xs text-[#717171]">22/08/2023</div>
+          <div className="self-end text-xs text-[#717171] dark:text-[#9C9C9C]">
+            22/08/2023
+          </div>
         </div>
       </div>
     </div>
