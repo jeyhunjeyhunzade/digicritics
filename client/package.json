@@ -14,6 +14,7 @@
     "@lineup-lite/hooks": "^1.7.0",
     "@tanstack/react-query": "^4.33.0",
     "@types/react-table": "^7.7.14",
+    "@types/react-tagcloud": "^1.1.7",
     "@uiw/react-md-editor": "^3.23.5",
     "axios": "^1.4.0",
     "eslint-plugin-simple-import-sort": "^9.0.0",
@@ -25,6 +26,7 @@
     "react-i18next": "^13.1.2",
     "react-router-dom": "^6.7.0",
     "react-table": "^7.8.0",
+    "react-tagcloud": "^2.3.1",
     "react-transition-state": "^2.0.2",
     "vite-tsconfig-paths": "^4.0.5"
   },
