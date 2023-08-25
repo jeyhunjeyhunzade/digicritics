@@ -2,14 +2,83 @@ import LinkToIcon from "@app/assets/icons/LinkToIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
 import ThreeDot from "@app/assets/icons/ThreeDot";
 import Layout from "@app/components/Layout";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  Column,
+  useGlobalFilter,
+  usePagination,
+  useRowSelect,
+  useTable,
+} from "react-table";
+
+import { reviewsData } from "@app/mock/reviewsData";
+import TableActions from "@app/components/TableActions";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
 
+  const columns: Column<any>[] = useMemo(
+    () => [
+      {
+        Header: "Id",
+        accessor: "id",
+      },
+      {
+        Header: "Review name",
+        accessor: "reviewName",
+      },
+      {
+        Header: "Category",
+        accessor: "category",
+      },
+      {
+        Header: "Created date",
+        accessor: "createdDate",
+      },
+      {
+        Header: "Author grade",
+        accessor: "authorGrade",
+      },
+      {
+        Header: "Raiting",
+        accessor: "rating",
+      },
+      {
+        Header: "Like",
+        accessor: "like",
+      },
+      {
+        Header: "Actions",
+        accessor: "actions",
+        Cell: TableActions,
+      },
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    setPageSize,
+    selectedFlatRows,
+  } = useTable(
+    { columns, data: reviewsData },
+    useGlobalFilter,
+    usePagination,
+    useRowSelect
+  );
+
+  useEffect(() => {
+    reviewsData?.length && setPageSize(reviewsData?.length);
+  }, [setPageSize, reviewsData?.length]);
+
   return (
     <Layout>
-      <div className="flex flex h-[90vh] w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
+      <div className="flex w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
         <div className="mb-10 flex w-full justify-start">
           <img
             src="/testprofile.jpeg"
@@ -51,7 +120,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex justify-between">
           <div className="relative mr-6">
             <input
               type="text"
@@ -102,6 +171,50 @@ const ProfilePage = () => {
               <option>{t("ProfileTable.actions")}</option>
             </select>
           </div>
+        </div>
+        <div>
+          <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
+            <thead className="bg-gray-10">
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      {...column.getHeaderProps()}
+                      className="px-6 py-5 text-base font-medium text-[#636060]"
+                    >
+                      {column.render("Header")}
+                      {column.id === "selection" && column.render("Summary")}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody
+              {...getTableBodyProps()}
+              className="divide-y bg-white shadow-tableRowShadow dark:divide-[#1B1B1B]"
+            >
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr
+                    {...row.getRowProps()}
+                    className="rounded-[8px] bg-white dark:bg-[#2C2C2C]"
+                  >
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          className="whitespace-nowrap px-6 py-5 text-base dark:text-white"
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </Layout>
