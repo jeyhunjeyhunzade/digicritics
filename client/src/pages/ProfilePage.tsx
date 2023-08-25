@@ -2,7 +2,7 @@ import LinkToIcon from "@app/assets/icons/LinkToIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
 import ThreeDot from "@app/assets/icons/ThreeDot";
 import Layout from "@app/components/Layout";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Column,
@@ -11,12 +11,23 @@ import {
   useRowSelect,
   useTable,
 } from "react-table";
+import Modal from "react-modal";
 
 import { reviewsData } from "@app/mock/reviewsData";
 import TableActions from "@app/components/TableActions";
+import PlusIcon from "@app/assets/icons/PlusIcon";
+import EditIcon from "@app/assets/icons/EditIcon";
+import EditProfileModal from "@app/components/EditModal";
+import DndUpload from "@app/components/DndUpload";
+import CloseIcon from "@app/assets/icons/CloseIcon";
+import { AppContext } from "@app/pages/App";
+import { AppContextShape } from "@app/types/types";
+import { useContext } from "react";
 
 const ProfilePage = () => {
   const { t } = useTranslation();
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const { isDarkMode } = useContext(AppContext) as AppContextShape;
 
   const columns: Column<any>[] = useMemo(
     () => [
@@ -76,6 +87,33 @@ const ProfilePage = () => {
     reviewsData?.length && setPageSize(reviewsData?.length);
   }, [setPageSize, reviewsData?.length]);
 
+  const openEditModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsOpen(false);
+  };
+
+  const customEditModalStyles = {
+    content: {
+      width: "516px",
+      height: "604px",
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      border: "none",
+      borderRadius: "16px",
+      backgroundColor: isDarkMode ? "#2C2C2C" : "white",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.30)",
+    },
+  };
+
   return (
     <Layout>
       <div className="flex w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
@@ -91,10 +129,6 @@ const ProfilePage = () => {
                 <span className="text-4xl font-medium dark:text-white">
                   Jeyhun Jeyhunzade
                 </span>
-                <button className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[26px] bg-[#209239] text-white ">
-                  <span className="pr-2">{t("Profile.admin")}</span>
-                  <LinkToIcon size={20} />
-                </button>
               </div>
               <div className="mb-2 flex items-center dark:text-white">
                 <table>
@@ -115,8 +149,18 @@ const ProfilePage = () => {
                 </table>
               </div>
             </div>
-            <div>
-              <ThreeDot size={24} />
+            <div className="flex">
+              <button className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white">
+                <span className="pr-2">{t("Profile.newReview")}</span>
+                <PlusIcon size={20} color={"white"} />
+              </button>
+              <button
+                onClick={openEditModal}
+                className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
+              >
+                <span className="pr-2">{t("Profile.editProfile")}</span>
+                <EditIcon size={20} color={"#2C2C2C"} />
+              </button>
             </div>
           </div>
         </div>
@@ -216,6 +260,40 @@ const ProfilePage = () => {
             </tbody>
           </table>
         </div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeEditModal}
+          style={customEditModalStyles}
+          contentLabel="Example Modal"
+        >
+          <span
+            onClick={closeEditModal}
+            className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
+          >
+            <CloseIcon size={24} />
+          </span>
+          <div className="flex flex-col p-10">
+            <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
+              {t("Profile.editProfile")}
+            </div>
+            <input
+              type="text"
+              placeholder={t("Profile.enterFullName")}
+              className="mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+            />
+
+            <DndUpload />
+
+            <div className="mt-6 flex w-full justify-between">
+              <button className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#D20F0F] text-white">
+                {t("Profile.deleteProfile")}
+              </button>
+              <button className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#209239] text-white">
+                {t("Profile.saveChanges")}
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </Layout>
   );

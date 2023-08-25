@@ -13,6 +13,7 @@
   "dependencies": {
     "@lineup-lite/hooks": "^1.7.0",
     "@tanstack/react-query": "^4.33.0",
+    "@types/react-modal": "^3.16.0",
     "@types/react-table": "^7.7.14",
     "@types/react-tagcloud": "^1.1.7",
     "@uiw/react-md-editor": "^3.23.5",
@@ -24,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.1.2",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.7.0",
     "react-table": "^7.8.0",
     "react-tagcloud": "^2.3.1",
