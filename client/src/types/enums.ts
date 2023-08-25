@@ -7,3 +7,7 @@ export enum Languages {
   EN = "en",
   RU = "ru",
 }
+
+export enum ProfileTableCategories {
+  REVIEWNAME = ""
+}

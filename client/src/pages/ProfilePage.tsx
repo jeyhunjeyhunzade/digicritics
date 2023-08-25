@@ -46,7 +46,7 @@ const ProfilePage = () => {
                 </table>
               </div>
             </div>
-            <div className="dark:text-white">
+            <div>
               <ThreeDot size={24} />
             </div>
           </div>
@@ -59,7 +59,7 @@ const ProfilePage = () => {
               className="h-[44px] w-[628px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#2C2C2C] outline-none focus:ring-0 dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
             />
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <SearchIcon color={"#2C2C2C"} />
+              <SearchIcon size={24} />
             </div>
           </div>
           <div className="h-[44px] w-[302px]">
