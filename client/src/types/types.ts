@@ -1,5 +1,10 @@
 import { Status } from "./enums";
 
+export interface AppContextShape {
+  isDarkMode: boolean;
+  setIsDarkMode: any;
+}
+
 export interface ActionsResponse {
   message: string;
 }
