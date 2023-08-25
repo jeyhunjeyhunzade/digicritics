@@ -1,6 +1,6 @@
 import { AppContextShape } from "@app/types/types";
 import { useContext, useEffect } from "react";
-import { AppContext } from "./Layout";
+import { AppContext } from "@app/pages/App";
 
 const ToggleTheme = () => {
   const { setIsDarkMode } = useContext(AppContext) as AppContextShape;

@@ -1,6 +1,9 @@
 import ReviewStar from "@app/assets/icons/ReviewStar";
 import Layout from "@app/components/Layout";
+import ReviewCard from "@app/components/ReviewCard";
+import { Routes } from "@app/router/rooter";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const ReviewPage = () => {
   const { t } = useTranslation();
@@ -94,7 +97,21 @@ const ReviewPage = () => {
             beatae dolor, modi
           </p>
         </div>
-        <div className="mt-[60px]">
+        <div className="flex flex-col">
+          <div className="mt-20 flex items-start text-2xl dark:text-white">
+            {t("Review.similiarReviews")}
+          </div>
+          <div className="mt-6 flex justify-between">
+            {Array.from({ length: 1 }).map((item: any, i) => (
+              <div key={i}>
+                <Link to={`${Routes.reviewpage}/2`}>
+                  <ReviewCard />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-20">
           <textarea
             placeholder={t("Review.yourComment")}
             className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:placeholder:text-white"
