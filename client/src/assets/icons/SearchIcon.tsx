@@ -2,7 +2,7 @@ import { AppContext } from "@app/components/Layout";
 import { AppContextShape } from "@app/types/types";
 import { useContext } from "react";
 
-const SearchIcon = ({ size, color }: { size: number; color: string }) => {
+const SearchIcon = ({ size, color }: { size: number; color?: string }) => {
   const { isDarkMode } = useContext(AppContext) as AppContextShape;
 
   return (
