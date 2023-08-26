@@ -19,8 +19,9 @@ const ReviewPage = () => {
           />
         </div>
         <div className="">
-          <div className="flex justify-start text-[40px] font-semibold dark:text-white">
-            Minecraft toys
+          <div className="flex justify-start text-left text-[40px] font-semibold dark:text-white">
+            Why Your MacBook Air Webcam Looks Bad in Zoom Meetings and How to
+            Fix It
           </div>
           <div className="mb-4 flex justify-start text-[32px] font-medium dark:text-white">
             Betman & Superman
@@ -114,7 +115,7 @@ const ReviewPage = () => {
         <div className="mt-20">
           <textarea
             placeholder={t("Review.yourComment")}
-            className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:placeholder:text-white"
+            className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:text-white dark:placeholder:text-white"
           ></textarea>
         </div>
         <div className="my-4 flex justify-end">

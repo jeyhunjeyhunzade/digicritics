@@ -1,11 +1,13 @@
+import { useContext, useState } from "react";
+import Modal from "react-modal";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+
 import WorldIcon from "@app/assets/icons/WorldIcon";
 import { Languages } from "@app/types/enums";
 import { checkAuth, classNames } from "@app/utils";
 import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
-import { useContext, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "@app/router/rooter";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
@@ -13,32 +15,74 @@ import { AppContextShape } from "@app/types/types";
 const Navbar = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
   const isAuthenticated = checkAuth();
-  const { setIsReviewEditorOpen } = useContext(AppContext) as AppContextShape;
-
-  const toggleLanguageMenu = () => {
-    if (isProfileMenuOpen) setIsProfileMenuOpen(false);
-    setIsLangMenuOpen(!isLangMenuOpen);
-  };
-
-  const toggleProfileMenu = () => {
-    if (isLangMenuOpen) setIsLangMenuOpen(false);
-    setIsProfileMenuOpen(!isProfileMenuOpen);
-  };
+  const { setIsReviewEditorOpen, isDarkMode } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const handleLanguageChange = (language: Languages) => {
     setSelectedLanguage(language);
     i18n.changeLanguage(language);
-    setIsLangMenuOpen(false);
+    setIsLangModalOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate(Routes.auth);
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+  };
+
+  const toggleProfileModal = () => {
+    setIsProfileModalOpen(!isProfileModalOpen);
+  };
+
+  const closeLanguageModal = () => {
+    setIsLangModalOpen(false);
+  };
+
+  const toggleLanguageModal = () => {
+    setIsLangModalOpen(!isLangModalOpen);
+  };
+
+  const customProfileModalStyles = {
+    content: {
+      padding: "0px",
+      width: "150px",
+      height: "fit-content",
+      top: "8%",
+      left: "88%",
+      border: "none",
+      backgroundColor: isDarkMode ? "#2C2C2C" : "white",
+      boxShadow:
+        "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    },
+    overlay: {
+      backgroundColor: "transparent",
+    },
+  };
+
+  const customLanguagesModalStyles = {
+    content: {
+      padding: "0px",
+      width: "150px",
+      height: "fit-content",
+      top: "9%",
+      left: "80%",
+      border: "none",
+      backgroundColor: isDarkMode ? "#2C2C2C" : "white",
+      boxShadow:
+        "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    },
+    overlay: {
+      backgroundColor: "transparent",
+    },
   };
 
   return (
@@ -50,38 +94,12 @@ const Navbar = () => {
         <SearchInput />
         <ToggleTheme />
         <button
-          onClick={toggleLanguageMenu}
+          onClick={toggleLanguageModal}
           aria-label="Toggle Language Menu"
           className="mx-6 flex items-center focus:outline-none"
         >
           <WorldIcon />
         </button>
-        {isLangMenuOpen && (
-          <div className="absolute right-[7%]	top-[8%] mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
-            <button
-              onClick={() => handleLanguageChange(Languages.EN)}
-              className={classNames(
-                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
-                selectedLanguage === Languages.EN
-                  ? "bg-[#046085] font-semibold text-white"
-                  : null
-              )}
-            >
-              {t("Navbar.english")}
-            </button>
-            <button
-              onClick={() => handleLanguageChange(Languages.RU)}
-              className={classNames(
-                "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
-                selectedLanguage === Languages.RU
-                  ? "bg-[#046085] font-semibold text-white"
-                  : null
-              )}
-            >
-              {t("Navbar.russian")}
-            </button>
-          </div>
-        )}
 
         {isAuthenticated ? (
           <>
@@ -95,7 +113,7 @@ const Navbar = () => {
               role="button"
               tabIndex={0}
               className="cursor-pointer"
-              onClick={toggleProfileMenu}
+              onClick={toggleProfileModal}
               aria-label="Toggle Profile Menu"
             >
               <img
@@ -103,39 +121,6 @@ const Navbar = () => {
                 className="h-[32px] w-[32px] rounded-[32px]"
               />
             </div>
-            {isProfileMenuOpen && (
-              <div className="absolute right-[1%]	top-[8%] z-10 mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
-                <button
-                  onClick={() => navigate(Routes.profile)}
-                  className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
-                >
-                  {t("Navbar.profile")}
-                </button>
-                {isAdmin && (
-                  <button
-                    onClick={() => navigate(Routes.adminpage)}
-                    className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
-                  >
-                    {t("Navbar.adminPage")}
-                  </button>
-                )}
-                <button
-                  onClick={() => {
-                    toggleProfileMenu();
-                    setIsReviewEditorOpen(true);
-                  }}
-                  className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
-                >
-                  {t("Navbar.newReview")}
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
-                >
-                  {t("Navbar.logout")}
-                </button>
-              </div>
-            )}
           </>
         ) : (
           <button
@@ -146,6 +131,68 @@ const Navbar = () => {
           </button>
         )}
       </div>
+      <Modal
+        isOpen={isLangModalOpen}
+        onRequestClose={closeLanguageModal}
+        style={customLanguagesModalStyles}
+      >
+        <button
+          onClick={() => handleLanguageChange(Languages.EN)}
+          className={classNames(
+            "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
+            selectedLanguage === Languages.EN
+              ? "bg-[#046085] font-semibold text-white"
+              : null
+          )}
+        >
+          {t("Navbar.english")}
+        </button>
+        <button
+          onClick={() => handleLanguageChange(Languages.RU)}
+          className={classNames(
+            "flex w-full px-4 py-2 text-sm text-gray-800 focus:outline-none dark:text-white",
+            selectedLanguage === Languages.RU
+              ? "bg-[#046085] font-semibold text-white"
+              : null
+          )}
+        >
+          {t("Navbar.russian")}
+        </button>
+      </Modal>
+      <Modal
+        isOpen={isProfileModalOpen}
+        onRequestClose={closeProfileModal}
+        style={customProfileModalStyles}
+      >
+        <button
+          onClick={() => navigate(Routes.profile)}
+          className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+        >
+          {t("Navbar.profile")}
+        </button>
+        {isAdmin && (
+          <button
+            onClick={() => navigate(Routes.adminpage)}
+            className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+          >
+            {t("Navbar.adminPage")}
+          </button>
+        )}
+        <button
+          onClick={() => {
+            setIsReviewEditorOpen(true);
+          }}
+          className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+        >
+          {t("Navbar.newReview")}
+        </button>
+        <button
+          onClick={handleLogout}
+          className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+        >
+          {t("Navbar.logout")}
+        </button>
+      </Modal>
     </nav>
   );
 };
