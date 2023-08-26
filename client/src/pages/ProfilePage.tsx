@@ -32,40 +32,40 @@ const ProfilePage = () => {
   const columns: Column<any>[] = useMemo(
     () => [
       {
-        Header: "Id",
+        Header: t("ProfileTable.id"),
         accessor: "id",
       },
       {
-        Header: "Review name",
+        Header: t("ProfileTable.reviewName"),
         accessor: "reviewName",
       },
       {
-        Header: "Category",
+        Header: t("ProfileTable.category"),
         accessor: "category",
       },
       {
-        Header: "Created date",
+        Header: t("ProfileTable.createdDate"),
         accessor: "createdDate",
       },
       {
-        Header: "Author grade",
+        Header: t("ProfileTable.authorGrade"),
         accessor: "authorGrade",
       },
       {
-        Header: "Raiting",
+        Header: t("ProfileTable.rating"),
         accessor: "rating",
       },
       {
-        Header: "Like",
+        Header: t("ProfileTable.like"),
         accessor: "like",
       },
       {
-        Header: "Actions",
+        Header: t("ProfileTable.actions"),
         accessor: "actions",
         Cell: TableActions,
       },
     ],
-    []
+    [t]
   );
 
   const {

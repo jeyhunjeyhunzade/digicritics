@@ -14,6 +14,7 @@ const Navbar = () => {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
+  const [isAdmin, setIsAdmin] = useState(true);
   const isAuthenticated = checkAuth();
 
   const toggleLanguageMenu = () => {
@@ -81,6 +82,12 @@ const Navbar = () => {
 
         {isAuthenticated ? (
           <>
+            <div className="mr-2 flex flex-col">
+              <div className="text-sm text-white">Jeyhun J.</div>
+              <div className="text-right	text-xs text-white">
+                {isAdmin ? t("Navbar.admin") : t("Navbar.user")}
+              </div>
+            </div>
             <div
               role="button"
               tabIndex={0}
@@ -94,13 +101,21 @@ const Navbar = () => {
               />
             </div>
             {isProfileMenuOpen && (
-              <div className="absolute right-[1%]	top-[8%] mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
+              <div className="absolute right-[1%]	top-[8%] z-10 mt-2 w-32 bg-white shadow-lg dark:bg-[#2C2C2C]">
                 <button
                   onClick={() => navigate(Routes.profile)}
                   className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
                 >
                   {t("Navbar.profile")}
                 </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => navigate(Routes.adminpage)}
+                    className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+                  >
+                    {t("Navbar.adminPage")}
+                  </button>
+                )}
                 <button
                   onClick={() => console.log("navigate to create new review")}
                   className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"

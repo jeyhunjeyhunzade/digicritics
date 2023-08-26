@@ -9,5 +9,11 @@ export enum Languages {
 }
 
 export enum ProfileTableCategories {
-  REVIEWNAME = ""
+  REVIEWNAME = "",
+}
+
+export enum UserStatus {
+  USER = "User",
+  ADMIN = "Admin",
+  BLOCKED = "Blocked",
 }
