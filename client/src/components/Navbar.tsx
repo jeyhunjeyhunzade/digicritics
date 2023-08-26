@@ -3,10 +3,12 @@ import { Languages } from "@app/types/enums";
 import { checkAuth, classNames } from "@app/utils";
 import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "@app/router/rooter";
+import { AppContext } from "@app/pages/App";
+import { AppContextShape } from "@app/types/types";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const Navbar = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isAdmin, setIsAdmin] = useState(true);
   const isAuthenticated = checkAuth();
+  const { setIsReviewEditorOpen } = useContext(AppContext) as AppContextShape;
 
   const toggleLanguageMenu = () => {
     if (isProfileMenuOpen) setIsProfileMenuOpen(false);
@@ -117,7 +120,10 @@ const Navbar = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => console.log("navigate to create new review")}
+                  onClick={() => {
+                    toggleProfileMenu();
+                    setIsReviewEditorOpen(true);
+                  }}
                   className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
                 >
                   {t("Navbar.newReview")}

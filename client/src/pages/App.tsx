@@ -8,12 +8,15 @@ export const AppContext = createContext<AppContextShape | null>(null);
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isReviewEditorOpen, setIsReviewEditorOpen] = useState(false);
 
   return (
     <AppContext.Provider
       value={{
         isDarkMode,
         setIsDarkMode,
+        isReviewEditorOpen,
+        setIsReviewEditorOpen,
       }}
     >
       <div>
