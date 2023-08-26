@@ -5,6 +5,7 @@ import AuthPage from "@app/pages/auth/AuthPage";
 import ReviewPage from "@app/pages/ReviewPage";
 import ProfilePage from "@app/pages/ProfilePage";
 import AdminPage from "@app/pages/AdminPage";
+import ReviewEditor from "@app/pages/ReviewEditorPage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { checkAuth } from "@app/utils";
 
@@ -15,6 +16,7 @@ export enum Routes {
   adminpage = "/adminpage",
   reviewpage = "/review",
   reviewById = "/review/:id",
+  reviewEditor = "/editor",
 }
 
 interface PrivateRoute {
@@ -50,6 +52,11 @@ export const router = createBrowserRouter([
   {
     path: Routes.adminpage,
     element: <AdminPage />,
+    errorElement: <RouterErrorPage />,
+  },
+  {
+    path: Routes.reviewEditor,
+    element: <ReviewEditor />,
     errorElement: <RouterErrorPage />,
   },
 ]);

@@ -79,4 +79,14 @@ export default {
     unBlock: "Unblock",
     delete: "Delete",
   },
+  ReviewEditor: {
+    title: "Review editor",
+    reviewTitle: "Review title",
+    reviewGrade: "Review grade",
+    workName: "Work name",
+    category: "Category",
+    tags: "Tags",
+    cancel: "Cancel",
+    shareReview: "Share review",
+  },
 };

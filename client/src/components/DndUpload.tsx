@@ -1,13 +1,17 @@
+import { classNames } from "@app/utils";
 import { useTranslation } from "react-i18next";
 
-const DndUpload = () => {
+const DndUpload = ({ width, height }: { width?: string; height?: string }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="mt-6 flex w-full items-center justify-center">
+    <div className="flex w-full items-center justify-center">
       <label
         htmlFor="dropzone-file"
-        className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-[transparent] dark:border-[#DEDEDE]"
+        className={classNames(
+          "flex h-64 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-[transparent] dark:border-[#DEDEDE]",
+          width ? `w-[${width}]` : "w-full"
+        )}
       >
         <div className="flex flex-col items-center justify-center pb-6 pt-5">
           <svg

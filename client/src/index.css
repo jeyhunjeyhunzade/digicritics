@@ -66,3 +66,10 @@ p, h1, h2, h3, h4, h5, h6 {
 @keyframes blinker {
   50% { opacity: 0.0; }
 }
+
+/* .CodeMirror,
+.CodeMirror-scroll {
+    width: 548px;
+    max-height: 271px;
+    max-width: 548px;
+} */
