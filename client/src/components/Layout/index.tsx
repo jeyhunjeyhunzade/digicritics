@@ -1,5 +1,6 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import Navbar from "../Navbar";
+import ReviewEditorModal from "../ReviewEditorModal";
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
@@ -8,6 +9,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         <Navbar />
       </header>
       <main className="flex items-center justify-center">{children}</main>
+      <ReviewEditorModal />
     </>
   );
 };

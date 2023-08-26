@@ -1,16 +1,63 @@
-import DndUpload from "@app/components/DndUpload";
-import Layout from "@app/components/Layout";
 import MDEditor from "@uiw/react-md-editor";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import Modal from "react-modal";
 import { useTranslation } from "react-i18next";
 
-const ReviewEditor = () => {
+import CloseIcon from "@app/assets/icons/CloseIcon";
+import { AppContext } from "@app/pages/App";
+import { AppContextShape } from "@app/types/types";
+import DndUpload from "./DndUpload";
+
+const ReviewEditorModal = () => {
   const { t } = useTranslation();
+  const { isDarkMode, isReviewEditorOpen, setIsReviewEditorOpen } = useContext(
+    AppContext
+  ) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
 
+  const customReviewEditorModalStyles = {
+    content: {
+      width: "1280px",
+      height: "695px",
+      padding: "56px 80px",
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      border: "none",
+      borderRadius: "16px",
+      backgroundColor: isDarkMode ? "#2C2C2C" : "white",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.30)",
+    },
+  };
+
+  const previewStyles = {
+    style: {
+      backgroundColor: "inherit",
+    },
+  };
+
+  const closeReviewEditorModal = () => {
+    setIsReviewEditorOpen(false);
+  };
+
   return (
-    <Layout>
-      <div className="flex w-full flex-col p-20 dark:bg-[#1B1B1B]">
+    <Modal
+      isOpen={isReviewEditorOpen}
+      onRequestClose={closeReviewEditorModal}
+      style={customReviewEditorModalStyles}
+    >
+      <span
+        onClick={closeReviewEditorModal}
+        className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
+      >
+        <CloseIcon size={24} />
+      </span>
+      <div className="flex flex-col">
         <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
           {t("ReviewEditor.title")}
         </div>
@@ -65,19 +112,15 @@ const ReviewEditor = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col justify-between">
-          <div className="mb-6">
+        <div className="flex justify-between">
+          <div>
             <MDEditor
               value={reviewContent}
               onChange={setReviewContent}
               height={"258px"}
-            />
-            <MDEditor.Markdown
-              source={reviewContent}
-              style={{
-                whiteSpace: "pre-wrap",
-                width: "548px",
-              }}
+              className="w-[548px] dark:text-[#C2C1BE]"
+              previewOptions={previewStyles}
+              style={{ backgroundColor: "transparent" }}
             />
           </div>
           <div>
@@ -85,13 +128,19 @@ const ReviewEditor = () => {
           </div>
         </div>
         <div className="mt-10 flex justify-end">
+          <button
+            onClick={closeReviewEditorModal}
+            className="flex h-[44px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#DEDEDE] dark:text-white"
+          >
+            {t("ReviewEditor.cancel")}
+          </button>
           <button className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white">
             <span className="pr-2">{t("ReviewEditor.shareReview")}</span>
           </button>
         </div>
       </div>
-    </Layout>
+    </Modal>
   );
 };
 
-export default ReviewEditor;
+export default ReviewEditorModal;

@@ -10,7 +10,6 @@ import {
   useTable,
 } from "react-table";
 import Modal from "react-modal";
-import MDEditor from "@uiw/react-md-editor";
 
 import { reviewsData } from "@app/mock/reviewsData";
 import TableActions from "@app/components/TableActions";
@@ -28,7 +27,9 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-  const { isDarkMode } = useContext(AppContext) as AppContextShape;
+  const { isDarkMode, setIsReviewEditorOpen } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const columns: Column<any>[] = useMemo(
     () => [
@@ -96,6 +97,10 @@ const ProfilePage = () => {
     setIsEditProfileModalOpen(false);
   };
 
+  const openReviewEditorModal = () => {
+    setIsReviewEditorOpen(true);
+  };
+
   const customEditProfileModalStyles = {
     content: {
       width: "516px",
@@ -152,7 +157,7 @@ const ProfilePage = () => {
             </div>
             <div className="flex">
               <button
-                onClick={() => navigate(Routes.reviewEditor)}
+                onClick={openReviewEditorModal}
                 className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
               >
                 <span className="pr-2">{t("Profile.newReview")}</span>

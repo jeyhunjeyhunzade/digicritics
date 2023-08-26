@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { Status } from "./enums";
 
 export interface AppContextShape {
   isDarkMode: boolean;
   setIsDarkMode: Dispatch<SetStateAction<boolean>>;
+  isReviewEditorOpen: boolean;
+  setIsReviewEditorOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface ActionsResponse {
