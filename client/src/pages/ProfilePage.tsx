@@ -1,6 +1,4 @@
-import LinkToIcon from "@app/assets/icons/LinkToIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
-import ThreeDot from "@app/assets/icons/ThreeDot";
 import Layout from "@app/components/Layout";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,21 +10,24 @@ import {
   useTable,
 } from "react-table";
 import Modal from "react-modal";
+import MDEditor from "@uiw/react-md-editor";
 
 import { reviewsData } from "@app/mock/reviewsData";
 import TableActions from "@app/components/TableActions";
 import PlusIcon from "@app/assets/icons/PlusIcon";
 import EditIcon from "@app/assets/icons/EditIcon";
-import EditProfileModal from "@app/components/EditModal";
 import DndUpload from "@app/components/DndUpload";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Routes } from "@app/router/rooter";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const { isDarkMode } = useContext(AppContext) as AppContextShape;
 
   const columns: Column<any>[] = useMemo(
@@ -87,15 +88,15 @@ const ProfilePage = () => {
     reviewsData?.length && setPageSize(reviewsData?.length);
   }, [setPageSize, reviewsData?.length]);
 
-  const openEditModal = () => {
-    setIsOpen(true);
+  const openEditProfileModal = () => {
+    setIsEditProfileModalOpen(true);
   };
 
-  const closeEditModal = () => {
-    setIsOpen(false);
+  const closeEditProfileModal = () => {
+    setIsEditProfileModalOpen(false);
   };
 
-  const customEditModalStyles = {
+  const customEditProfileModalStyles = {
     content: {
       width: "516px",
       height: "604px",
@@ -150,12 +151,15 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex">
-              <button className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white">
+              <button
+                onClick={() => navigate(Routes.reviewEditor)}
+                className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+              >
                 <span className="pr-2">{t("Profile.newReview")}</span>
                 <PlusIcon size={20} color={"white"} />
               </button>
               <button
-                onClick={openEditModal}
+                onClick={openEditProfileModal}
                 className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
               >
                 <span className="pr-2">{t("Profile.editProfile")}</span>
@@ -261,13 +265,12 @@ const ProfilePage = () => {
           </table>
         </div>
         <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeEditModal}
-          style={customEditModalStyles}
-          contentLabel="Example Modal"
+          isOpen={isEditProfileModalOpen}
+          onRequestClose={closeEditProfileModal}
+          style={customEditProfileModalStyles}
         >
           <span
-            onClick={closeEditModal}
+            onClick={closeEditProfileModal}
             className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <CloseIcon size={24} />
@@ -279,7 +282,7 @@ const ProfilePage = () => {
             <input
               type="text"
               placeholder={t("Profile.enterFullName")}
-              className="mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+              className="mb-6 mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
             />
 
             <DndUpload />

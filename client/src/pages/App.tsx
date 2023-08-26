@@ -10,7 +10,12 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
-    <AppContext.Provider value={{ isDarkMode, setIsDarkMode }}>
+    <AppContext.Provider
+      value={{
+        isDarkMode,
+        setIsDarkMode,
+      }}
+    >
       <div>
         <Toaster />
       </div>
