@@ -1,8 +1,7 @@
 import Auth from "../helpers/auth";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
-import { UserStatus } from "../types/enums";
+import { UserStatus } from "@prisma/client";
 import { prisma } from "../config";
 
 const Users = {
@@ -36,12 +35,12 @@ const Users = {
           .send({ message: "Email and password do not match" });
       }
 
-      if (user.status !== UserStatus.ACTIVE) {
+      if (user.status === UserStatus.BLOCKED) {
         return response.status(403).send({ message: "User is blocked" });
       }
 
       const token = Auth.generateToken(user.id);
-      return response.status(201).json({ token });
+      return response.status(201).json({ token, user });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
@@ -90,14 +89,15 @@ const Users = {
         data: {
           email: email,
           password: hashPassword,
-          full_name: name,
-          status: UserStatus.ACTIVE,
+          fullName: name,
         },
       });
 
       const token = Auth.generateToken(newUser.id);
 
-      response.status(200).json({ token, message: "Successfully created" });
+      response
+        .status(200)
+        .json({ token, newUser, message: "Successfully created" });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
@@ -112,10 +112,12 @@ const Users = {
       const allUsers = await prisma.users.findMany({
         select: {
           id: true,
-          full_name: true,
+          fullName: true,
           email: true,
           status: true,
-          register_time: true,
+          createdTime: true,
+          Like: true,
+          Rating: true,
         },
         orderBy: {
           id: "asc",
@@ -146,9 +148,11 @@ const Users = {
         },
         select: {
           id: true,
-          full_name: true,
+          fullName: true,
           email: true,
           status: true,
+          profileImage: true,
+          createdTime: true,
         },
       });
 
@@ -201,7 +205,6 @@ const Users = {
       const userIds = request.body.userIds;
 
       if (!userIds || !userIds.length) {
-        console.log("request", request.body.userIds);
         return response
           .status(400)
           .send({ message: "Please provide at least one id" });
@@ -247,7 +250,7 @@ const Users = {
           },
         },
         data: {
-          status: UserStatus.ACTIVE,
+          status: UserStatus.USER,
         },
       });
 
@@ -262,6 +265,7 @@ const Users = {
       }
     }
   },
+
   makeUsersAdmin: async (request: Request, response: Response) => {
     try {
       const userIds = request.body.userIds;
@@ -279,13 +283,59 @@ const Users = {
           },
         },
         data: {
-          isAdmin: true,
+          status: UserStatus.ADMIN,
         },
       });
 
       response.status(200).send({
         message: `Selected users are now admins: ${userIds.join(", ")}`,
       });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "unknown error" });
+      }
+    }
+  },
+
+  updateUser: async (request: Request, response: Response) => {
+    try {
+      const { id, fullName, profileImage } = request.body;
+
+      if (!id) {
+        return response.status(400).send({ message: "Please provide an id" });
+      }
+
+      if (!fullName && !profileImage) {
+        return response
+          .status(400)
+          .send({ message: "Please provide data to update" });
+      }
+
+      const updatedUser = await prisma.users.update({
+        where: {
+          id: id,
+        },
+        data: {
+          fullName: fullName,
+          profileImage: profileImage,
+        },
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          status: true,
+          profileImage: true,
+          createdTime: true,
+        },
+      });
+
+      if (!updatedUser) {
+        return response.status(404).send({ message: "User not found" });
+      }
+
+      response.status(200).json(updatedUser);
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });

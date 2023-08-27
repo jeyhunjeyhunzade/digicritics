@@ -4,12 +4,14 @@ import GoogleIcon from "@app/assets/icons/GoogleIcon";
 import Layout from "@app/components/Layout";
 import { queryClient } from "@app/index";
 import { Routes } from "@app/router/rooter";
+import { AppContextShape } from "@app/types/types";
 import { errorHandler, successHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../App";
 
 const AuthPage = () => {
   const { t } = useTranslation();
@@ -22,9 +24,10 @@ const AuthPage = () => {
 
   const { mutate: createAccountMutate, isLoading: isCreateAccountLoading } =
     useMutation(createAccount, {
-      onSuccess: (response) => {
-        localStorage.setItem("token", response.token);
-        successHandler(response);
+      onSuccess: (data) => {
+        localStorage.setItem("token", data.token);
+        queryClient.invalidateQueries([["userById"]]);
+        successHandler(data);
         navigate(Routes.homepage);
       },
       onError: errorHandler,
@@ -35,7 +38,7 @@ const AuthPage = () => {
     {
       onSuccess: (data) => {
         localStorage.setItem("token", data.token);
-        // queryClient.invalidateQueries([["users"]]);
+        queryClient.invalidateQueries([["userById"]]);
         navigate(Routes.homepage);
       },
       onError: errorHandler,
