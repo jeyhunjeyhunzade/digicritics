@@ -30,6 +30,7 @@ app.patch(
   Auth.authenticateToken,
   queries.Users.makeUsersAdmin
 );
+app.patch("/users/edit", Auth.authenticateToken, queries.Users.updateUser);
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}.`);

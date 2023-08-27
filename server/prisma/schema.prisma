@@ -8,17 +8,71 @@ datasource db {
   url      = env("POSTGRES_URL_DEV")
 }
 
-enum user_status {
+// schema.prisma
+
+enum UserStatus {
+  USER
+  ADMIN
   BLOCKED
-  ACTIVE
 }
 
-model users {
-  id            Int         @id @default(autoincrement())
-  full_name     String      @db.VarChar(255)
-  email         String      @unique @db.VarChar(255)
-  password      String      @db.VarChar(255)
-  status        user_status
-  isAdmin       Boolean     @default(false)
-  register_time DateTime    @default(now())
+model Users {
+  id           Int        @id @default(autoincrement())
+  fullName     String
+  email        String     @unique
+  status       UserStatus @default(USER)
+  password     String     @db.VarChar(255)
+  profileImage String?
+  createdTime  DateTime   @default(now())
+  reviews      Review[]
+  Like         Like[]
+  Rating       Rating[]
+  Comment      Comment[]
+}
+
+model Review {
+  id            Int      @id @default(autoincrement())
+  reviewTitle   String
+  workName      String
+  category      String
+  reviewGrade   Int
+  tags          String[]
+  reviewContent String
+  reviewImages  String[]
+
+  likes    Like[]
+  ratings  Rating[]
+  comments Comment[]
+
+  userId Int
+  user   Users @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id       Int @id @default(autoincrement())
+  userId   Int
+  reviewId Int
+
+  user   Users  @relation(fields: [userId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id])
+}
+
+model Rating {
+  id       Int @id @default(autoincrement())
+  userId   Int
+  reviewId Int
+  rating   Int
+
+  user   Users  @relation(fields: [userId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id])
+}
+
+model Comment {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  reviewId Int
+  content  String
+
+  user   Users  @relation(fields: [userId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id])
 }

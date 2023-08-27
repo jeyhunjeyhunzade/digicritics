@@ -2,13 +2,8 @@ import "dotenv/config";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { prisma } from "../config";
+import { UserStatus } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { UserStatus } from "../types/enums";
-
-const userStatus = {
-  active: "ACTIVE",
-  blocked: "BLOCKED",
-};
 
 const SECRET = process.env.SECRET as string;
 
@@ -83,6 +78,10 @@ const Auth = {
 
         if (!userById) {
           return res.status(401).send({ message: "User cannot be found." });
+        }
+
+        if (userById.status === UserStatus.BLOCKED) {
+          return res.status(401).send({ message: "User is blocked" });
         }
 
         req.user = user;

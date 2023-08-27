@@ -1,16 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import WorldIcon from "@app/assets/icons/WorldIcon";
-import { Languages } from "@app/types/enums";
-import { checkAuth, classNames } from "@app/utils";
+import { Languages, UserStatus } from "@app/types/enums";
+import {
+  checkAuth,
+  classNames,
+  errorHandler,
+  shorteningFullName,
+  successHandler,
+} from "@app/utils";
 import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
 import { Routes } from "@app/router/rooter";
 import { AppContext } from "@app/pages/App";
-import { AppContextShape } from "@app/types/types";
+import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";
+import { getUserById } from "@app/api/users";
+import { AxiosError } from "axios";
+import { queryClient } from "..";
+import { useQuery } from "@tanstack/react-query";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -18,11 +28,34 @@ const Navbar = () => {
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true);
   const isAuthenticated = checkAuth();
-  const { setIsReviewEditorOpen, isDarkMode } = useContext(
-    AppContext
-  ) as AppContextShape;
+  const {
+    setIsReviewEditorOpen,
+    isDarkMode,
+    loggedUserId,
+    loggedUser,
+    setLoggedUser,
+  } = useContext(AppContext) as AppContextShape;
+
+  const onError = (error: unknown) => {
+    if (error instanceof AxiosError) {
+      console.log(error);
+      if (error.response?.status === 401) {
+        navigate(Routes.auth);
+      }
+    }
+    errorHandler(error);
+  };
+
+  const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
+    ["userById", loggedUserId],
+    () => loggedUserId && getUserById(loggedUserId),
+    {
+      onError,
+      retry: false,
+      enabled: isAuthenticated,
+    }
+  );
 
   const handleLanguageChange = (language: Languages) => {
     setSelectedLanguage(language);
@@ -50,6 +83,10 @@ const Navbar = () => {
   const toggleLanguageModal = () => {
     setIsLangModalOpen(!isLangModalOpen);
   };
+
+  useEffect(() => {
+    userByIdData && setLoggedUser(userByIdData);
+  }, [userByIdData]);
 
   const customProfileModalStyles = {
     content: {
@@ -104,9 +141,13 @@ const Navbar = () => {
         {isAuthenticated ? (
           <>
             <div className="mr-2 flex flex-col">
-              <div className="text-sm text-white">Jeyhun J.</div>
+              <div className="text-sm text-white">
+                {loggedUser && shorteningFullName(loggedUser?.fullName)}
+              </div>
               <div className="text-right	text-xs text-white">
-                {isAdmin ? t("Navbar.admin") : t("Navbar.user")}
+                {loggedUser?.status === UserStatus.ADMIN
+                  ? t("Navbar.admin")
+                  : t("Navbar.user")}
               </div>
             </div>
             <div
@@ -170,7 +211,7 @@ const Navbar = () => {
         >
           {t("Navbar.profile")}
         </button>
-        {isAdmin && (
+        {loggedUser?.status === UserStatus.ADMIN && (
           <button
             onClick={() => navigate(Routes.adminpage)}
             className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
