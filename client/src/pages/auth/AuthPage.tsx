@@ -33,8 +33,8 @@ const AuthPage = () => {
   const { mutate: createAccountMutate, isLoading: isCreateAccountLoading } =
     useMutation(createAccount, {
       onSuccess: (data) => {
-        console.log("data: ", data);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("status", data.newUser.status);
         setLoggedUser(data.newUser);
         queryClient.invalidateQueries(["userById"]);
         successHandler(data);
@@ -48,6 +48,7 @@ const AuthPage = () => {
     {
       onSuccess: (data) => {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("status", data.user.status);
         setLoggedUser(data.user);
         queryClient.invalidateQueries(["userById"]);
         navigate(Routes.homepage);

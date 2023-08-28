@@ -60,6 +60,7 @@ const ProfilePage = () => {
         queryClient.invalidateQueries(["users"]);
         successHandler(response);
         localStorage.removeItem("token");
+        localStorage.removeItem("status");
         setLoggedUserId(null);
         setLoggedUser(null);
         navigate(Routes.auth);
