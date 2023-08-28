@@ -51,3 +51,10 @@ export interface UsersData {
   Like: any;
   Rating: any;
 }
+
+export interface DndUploadSingleProps {
+  width?: string;
+  height?: string;
+  url: string | undefined;
+  setUrl: Dispatch<SetStateAction<string | undefined>>;
+}

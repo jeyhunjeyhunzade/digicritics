@@ -53,6 +53,7 @@ export default {
     orDnD: "or drag and drop",
     saveChanges: "Save changes",
     deleteProfile: "Delete profile",
+    provideProfileImg: "Please provide profile image",
   },
   ProfileTable: {
     id: "Id",

@@ -15,7 +15,7 @@ import { reviewsData } from "@app/mock/reviewsData";
 import TableActions from "@app/components/TableActions";
 import PlusIcon from "@app/assets/icons/PlusIcon";
 import EditIcon from "@app/assets/icons/EditIcon";
-import DndUpload from "@app/components/DndUpload";
+import DndUpload from "@app/components/DndUploadSingle";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
 import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";
@@ -29,12 +29,15 @@ import { deleteAccounts } from "@app/api/auth";
 import { AxiosError } from "axios";
 import { Routes } from "@app/router/rooter";
 import Loader from "@app/components/Loader";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [newFullName, setNewFullName] = useState<string>("");
+  const [url, setUrl] = useState<string>();
+
   const {
     isDarkMode,
     setIsReviewEditorOpen,
@@ -168,13 +171,21 @@ const ProfilePage = () => {
     },
   };
 
+  useEffect(() => {
+    url && console.log("image url: ", url);
+  }, [url]);
+
   const handleUpdateUser = () => {
     if (loggedUserId) {
-      updateUserMutate({
-        id: loggedUserId,
-        fullName: newFullName,
-        profileImage: "test.jsp",
-      });
+      if (url) {
+        updateUserMutate({
+          id: loggedUserId,
+          fullName: newFullName,
+          profileImage: url,
+        });
+      } else {
+        toast.error(t("Profile.provideProfileImg"));
+      }
     }
   };
 
@@ -190,7 +201,7 @@ const ProfilePage = () => {
         <div className="flex w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
           <div className="mb-10 flex w-full justify-start">
             <img
-              src="/testprofile.jpeg"
+              src={loggedUser.profileImage}
               alt="profile image"
               className="h-[160px] w-[160px] rounded-[8px]"
             />
@@ -368,7 +379,7 @@ const ProfilePage = () => {
                     className="mb-6 mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
                   />
 
-                  <DndUpload />
+                  <DndUpload url={url} setUrl={setUrl} />
 
                   <div className="mt-6 flex w-full justify-between">
                     <button

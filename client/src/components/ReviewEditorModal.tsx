@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
-import DndUpload from "./DndUpload";
+import DndUpload from "./DndUploadSingle";
 
 const ReviewEditorModal = () => {
   const { t } = useTranslation();
@@ -123,9 +123,7 @@ const ReviewEditorModal = () => {
               style={{ backgroundColor: "transparent" }}
             />
           </div>
-          <div>
-            <DndUpload width={"548px"} />
-          </div>
+          <div>{/* <DndUpload width={"548px"} /> */}</div>
         </div>
         <div className="mt-10 flex justify-end">
           <button

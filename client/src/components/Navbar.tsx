@@ -183,7 +183,7 @@ const Navbar = () => {
               aria-label="Toggle Profile Menu"
             >
               <img
-                src="/testprofile.jpeg"
+                src={loggedUser?.profileImage}
                 className="h-[32px] w-[32px] rounded-[32px]"
               />
             </div>

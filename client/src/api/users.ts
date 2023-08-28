@@ -20,3 +20,8 @@ export const updateUser = async (updatedUserData: UpdatedUserData) => {
   );
   return res?.data;
 };
+
+export const uploadProfileImage = async (updatedUserData: any) => {
+  const res = await axios.post(`${serverUrl}/uploadMedia`, updatedUserData);
+  return res?.data;
+};
