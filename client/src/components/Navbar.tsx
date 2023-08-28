@@ -21,6 +21,7 @@ import { getUserById } from "@app/api/users";
 import { AxiosError } from "axios";
 import { queryClient } from "..";
 import { useQuery } from "@tanstack/react-query";
+import useCurrentPath from "@app/hooks/useCurrentPath";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const Navbar = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const isAuthenticated = checkAuth();
+  const currentPath = useCurrentPath();
 
   const {
     setIsReviewEditorOpen,
@@ -40,10 +42,13 @@ const Navbar = () => {
   } = useContext(AppContext) as AppContextShape;
 
   const onError = (error: unknown) => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      handleLogout();
+    }
     if (error instanceof AxiosError) {
-      console.log(error);
       if (error.response?.status === 401) {
-        navigate(Routes.auth);
+        handleLogout();
       }
     }
     errorHandler(error);
@@ -88,8 +93,24 @@ const Navbar = () => {
     setIsLangModalOpen(!isLangModalOpen);
   };
 
+  const watchUserRole = () => {
+    const savedRole = localStorage.getItem("status");
+    const actualRole = userByIdData.status;
+
+    if (savedRole !== actualRole) {
+      localStorage.setItem("status", actualRole);
+    }
+
+    if (actualRole !== UserStatus.ADMIN && currentPath === Routes.adminpage) {
+      navigate(Routes.homepage);
+    }
+  };
+
   useEffect(() => {
-    userByIdData && setLoggedUser(userByIdData);
+    if (userByIdData) {
+      setLoggedUser(userByIdData);
+      watchUserRole();
+    }
   }, [userByIdData]);
 
   const customProfileModalStyles = {

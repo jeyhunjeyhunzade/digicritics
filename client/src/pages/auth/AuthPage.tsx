@@ -108,125 +108,127 @@ const AuthPage = () => {
         </div>
         <div className="flex h-[90vh] w-[50%] items-center justify-center dark:bg-[#1B1B1B]">
           <div className="flex flex-col ">
-            <div className="mb-6 text-6xl font-semibold text-[#006F9C]">
-              {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
-            </div>
-            {isSignUp && (
+            <form onSubmit={() => (isSignUp ? handleSignUp() : handleLogin())}>
+              <div className="mb-6 text-6xl font-semibold text-[#006F9C]">
+                {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
+              </div>
+              {isSignUp && (
+                <div className="mb-2">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                    >
+                      {t("Auth.name")}
+                    </label>
+                  </div>
+                  <div className="mt-1">
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder={t("Auth.namePlaceholder")}
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.currentTarget.value);
+                      }}
+                      required
+                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="mb-2">
                 <div className="flex items-center justify-between">
                   <label
-                    htmlFor="name"
+                    htmlFor="email"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
                   >
-                    {t("Auth.name")}
+                    {t("Auth.email")}
                   </label>
                 </div>
                 <div className="mt-1">
                   <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    placeholder={t("Auth.namePlaceholder")}
-                    value={name}
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder={t("Auth.emailPlaceholder")}
+                    value={email}
                     onChange={(e) => {
-                      setName(e.currentTarget.value);
+                      setEmail(e.currentTarget.value);
                     }}
+                    autoComplete="email"
                     required
-                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
+                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
-            )}
-
-            <div className="mb-2">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
-                >
-                  {t("Auth.email")}
-                </label>
-              </div>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder={t("Auth.emailPlaceholder")}
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.currentTarget.value);
-                  }}
-                  autoComplete="email"
-                  required
-                  className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            <div className="mb-2">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
-                >
-                  {t("Auth.password")}
-                </label>
-              </div>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder={t("Auth.passwordPlaceholder")}
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.currentTarget.value);
-                  }}
-                  required
-                  className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-            {isSignUp && (
-              <div>
+              <div className="mb-2">
                 <div className="flex items-center justify-between">
                   <label
-                    htmlFor="passwordAgain"
+                    htmlFor="password"
                     className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
                   >
-                    {t("Auth.passwordConfirm")}
+                    {t("Auth.password")}
                   </label>
                 </div>
                 <div className="mt-1">
                   <input
-                    id="passwordAgain"
-                    name="passwordAgain"
+                    id="password"
+                    name="password"
                     type="password"
-                    placeholder={t("Auth.passwordConfirmPlaceholder")}
-                    value={confirmPassword}
+                    placeholder={t("Auth.passwordPlaceholder")}
+                    value={password}
                     onChange={(e) => {
-                      setConfirmPassword(e.currentTarget.value);
+                      setPassword(e.currentTarget.value);
                     }}
                     required
                     className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
-            )}
+              {isSignUp && (
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="passwordAgain"
+                      className="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+                    >
+                      {t("Auth.passwordConfirm")}
+                    </label>
+                  </div>
+                  <div className="mt-1">
+                    <input
+                      id="passwordAgain"
+                      name="passwordAgain"
+                      type="password"
+                      placeholder={t("Auth.passwordConfirmPlaceholder")}
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.currentTarget.value);
+                      }}
+                      required
+                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              )}
 
-            <div className="mt-6">
-              <button
-                type="submit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  isSignUp ? handleSignUp() : handleLogin();
-                }}
-                disabled={isLoading}
-                className="flex h-[48px] w-full items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
-              </button>
-            </div>
+              <div className="mt-6">
+                <button
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    isSignUp ? handleSignUp() : handleLogin();
+                  }}
+                  disabled={isLoading}
+                  className="flex h-[48px] w-full items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  {isSignUp ? t("Auth.signUp") : t("Navbar.login")}
+                </button>
+              </div>
+            </form>
             <div className="my-6 flex justify-between">
               <hr className="h-px w-[40%] self-center border-0 bg-gray-200 dark:bg-[#DEDEDEED]" />
               <div className="flex dark:text-[#9D9D9D]">{t("Auth.or")}</div>

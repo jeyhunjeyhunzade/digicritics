@@ -41,3 +41,13 @@ export interface UpdatedUserData {
   fullName: string;
   profileImage: string;
 }
+
+export interface UsersData {
+  id: number;
+  fullName: string;
+  email: string;
+  status: UserStatus;
+  createdTime: string;
+  Like: any;
+  Rating: any;
+}

@@ -266,9 +266,9 @@ const Users = {
     }
   },
 
-  makeUsersAdmin: async (request: Request, response: Response) => {
+  updateUserRole: async (request: Request, response: Response) => {
     try {
-      const userIds = request.body.userIds;
+      const { userIds, status } = request.body;
 
       if (!userIds || !userIds.length) {
         return response
@@ -283,7 +283,7 @@ const Users = {
           },
         },
         data: {
-          status: UserStatus.ADMIN,
+          status: status,
         },
       });
 

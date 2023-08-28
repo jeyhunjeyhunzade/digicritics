@@ -17,3 +17,11 @@ export enum UserStatus {
   ADMIN = "ADMIN",
   BLOCKED = "BLOCKED",
 }
+
+export enum AdminTableAction {
+  MAKEADMIN = "MAKEADMIN",
+  MAKEUSER = "MAKEUSER",
+  BLOCK = "BLOCK",
+  UNBLOCK = "UNBLOCK",
+  DELETE = "DELETE",
+}
