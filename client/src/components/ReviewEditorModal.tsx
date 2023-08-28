@@ -123,9 +123,7 @@ const ReviewEditorModal = () => {
               style={{ backgroundColor: "transparent" }}
             />
           </div>
-          <div>
-            <DndUpload width={"548px"} />
-          </div>
+          <div>{/* <DndUpload width={"548px"} /> */}</div>
         </div>
         <div className="mt-10 flex justify-end">
           <button
