@@ -61,10 +61,10 @@ const ToggleTheme = () => {
       (!("color-theme" in localStorage) && preferredOSTheme)
     ) {
       console.log("open light icon");
-      themeToggleLightIcon?.classList.remove("hidden");
+      themeToggleLightIcon.classList.remove("hidden");
     } else {
       console.log("open dark icon");
-      themeToggleDarkIcon?.classList.remove("hidden");
+      themeToggleDarkIcon.classList.remove("hidden");
     }
   });
 
