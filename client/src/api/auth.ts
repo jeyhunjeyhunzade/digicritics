@@ -1,6 +1,7 @@
 import { LoginData, SignUpData } from "@app/types/types";
 import axios from "axios";
 import { getConfig, serverUrl } from "./apiClient";
+import { UserStatus } from "@app/types/enums";
 
 export const loginAccount = async (loginData: LoginData) => {
   const res = await axios.post(`${serverUrl}/login`, loginData);
@@ -38,10 +39,16 @@ export const deleteAccounts = async (userIds: string[] | number[]) => {
   return res?.data;
 };
 
-export const makeAdmin = async (userIds: string[]) => {
+export const updateUserRole = async ({
+  userIds,
+  status,
+}: {
+  userIds: string[];
+  status: UserStatus;
+}) => {
   const res = await axios.patch(
     `${serverUrl}/users/setAdmin`,
-    { userIds },
+    { userIds, status },
     getConfig()
   );
   return res?.data;

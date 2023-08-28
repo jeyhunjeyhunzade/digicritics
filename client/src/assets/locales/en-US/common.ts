@@ -75,6 +75,7 @@ export default {
     apply: "Apply",
     actions: "Actions",
     makeAdmin: "Make admin",
+    makeUser: "Make user",
     block: "Block",
     unBlock: "Unblock",
     delete: "Delete",

@@ -28,7 +28,7 @@ app.patch("/users/unblock", Auth.authenticateToken, queries.Users.unBlockUser);
 app.patch(
   "/users/setAdmin",
   Auth.authenticateToken,
-  queries.Users.makeUsersAdmin
+  queries.Users.updateUserRole
 );
 app.patch("/users/edit", Auth.authenticateToken, queries.Users.updateUser);
 
