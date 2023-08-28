@@ -1,9 +1,12 @@
 import { AppContextShape } from "@app/types/types";
 import { useContext, useEffect } from "react";
 import { AppContext } from "@app/pages/App";
+import { classNames } from "@app/utils";
 
 const ToggleTheme = () => {
-  const { setIsDarkMode } = useContext(AppContext) as AppContextShape;
+  const { isDarkMode, setIsDarkMode } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const themeToggleDarkIcon = document.getElementById("theme-toggle-dark-icon");
   const themeToggleLightIcon = document.getElementById(
@@ -55,23 +58,6 @@ const ToggleTheme = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (
-      savedThemeMode === "dark" ||
-      (!("color-theme" in localStorage) && preferredOSTheme)
-    ) {
-      if (themeToggleLightIcon) {
-        console.log("open light icon");
-        themeToggleLightIcon.classList.remove("hidden");
-      }
-    } else {
-      if (themeToggleDarkIcon) {
-        console.log("open dark icon");
-        themeToggleDarkIcon.classList.remove("hidden");
-      }
-    }
-  });
-
   return (
     <button
       id="theme-toggle"
@@ -81,7 +67,7 @@ const ToggleTheme = () => {
     >
       <svg
         id="theme-toggle-dark-icon"
-        className="hidden h-5 w-5"
+        className={classNames("h-5 w-5", isDarkMode ? "hidden" : null)}
         fill="currentColor"
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +76,7 @@ const ToggleTheme = () => {
       </svg>
       <svg
         id="theme-toggle-light-icon"
-        className="hidden h-5 w-5"
+        className={classNames("h-5 w-5", !isDarkMode ? "hidden" : null)}
         fill="currentColor"
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
