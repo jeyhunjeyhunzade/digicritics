@@ -60,11 +60,15 @@ const ToggleTheme = () => {
       savedThemeMode === "dark" ||
       (!("color-theme" in localStorage) && preferredOSTheme)
     ) {
-      console.log("open light icon");
-      themeToggleLightIcon?.classList.remove("hidden");
+      if (themeToggleLightIcon) {
+        console.log("open light icon");
+        themeToggleLightIcon.classList.remove("hidden");
+      }
     } else {
-      console.log("open dark icon");
-      themeToggleDarkIcon?.classList.remove("hidden");
+      if (themeToggleDarkIcon) {
+        console.log("open dark icon");
+        themeToggleDarkIcon.classList.remove("hidden");
+      }
     }
   });
 
