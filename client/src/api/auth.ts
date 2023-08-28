@@ -30,7 +30,7 @@ export const unBlockAccounts = async (userIds: string[]) => {
   return res?.data;
 };
 
-export const deleteAccounts = async (userIds: string[]) => {
+export const deleteAccounts = async (userIds: string[] | number[]) => {
   const res = await axios.delete(`${serverUrl}/users`, {
     data: { userIds },
     ...getConfig(),

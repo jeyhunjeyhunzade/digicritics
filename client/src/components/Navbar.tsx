@@ -29,12 +29,14 @@ const Navbar = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const isAuthenticated = checkAuth();
+
   const {
     setIsReviewEditorOpen,
     isDarkMode,
     loggedUserId,
     loggedUser,
     setLoggedUser,
+    setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
 
   const onError = (error: unknown) => {
@@ -53,7 +55,6 @@ const Navbar = () => {
     {
       onError,
       retry: false,
-      enabled: isAuthenticated,
     }
   );
 
@@ -65,6 +66,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setLoggedUserId(null);
+    setLoggedUser(null);
     navigate(Routes.auth);
   };
 

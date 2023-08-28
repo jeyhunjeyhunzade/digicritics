@@ -9,6 +9,7 @@ export interface AppContextShape {
   loggedUserId: number | null;
   loggedUser: LoggedUser | null;
   setLoggedUser: Dispatch<SetStateAction<LoggedUser | null>>;
+  setLoggedUserId: Dispatch<SetStateAction<number | null>>;
 }
 
 export interface ActionsResponse {
