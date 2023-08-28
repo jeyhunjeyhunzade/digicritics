@@ -66,6 +66,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("status");
     setLoggedUserId(null);
     setLoggedUser(null);
     navigate(Routes.auth);

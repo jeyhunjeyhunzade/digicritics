@@ -96,3 +96,8 @@ export const getLoggedUserId = () => {
     return userId;
   }
 };
+
+export const getUserStatus = () => {
+  const status = localStorage.getItem("status");
+  return status;
+};

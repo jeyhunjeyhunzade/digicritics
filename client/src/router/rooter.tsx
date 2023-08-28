@@ -6,7 +6,8 @@ import ReviewPage from "@app/pages/ReviewPage";
 import ProfilePage from "@app/pages/ProfilePage";
 import AdminPage from "@app/pages/AdminPage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
-import { checkAuth } from "@app/utils";
+import { checkAuth, getUserStatus } from "@app/utils";
+import { UserStatus } from "@app/types/enums";
 
 export enum Routes {
   auth = "/auth",
@@ -22,9 +23,13 @@ interface PrivateRoute {
   children: ReactElement;
 }
 
-const PrivateRoute = ({ children }: PrivateRoute) => {
-  const isAuthenticated = checkAuth();
-  return isAuthenticated ? children : <Navigate to="/auth" />;
+const PrivateAdminRoute = ({ children }: PrivateRoute) => {
+  const status = getUserStatus();
+  return status === UserStatus.ADMIN ? (
+    children
+  ) : (
+    <Navigate to={Routes.homepage} />
+  );
 };
 
 export const router = createBrowserRouter([
@@ -50,7 +55,11 @@ export const router = createBrowserRouter([
   },
   {
     path: Routes.adminpage,
-    element: <AdminPage />,
+    element: (
+      <PrivateAdminRoute>
+        <AdminPage />
+      </PrivateAdminRoute>
+    ),
     errorElement: <RouterErrorPage />,
   },
 ]);

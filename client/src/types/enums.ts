@@ -13,7 +13,7 @@ export enum ProfileTableCategories {
 }
 
 export enum UserStatus {
-  USER = "User",
-  ADMIN = "Admin",
-  BLOCKED = "Blocked",
+  USER = "USER",
+  ADMIN = "ADMIN",
+  BLOCKED = "BLOCKED",
 }
