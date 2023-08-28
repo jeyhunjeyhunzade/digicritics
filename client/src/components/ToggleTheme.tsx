@@ -15,16 +15,6 @@ const ToggleTheme = () => {
     "(prefers-color-scheme: dark)"
   ).matches;
 
-  // Change the icons inside the button based on previous settings
-  if (
-    savedThemeMode === "dark" ||
-    (!("color-theme" in localStorage) && preferredOSTheme)
-  ) {
-    themeToggleLightIcon?.classList.remove("hidden");
-  } else {
-    themeToggleDarkIcon?.classList.remove("hidden");
-  }
-
   const handleToggle = () => {
     themeToggleDarkIcon?.classList.toggle("hidden");
     themeToggleLightIcon?.classList.toggle("hidden");
@@ -64,6 +54,17 @@ const ToggleTheme = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (
+      savedThemeMode === "dark" ||
+      (!("color-theme" in localStorage) && preferredOSTheme)
+    ) {
+      themeToggleLightIcon?.classList.remove("hidden");
+    } else {
+      themeToggleDarkIcon?.classList.remove("hidden");
+    }
+  });
 
   return (
     <button
