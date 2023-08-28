@@ -21,12 +21,22 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const {
+    isDarkMode,
+    setIsReviewEditorOpen,
+    loggedUserId,
+    loggedUser,
+    setLoggedUser,
+    setLoggedUserId,
+  } = useContext(AppContext) as AppContextShape;
 
   const { mutate: createAccountMutate, isLoading: isCreateAccountLoading } =
     useMutation(createAccount, {
       onSuccess: (data) => {
+        console.log("data: ", data);
         localStorage.setItem("token", data.token);
-        queryClient.invalidateQueries([["userById"]]);
+        setLoggedUser(data.newUser);
+        queryClient.invalidateQueries(["userById"]);
         successHandler(data);
         navigate(Routes.homepage);
       },
@@ -38,7 +48,8 @@ const AuthPage = () => {
     {
       onSuccess: (data) => {
         localStorage.setItem("token", data.token);
-        queryClient.invalidateQueries([["userById"]]);
+        setLoggedUser(data.user);
+        queryClient.invalidateQueries(["userById"]);
         navigate(Routes.homepage);
       },
       onError: errorHandler,

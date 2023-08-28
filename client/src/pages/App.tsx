@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
 import { AppContextShape, LoggedUser } from "@app/types/types";
 import { createContext, useEffect, useState } from "react";
-import { getLoggedUserId } from "@app/utils";
+import { checkAuth, getLoggedUserId } from "@app/utils";
 
 export const AppContext = createContext<AppContextShape | null>(null);
 
@@ -15,16 +15,11 @@ const App = () => {
 
   useEffect(() => {
     const id = getLoggedUserId();
-    const currentUser = localStorage.getItem("loggedUser");
 
     if (id) {
       setLoggedUserId(id);
     }
-
-    if (currentUser !== null) {
-      const loggedUser = JSON.parse(currentUser);
-    }
-  }, []);
+  }, [loggedUser]);
 
   return (
     <AppContext.Provider
@@ -36,6 +31,7 @@ const App = () => {
         loggedUserId,
         loggedUser,
         setLoggedUser,
+        setLoggedUserId,
       }}
     >
       <div>

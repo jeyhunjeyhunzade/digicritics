@@ -10,11 +10,6 @@ const Homepage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    navigate(Routes.auth);
-  };
-
   const mockTags = [
     { value: "photo", count: 25 },
     { value: "movie", count: 18 },

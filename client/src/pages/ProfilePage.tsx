@@ -18,14 +18,17 @@ import EditIcon from "@app/assets/icons/EditIcon";
 import DndUpload from "@app/components/DndUpload";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
-import { AppContextShape, LoggedUser } from "@app/types/types";
+import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Routes } from "@app/router/rooter";
-import { dateFormatter, errorHandler } from "@app/utils";
+import { dateFormatter, errorHandler, successHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
 import { updateUser } from "@app/api/users";
 import { queryClient } from "..";
+import { deleteAccounts } from "@app/api/auth";
+import { AxiosError } from "axios";
+import { Routes } from "@app/router/rooter";
+import Loader from "@app/components/Loader";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -38,17 +41,41 @@ const ProfilePage = () => {
     loggedUserId,
     loggedUser,
     setLoggedUser,
+    setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
 
   const { mutate: updateUserMutate, isLoading: isUpdateUserMutateLoading } =
     useMutation(updateUser, {
-      onSuccess: (data) => {
-        setLoggedUser(data);
+      onSuccess: (response) => {
+        setLoggedUser(response);
         closeEditProfileModal();
-        queryClient.invalidateQueries([["userById"]]);
+        queryClient.invalidateQueries(["userById"]);
       },
       onError: errorHandler,
     });
+
+  const { mutate: deleteUserMutate, isLoading: isDeleteUserLoading } =
+    useMutation(deleteAccounts, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(["users"]);
+        successHandler(response);
+        localStorage.removeItem("token");
+        setLoggedUserId(null);
+        setLoggedUser(null);
+        navigate(Routes.auth);
+      },
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          console.log(error);
+          if (error.response?.status === 401) {
+            navigate(Routes.auth);
+          }
+        }
+        errorHandler(error);
+      },
+    });
+
+  const isLoading = isUpdateUserMutateLoading || isDeleteUserLoading;
 
   const columns: Column<any>[] = useMemo(
     () => [
@@ -147,6 +174,12 @@ const ProfilePage = () => {
         fullName: newFullName,
         profileImage: "test.jsp",
       });
+    }
+  };
+
+  const handleDeleteUser = () => {
+    if (loggedUserId) {
+      deleteUserMutate([loggedUserId]);
     }
   };
 
@@ -308,40 +341,51 @@ const ProfilePage = () => {
             onRequestClose={closeEditProfileModal}
             style={customEditProfileModalStyles}
           >
-            <span
-              onClick={closeEditProfileModal}
-              className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
-            >
-              <CloseIcon size={24} />
-            </span>
-            <div className="flex flex-col p-10">
-              <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
-                {t("Profile.editProfile")}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <Loader />
               </div>
-              <input
-                type="text"
-                placeholder={t("Profile.enterFullName")}
-                value={newFullName}
-                onChange={(e) => {
-                  setNewFullName(e.target.value);
-                }}
-                className="mb-6 mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
-              />
-
-              <DndUpload />
-
-              <div className="mt-6 flex w-full justify-between">
-                <button className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#D20F0F] text-white">
-                  {t("Profile.deleteProfile")}
-                </button>
-                <button
-                  onClick={handleUpdateUser}
-                  className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+            ) : (
+              <>
+                <span
+                  onClick={closeEditProfileModal}
+                  className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
                 >
-                  {t("Profile.saveChanges")}
-                </button>
-              </div>
-            </div>
+                  <CloseIcon size={24} />
+                </span>
+                <div className="flex flex-col p-10">
+                  <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
+                    {t("Profile.editProfile")}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder={t("Profile.enterFullName")}
+                    value={newFullName}
+                    onChange={(e) => {
+                      setNewFullName(e.target.value);
+                    }}
+                    className="mb-6 mt-12 h-[48px] w-full rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+                  />
+
+                  <DndUpload />
+
+                  <div className="mt-6 flex w-full justify-between">
+                    <button
+                      onClick={handleDeleteUser}
+                      className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#D20F0F] text-white"
+                    >
+                      {t("Profile.deleteProfile")}
+                    </button>
+                    <button
+                      onClick={handleUpdateUser}
+                      className="flex h-[44px] w-[190px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+                    >
+                      {t("Profile.saveChanges")}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </Modal>
         </div>
       )}
