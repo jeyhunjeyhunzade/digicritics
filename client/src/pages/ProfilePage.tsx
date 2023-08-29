@@ -40,6 +40,7 @@ import { AxiosError } from "axios";
 import { Routes } from "@app/router/rooter";
 import Loader from "@app/components/Loader";
 import toast from "react-hot-toast";
+import { UserStatus } from "@app/types/enums";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -49,6 +50,8 @@ const ProfilePage = () => {
   const [newFullName, setNewFullName] = useState<string>("");
   const [url, setUrl] = useState<string>();
   const [profileData, setProfileData] = useState<UsersData>();
+  const [isOwnPage, setIsOwnPage] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const {
     isDarkMode,
@@ -177,6 +180,29 @@ const ProfilePage = () => {
     userByIdData && setProfileData(userByIdData);
   }, [userByIdData]);
 
+  useEffect(() => {
+    if (loggedUser) {
+      if (`${loggedUser?.id}` === id) {
+        setIsOwnPage(true);
+      } else {
+        setIsOwnPage(false);
+      }
+
+      if (loggedUser) {
+        if (loggedUser.status === UserStatus.ADMIN) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }
+    }
+  }, [loggedUser, profileData]);
+
+  useEffect(() => {
+    console.log("isAdmin", isAdmin);
+    console.log("isOwnPage", isOwnPage);
+  }, [isAdmin, isOwnPage]);
+
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
   };
@@ -270,22 +296,24 @@ const ProfilePage = () => {
                   </table>
                 </div>
               </div>
-              <div className="flex">
-                <button
-                  onClick={openReviewEditorModal}
-                  className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
-                >
-                  <span className="pr-2">{t("Profile.newReview")}</span>
-                  <PlusIcon size={20} color={"white"} />
-                </button>
-                <button
-                  onClick={openEditProfileModal}
-                  className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
-                >
-                  <span className="pr-2">{t("Profile.editProfile")}</span>
-                  <EditIcon size={20} color={"#2C2C2C"} />
-                </button>
-              </div>
+              {(isOwnPage || isAdmin) && (
+                <div className="flex">
+                  <button
+                    onClick={openReviewEditorModal}
+                    className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+                  >
+                    <span className="pr-2">{t("Profile.newReview")}</span>
+                    <PlusIcon size={20} color={"white"} />
+                  </button>
+                  <button
+                    onClick={openEditProfileModal}
+                    className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
+                  >
+                    <span className="pr-2">{t("Profile.editProfile")}</span>
+                    <EditIcon size={20} color={"#2C2C2C"} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex justify-between">
