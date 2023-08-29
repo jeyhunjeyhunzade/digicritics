@@ -37,15 +37,16 @@ export interface LoggedUser {
 }
 
 export interface UpdatedUserData {
-  id: number;
+  id: number | string | undefined;
   fullName: string;
-  profileImage: string;
+  profileImage: string | undefined;
 }
 
 export interface UsersData {
   id: number;
   fullName: string;
   email: string;
+  profileImage: string;
   status: UserStatus;
   createdTime: string;
   Like: any;

@@ -7,7 +7,7 @@ export const getUsers = async () => {
   return res?.data;
 };
 
-export const getUserById = async (id: number | null) => {
+export const getUserById = async (id: number | string | null) => {
   const res = await axios.get(`${serverUrl}/users/${id}`, getConfig());
   return res?.data;
 };

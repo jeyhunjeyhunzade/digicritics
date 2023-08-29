@@ -231,7 +231,7 @@ const Navbar = () => {
         style={customProfileModalStyles}
       >
         <button
-          onClick={() => navigate(Routes.profile)}
+          onClick={() => navigate(`${Routes.profile}/${loggedUserId}`)}
           className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
         >
           {t("Navbar.profile")}
