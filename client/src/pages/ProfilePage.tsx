@@ -18,12 +18,22 @@ import EditIcon from "@app/assets/icons/EditIcon";
 import DndUpload from "@app/components/DndUploadSingle";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
-import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";
+import {
+  ActionsResponse,
+  AppContextShape,
+  LoggedUser,
+  UsersData,
+} from "@app/types/types";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { dateFormatter, errorHandler, successHandler } from "@app/utils";
-import { useMutation } from "@tanstack/react-query";
-import { updateUser } from "@app/api/users";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  checkAuth,
+  dateFormatter,
+  errorHandler,
+  successHandler,
+} from "@app/utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUserById, updateUser } from "@app/api/users";
 import { queryClient } from "..";
 import { deleteAccounts } from "@app/api/auth";
 import { AxiosError } from "axios";
@@ -32,11 +42,13 @@ import Loader from "@app/components/Loader";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [newFullName, setNewFullName] = useState<string>("");
   const [url, setUrl] = useState<string>();
+  const [profileData, setProfileData] = useState<UsersData>();
 
   const {
     isDarkMode,
@@ -46,6 +58,28 @@ const ProfilePage = () => {
     setLoggedUser,
     setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
+
+  const onError = (error: unknown) => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      handleLogout();
+    }
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 401) {
+        handleLogout();
+      }
+    }
+    errorHandler(error);
+  };
+
+  const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
+    ["userById", id],
+    () => id && getUserById(id),
+    {
+      onError,
+      retry: false,
+    }
+  );
 
   const { mutate: updateUserMutate, isLoading: isUpdateUserMutateLoading } =
     useMutation(updateUser, {
@@ -108,7 +142,7 @@ const ProfilePage = () => {
         accessor: "rating",
       },
       {
-        Header: t("ProfileTable.like"),
+        Header: t("ProfileTable.likes"),
         accessor: "like",
       },
       {
@@ -138,6 +172,10 @@ const ProfilePage = () => {
   useEffect(() => {
     reviewsData?.length && setPageSize(reviewsData?.length);
   }, [setPageSize, reviewsData?.length]);
+
+  useEffect(() => {
+    userByIdData && setProfileData(userByIdData);
+  }, [userByIdData]);
 
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
@@ -176,40 +214,36 @@ const ProfilePage = () => {
   }, [url]);
 
   const handleUpdateUser = () => {
-    if (loggedUserId) {
-      if (url) {
-        updateUserMutate({
-          id: loggedUserId,
-          fullName: newFullName,
-          profileImage: url,
-        });
-      } else {
-        toast.error(t("Profile.provideProfileImg"));
-      }
+    if (id) {
+      updateUserMutate({
+        id: +id,
+        fullName: newFullName,
+        profileImage: url ? url : profileData?.profileImage,
+      });
     }
   };
 
   const handleDeleteUser = () => {
-    if (loggedUserId) {
-      deleteUserMutate([loggedUserId]);
+    if (id) {
+      deleteUserMutate([id]);
     }
   };
 
   return (
     <Layout>
-      {loggedUser && (
+      {profileData && (
         <div className="flex w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
           <div className="mb-10 flex w-full justify-start">
             <img
-              src={loggedUser.profileImage}
+              src={profileData.profileImage}
               alt="profile image"
-              className="h-[160px] w-[160px] rounded-[8px]"
+              className="max-h-[215px] w-[160px] rounded-[8px]"
             />
             <div className="ml-4 flex w-full justify-between">
               <div>
                 <div className="mb-2 flex items-center">
                   <span className="text-4xl font-medium dark:text-white">
-                    {loggedUser.fullName}
+                    {profileData.fullName}
                   </span>
                 </div>
                 <div className="mb-2 flex items-center dark:text-white">
@@ -217,7 +251,9 @@ const ProfilePage = () => {
                     <tbody className="text-left">
                       <tr className="mb-2">
                         <td className="font-medium">{t("Profile.email")}</td>
-                        <td className="pl-6 font-normal">{loggedUser.email}</td>
+                        <td className="pl-6 font-normal">
+                          {profileData.email}
+                        </td>
                       </tr>
                       <tr className="mb-2">
                         <td className="font-medium">{t("Profile.likes")}</td>
@@ -227,7 +263,7 @@ const ProfilePage = () => {
                       <tr>
                         <td className="font-medium">{t("Profile.created")}</td>
                         <td className="pl-6 font-normal">
-                          {dateFormatter(loggedUser.createdTime)}
+                          {dateFormatter(profileData.createdTime)}
                         </td>
                       </tr>
                     </tbody>
@@ -299,7 +335,7 @@ const ProfilePage = () => {
                 <option>{t("ProfileTable.createdDate")}</option>
                 <option>{t("ProfileTable.authorGrade")}</option>
                 <option>{t("ProfileTable.rating")}</option>
-                <option>{t("ProfileTable.like")}</option>
+                <option>{t("ProfileTable.likes")}</option>
                 <option>{t("ProfileTable.actions")}</option>
               </select>
             </div>
@@ -406,3 +442,6 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+function handleLogout() {
+  throw new Error("Function not implemented.");
+}

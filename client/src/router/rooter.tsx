@@ -13,6 +13,7 @@ export enum Routes {
   auth = "/auth",
   homepage = "/",
   profile = "/profile",
+  profileById = "/profile/:id",
   adminpage = "/adminpage",
   reviewpage = "/review",
   reviewById = "/review/:id",
@@ -49,7 +50,7 @@ export const router = createBrowserRouter([
     errorElement: <RouterErrorPage />,
   },
   {
-    path: Routes.profile,
+    path: Routes.profileById,
     element: <ProfilePage />,
     errorElement: <RouterErrorPage />,
   },

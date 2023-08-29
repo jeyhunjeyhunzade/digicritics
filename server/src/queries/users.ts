@@ -153,6 +153,8 @@ const Users = {
           status: true,
           profileImage: true,
           createdTime: true,
+          Like: true,
+          Rating: true,
         },
       });
 

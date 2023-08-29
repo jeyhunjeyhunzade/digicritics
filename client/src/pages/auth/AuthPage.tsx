@@ -133,7 +133,7 @@ const AuthPage = () => {
                         setName(e.currentTarget.value);
                       }}
                       required
-                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
+                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:text-white dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -160,7 +160,7 @@ const AuthPage = () => {
                     }}
                     autoComplete="email"
                     required
-                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
+                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:text-white  dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -184,7 +184,7 @@ const AuthPage = () => {
                       setPassword(e.currentTarget.value);
                     }}
                     required
-                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
+                    className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:text-white  dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -209,7 +209,7 @@ const AuthPage = () => {
                         setConfirmPassword(e.currentTarget.value);
                       }}
                       required
-                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:placeholder:text-[#9D9D9D]  sm:text-sm sm:leading-6"
+                      className="block h-[48px] w-[368px] rounded-md border-0 bg-[transparent] py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-[#636060] focus:ring-2 focus:ring-inset dark:text-white  dark:placeholder:text-[#9D9D9D] sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>

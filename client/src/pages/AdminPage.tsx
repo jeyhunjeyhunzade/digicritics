@@ -13,7 +13,7 @@ import {
 } from "react-table";
 import { useRowSelectColumn } from "@lineup-lite/hooks";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Routes } from "@app/router/rooter";
 import { AppContext } from "./App";
 import { ActionsResponse, AppContextShape, UsersData } from "@app/types/types";
@@ -107,6 +107,11 @@ const AdminPage = () => {
         Header: t("ProfileTable.userName"),
         accessor: "fullName",
         sortType: "basic",
+        Cell: ({ row }) => (
+          <Link to={`${Routes.profile}/${row.values.id}`}>
+            {row.values.fullName}
+          </Link>
+        ),
       },
       {
         Header: t("ProfileTable.email"),
