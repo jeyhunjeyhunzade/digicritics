@@ -7,7 +7,7 @@ import Loader from "./Loader";
 import { DndUploadProps } from "@app/types/types";
 
 const DndUploadSingle = (props: DndUploadProps) => {
-  const { width, height, url, setUrl, multiple } = props;
+  const { width, height, url, setUrl } = props;
   const { t } = useTranslation();
 
   const {
