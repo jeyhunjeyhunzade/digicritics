@@ -5,10 +5,50 @@ import ReviewCard from "@app/components/ReviewCard";
 import { useTranslation } from "react-i18next";
 import { TagCloud } from "react-tagcloud";
 import { Link } from "react-router-dom";
+import { getReviews } from "@app/api/reviews";
+import { checkAuth, errorHandler } from "@app/utils";
+import { AxiosError } from "axios";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "./App";
+import { AppContextShape, ReviewsData } from "@app/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 const Homepage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { setLoggedUser, setLoggedUserId } = useContext(
+    AppContext
+  ) as AppContextShape;
+
+  const [reviews, setReviews] = useState<ReviewsData[]>();
+
+  const onError = (error: unknown) => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      handleLogout();
+    }
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 401) {
+        handleLogout();
+      }
+    }
+    errorHandler(error);
+  };
+
+  const { data: reviewsData, isLoading: isUsersDataLoading } = useQuery<
+    ReviewsData[]
+  >(["reviews"], getReviews, {
+    onError,
+    retry: false,
+  });
+
+  useEffect(() => {
+    reviewsData && setReviews(reviewsData);
+  }, [reviewsData]);
+
+  useEffect(() => {
+    console.log("reviews: ", reviews);
+  }, [reviews]);
 
   const mockTags = [
     { value: "photo", count: 25 },
@@ -48,6 +88,14 @@ const Homepage = () => {
     </span>
   );
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("status");
+    setLoggedUserId(null);
+    setLoggedUser(null);
+    navigate(Routes.auth);
+  };
+
   return (
     <Layout>
       <div className="flex h-full w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
@@ -68,10 +116,8 @@ const Homepage = () => {
           {t("Homepage.recentlyAdded")}
         </div>
         <div className="mt-6 flex justify-between">
-          {Array.from({ length: 4 }).map((item: any, i) => (
-            <div key={i}>
-              <ReviewCard />
-            </div>
+          {reviews?.map((review: ReviewsData) => (
+            <ReviewCard review={review} key={review.id} />
           ))}
         </div>
         <div className="mt-10 flex items-start text-2xl dark:text-white">

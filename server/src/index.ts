@@ -39,6 +39,7 @@ app.post(
   Auth.authenticateToken,
   queries.Reviews.createReview
 );
+app.get("/reviews", queries.Reviews.getReviews);
 
 //media upload api
 app.post("/uploadMedia", (req, res) => {

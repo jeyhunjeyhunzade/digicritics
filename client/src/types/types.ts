@@ -77,3 +77,25 @@ export interface CreateNewReviewData {
   reviewImages: string[];
   userId: number;
 }
+
+export interface ReviewsData {
+  id: number;
+  reviewTitle: string;
+  workName: string;
+  category: string;
+  reviewGrade: 7;
+  reviewContent: string;
+  reviewImages: string[];
+  userId: number;
+  createdTime: string;
+  tags: ReviewTags[];
+  likes: [];
+  ratings: [];
+  comments: [];
+  user: Omit<UsersData, "Like" | "Rating">;
+}
+
+export interface ReviewTags {
+  id: number;
+  name: string;
+}

@@ -42,14 +42,9 @@ const AdminPage = () => {
   const [tableData, setTableData] = useState<UsersData[]>([]);
   const [tableAction, setTableAction] = useState<AdminTableAction | string>();
 
-  const {
-    setIsReviewEditorOpen,
-    isDarkMode,
-    loggedUserId,
-    loggedUser,
-    setLoggedUser,
-    setLoggedUserId,
-  } = useContext(AppContext) as AppContextShape;
+  const { setLoggedUser, setLoggedUserId } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const onError = (error: unknown) => {
     const isAuthenticated = checkAuth();
