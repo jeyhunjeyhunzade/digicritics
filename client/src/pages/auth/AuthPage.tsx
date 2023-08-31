@@ -61,9 +61,9 @@ const AuthPage = () => {
 
   const handleSignUp = () => {
     if (!email || !password || !confirmPassword || !name) {
-      return toast.error("please fill the all fields");
+      return toast.error(t("Toast.allRequiredFields"));
     } else if (password !== confirmPassword) {
-      return toast.error("passwords do not match");
+      return toast.error(t("Toast.passwordNotMatch"));
     }
 
     createAccountMutate({
@@ -75,7 +75,7 @@ const AuthPage = () => {
 
   const handleLogin = () => {
     if (!email || !password) {
-      return toast.error("please fill the all fields");
+      return toast.error(t("Toast.allRequiredFields"));
     }
 
     loginMutate({

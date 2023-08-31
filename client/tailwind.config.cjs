@@ -8,6 +8,7 @@ module.exports = {
         customBlue: "0px 9px 13px 0px rgba(3, 78, 107, 0.90)",
         cardShadow: "0px 4px 16px 0px rgba(0, 0, 0, 0.07)",
         tableRowShadow: "0px 4px 17px 0px rgba(0, 0, 0, 0.08)",
+        reviewImagesShadow: "0px 4px 12px 0px rgba(0, 0, 0, 0.08)",
       },
       backgroundImage: {
         gradientBlue: "linear-gradient(135deg, #03425B 0%, #0386BA 100%)",
@@ -15,7 +16,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require("@tailwindcss/forms"),
-  ],
+  plugins: [require("@tailwindcss/forms")],
 };

@@ -127,13 +127,13 @@ const ReviewEditorModal = () => {
           reviewGrade,
           tags: selectedTags,
           reviewContent,
-          reviewImages: ["testimage1, testimage2"],
+          reviewImages: urls,
           //TODO: need condition for admin
           userId: loggedUserId,
         });
       }
     } else {
-      toast.error("Please fill the all required fields");
+      toast.error(t("Toast.allRequiredFields"));
     }
   };
 

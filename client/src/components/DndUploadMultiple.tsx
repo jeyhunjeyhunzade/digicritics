@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import Loader from "./Loader";
 import { DnDUploadMultipleProps } from "@app/types/types";
+import toast from "react-hot-toast";
 
 const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
   const { width, height, urls, setUrls } = props;
@@ -22,21 +23,32 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
   const uploadImages = async (e: any) => {
     const files = e.target.files;
 
-    const base64Files = files.map(async (file: any) => convertBase64(file));
-    console.log("base64Files: ", base64Files);
-    // const base64 = await convertBase64(file);
+    if (files.length > 3) {
+      return toast.error(t("Toast.filesCountLimit"));
+    }
 
-    // uploadReviewImagesMutate({ image: base64 });
+    const base64s = [];
+    for (let i = 0; i < files.length; i++) {
+      const base = await convertBase64(files[i]);
+      base64s.push(base);
+    }
+    console.log("base64s: ", base64s);
+
+    uploadReviewImagesMutate({ images: base64s });
   };
 
   return (
     <div className="flex w-full items-center justify-center">
       {urls.length ? (
-        <img
-          src={"asdfs"}
-          alt="profileImage"
-          className="h-[292px] rounded-[10px]"
-        />
+        <div className="flex h-64 w-[548px] items-center justify-center space-x-[25px] rounded-lg border-2 border-dashed border-gray-300 bg-[transparent] dark:border-[#DEDEDE]">
+          {urls.map((url: string) => (
+            <img
+              src={url}
+              alt="review image"
+              className="h-[223px] w-[150px] rounded-[8px] shadow-reviewImagesShadow"
+            />
+          ))}
+        </div>
       ) : (
         <label
           htmlFor="dropzone-file"
