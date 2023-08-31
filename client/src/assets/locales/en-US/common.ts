@@ -94,4 +94,9 @@ export default {
     cancel: "Cancel",
     shareReview: "Share review",
   },
+  Toast: {
+    allRequiredFields: "Please fill the all fields",
+    passwordNotMatch: "Passwords do not match",
+    filesCountLimit: "You can upload up to 3 images",
+  },
 };

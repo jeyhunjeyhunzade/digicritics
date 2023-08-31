@@ -199,11 +199,6 @@ const ProfilePage = () => {
     }
   }, [loggedUser, profileData]);
 
-  useEffect(() => {
-    console.log("isAdmin", isAdmin);
-    console.log("isOwnPage", isOwnPage);
-  }, [isAdmin, isOwnPage]);
-
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
   };
