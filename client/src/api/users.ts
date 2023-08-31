@@ -21,7 +21,12 @@ export const updateUser = async (updatedUserData: UpdatedUserData) => {
   return res?.data;
 };
 
-export const uploadProfileImage = async (updatedUserData: any) => {
-  const res = await axios.post(`${serverUrl}/uploadMedia`, updatedUserData);
+export const uploadProfileImage = async (image: any) => {
+  const res = await axios.post(`${serverUrl}/uploadMedia`, image);
+  return res?.data;
+};
+
+export const uploadReviewImages = async (images: any) => {
+  const res = await axios.post(`${serverUrl}/uploadMultipleMedia`, images);
   return res?.data;
 };

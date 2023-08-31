@@ -53,9 +53,27 @@ export interface UsersData {
   Rating: any;
 }
 
-export interface DndUploadSingleProps {
+export interface DndUploadProps {
   width?: string;
   height?: string;
   url: string | undefined;
   setUrl: Dispatch<SetStateAction<string | undefined>>;
+}
+
+export interface DnDUploadMultipleProps {
+  width?: string;
+  height?: string;
+  urls: string[];
+  setUrls: Dispatch<SetStateAction<string[]>>;
+}
+
+export interface CreateNewReviewData {
+  reviewTitle: string;
+  workName: string;
+  category: string | undefined;
+  reviewGrade: number;
+  tags: string[];
+  reviewContent: string;
+  reviewImages: string[];
+  userId: number;
 }

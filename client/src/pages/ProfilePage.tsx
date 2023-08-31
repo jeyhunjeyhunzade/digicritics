@@ -52,6 +52,7 @@ const ProfilePage = () => {
   const [profileData, setProfileData] = useState<UsersData>();
   const [isOwnPage, setIsOwnPage] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isDeleteProfileModaOpen, setDeleteProfileModaOpen] = useState(false);
 
   const {
     isDarkMode,
@@ -209,7 +210,12 @@ const ProfilePage = () => {
 
   const closeEditProfileModal = () => {
     setNewFullName("");
+    setUrl("");
     setIsEditProfileModalOpen(false);
+  };
+
+  const closeDeleteProfileModal = () => {
+    setDeleteProfileModaOpen(false);
   };
 
   const openReviewEditorModal = () => {
@@ -220,6 +226,25 @@ const ProfilePage = () => {
     content: {
       width: "516px",
       height: "604px",
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      border: "none",
+      borderRadius: "16px",
+      backgroundColor: isDarkMode ? "#2C2C2C" : "white",
+    },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.30)",
+    },
+  };
+
+  const customDeleteProfileModalStyles = {
+    content: {
+      width: "525px",
+      height: "172px",
       top: "50%",
       left: "50%",
       right: "auto",
@@ -250,9 +275,22 @@ const ProfilePage = () => {
   };
 
   const handleDeleteUser = () => {
+    setIsEditProfileModalOpen(false);
+    setDeleteProfileModaOpen(true);
+  };
+
+  const handleDeleteAccount = () => {
     if (id) {
-      deleteUserMutate([id]);
+      deleteUserMutate([+id]);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("status");
+    setLoggedUserId(null);
+    setLoggedUser(null);
+    navigate(Routes.auth);
   };
 
   return (
@@ -463,6 +501,34 @@ const ProfilePage = () => {
               </>
             )}
           </Modal>
+          <Modal
+            isOpen={isDeleteProfileModaOpen}
+            onRequestClose={closeDeleteProfileModal}
+            style={customDeleteProfileModalStyles}
+          >
+            <div className="flex flex-col">
+              <div className="mb-2 text-2xl font-medium dark:text-white">
+                {t("Profile.deleteProfile")}
+              </div>
+              <div className="mb-8 text-base dark:text-white">
+                {t("Profile.decideDeleteAccount")}?
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={closeDeleteProfileModal}
+                  className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#9D9D9D] dark:text-white"
+                >
+                  {t("Profile.cancel")}
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#D20F0F] text-white"
+                >
+                  {t("Profile.delete")}
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
       )}
     </Layout>
@@ -470,6 +536,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-function handleLogout() {
-  throw new Error("Function not implemented.");
-}

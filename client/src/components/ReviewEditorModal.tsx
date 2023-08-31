@@ -1,19 +1,75 @@
 import MDEditor from "@uiw/react-md-editor";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useTranslation } from "react-i18next";
 
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
-import DndUpload from "./DndUploadSingle";
+import DndUploadMiltiple from "./DndUploadMultiple";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "..";
+import { checkAuth, errorHandler, successHandler } from "@app/utils";
+import { createNewReview } from "@app/api/reviews";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
+import { Routes } from "@app/router/rooter";
+import toast from "react-hot-toast";
+import { Category } from "@app/types/enums";
+
+import { tags } from "@app/mock/tagsData";
+import { Autocomplete, Chip, TextField } from "@mui/material";
 
 const ReviewEditorModal = () => {
   const { t } = useTranslation();
-  const { isDarkMode, isReviewEditorOpen, setIsReviewEditorOpen } = useContext(
-    AppContext
-  ) as AppContextShape;
+  const navigate = useNavigate();
+  const {
+    isDarkMode,
+    isReviewEditorOpen,
+    setIsReviewEditorOpen,
+    setLoggedUserId,
+    setLoggedUser,
+    loggedUserId,
+  } = useContext(AppContext) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
+  const [reviewTitle, setReviewTitle] = useState("");
+  const [reviewWorkName, setReviewWorkName] = useState("");
+  const [reviewCategory, setReviewCategory] = useState<Category | string>();
+  const [reviewGrade, setReviewGrade] = useState<number | undefined>();
+  const [selectedTags, setSelectedTags] = useState<string[] | any>([]);
+  const [urls, setUrls] = useState<string[]>([]);
+
+  const [blurred, setBlurred] = useState(false);
+
+  const handleBlur = () => {
+    if (!blurred) {
+      setBlurred(true);
+    }
+  };
+
+  const onError = (error: unknown) => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      handleLogout();
+    }
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 401) {
+        handleLogout();
+      }
+    }
+    errorHandler(error);
+  };
+
+  const { mutate: createNewReviewMutate, isLoading: isCreateNewReviewLoading } =
+    useMutation(createNewReview, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviews"]);
+        successHandler(response);
+        closeReviewEditorModal();
+      },
+      onError,
+    });
 
   const customReviewEditorModalStyles = {
     content: {
@@ -43,6 +99,51 @@ const ReviewEditorModal = () => {
 
   const closeReviewEditorModal = () => {
     setIsReviewEditorOpen(false);
+    resetFields();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("status");
+    setLoggedUserId(null);
+    setLoggedUser(null);
+    navigate(Routes.auth);
+  };
+
+  const handleShareReview = () => {
+    if (
+      reviewTitle &&
+      reviewWorkName &&
+      reviewContent &&
+      reviewGrade &&
+      reviewCategory &&
+      tags.length
+    ) {
+      if (loggedUserId) {
+        createNewReviewMutate({
+          reviewTitle,
+          workName: reviewWorkName,
+          category: reviewCategory,
+          reviewGrade,
+          tags: selectedTags,
+          reviewContent,
+          reviewImages: ["testimage1, testimage2"],
+          //TODO: need condition for admin
+          userId: loggedUserId,
+        });
+      }
+    } else {
+      toast.error("Please fill the all required fields");
+    }
+  };
+
+  const resetFields = () => {
+    setReviewTitle("");
+    setReviewWorkName("");
+    setReviewCategory("");
+    setReviewGrade(undefined);
+    selectedTags([]);
+    setReviewContent("");
   };
 
   return (
@@ -64,11 +165,19 @@ const ReviewEditorModal = () => {
         <div className="mb-6 flex justify-between">
           <input
             type="text"
+            value={reviewTitle}
+            onChange={(e) => {
+              setReviewTitle(e.target.value);
+            }}
             placeholder={t("ReviewEditor.reviewTitle")}
             className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
           />
           <input
             type="text"
+            value={reviewWorkName}
+            onChange={(e) => {
+              setReviewWorkName(e.target.value);
+            }}
             placeholder={t("ReviewEditor.workName")}
             className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
           />
@@ -78,37 +187,67 @@ const ReviewEditorModal = () => {
             <div className="mr-3 flex">
               <div className="h-[48px] w-[262px]">
                 <select
-                  id="region"
-                  name="region"
+                  name="category"
                   className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  // value={region}
-                  // onChange={(e) => {
-                  //   setRegion(e.target.value);
-                  // }}
+                  value={reviewCategory}
+                  onChange={(e) => {
+                    setReviewCategory(e.target.value);
+                  }}
                 >
                   <option value="">{t("ReviewEditor.category")}</option>
-                  <option>Games</option>
-                  <option>Movies</option>
-                  <option>Sport</option>
-                  <option>Games</option>
-                  <option>Movies</option>
-                  <option>Sport</option>
+                  {/* //TODO:  make it dynamic*/}
+                  <option value={Category.GAMING}>{Category.GAMING}</option>
+                  <option value={Category.MOVIE}>{Category.MOVIE}</option>
+                  <option value={Category.ANIME}>{Category.ANIME}</option>
+                  <option value={Category.TECH}>{Category.TECH}</option>
+                  <option value={Category.SPORT}>{Category.SPORT}</option>
+                  <option value={Category.CITIES}>{Category.CITIES}</option>
                 </select>
               </div>
             </div>
             <div className="flex">
-              <input
-                type="text"
-                placeholder={t("ReviewEditor.reviewGrade")}
-                className="h-[48px] w-[274px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
-              />
+              <select
+                name="reviewGrade"
+                className="block h-[48px] w-[274px] rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                value={reviewGrade && reviewGrade}
+                onChange={(e) => {
+                  setReviewGrade(+e.target.value);
+                }}
+              >
+                <option value="">{t("ReviewEditor.reviewGrade")}</option>
+                {Array.from({ length: 10 }, (_, index) => index + 1).map(
+                  (grade) => (
+                    <option key={grade} value={grade}>
+                      {grade}
+                    </option>
+                  )
+                )}
+              </select>
             </div>
           </div>
           <div className="flex">
-            <input
-              type="text"
-              placeholder={t("ReviewEditor.tags")}
-              className="h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+            {/* //TODO: get tags dynamically */}
+            <Autocomplete
+              className="w-[548px] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+              multiple
+              limitTags={4}
+              freeSolo
+              options={tags}
+              autoSelect
+              value={selectedTags}
+              onOpen={() => handleBlur()}
+              renderInput={(params) => (
+                //@ts-ignore
+                <TextField
+                  className="outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                  {...params}
+                  fullWidth
+                  placeholder={`${t("ReviewEditor.tags")}`}
+                />
+              )}
+              onChange={(_, value) => {
+                setSelectedTags(value);
+              }}
             />
           </div>
         </div>
@@ -123,7 +262,9 @@ const ReviewEditorModal = () => {
               style={{ backgroundColor: "transparent" }}
             />
           </div>
-          <div>{/* <DndUpload width={"548px"} /> */}</div>
+          <div>
+            <DndUploadMiltiple width={"548px"} urls={urls} setUrls={setUrls} />
+          </div>
         </div>
         <div className="mt-10 flex justify-end">
           <button
@@ -132,7 +273,10 @@ const ReviewEditorModal = () => {
           >
             {t("ReviewEditor.cancel")}
           </button>
-          <button className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white">
+          <button
+            onClick={handleShareReview}
+            className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+          >
             <span className="pr-2">{t("ReviewEditor.shareReview")}</span>
           </button>
         </div>

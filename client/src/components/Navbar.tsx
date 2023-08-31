@@ -14,6 +14,7 @@ import {
 } from "@app/utils";
 import SearchInput from "./SearchInput";
 import ToggleTheme from "./ToggleTheme";
+import ReviewEditorModal from "./ReviewEditorModal";
 import { Routes } from "@app/router/rooter";
 import { AppContext } from "@app/pages/App";
 import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";

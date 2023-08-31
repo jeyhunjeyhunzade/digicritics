@@ -1,37 +1,39 @@
-import { uploadProfileImage } from "@app/api/users";
+import { uploadReviewImages } from "@app/api/users";
 import { classNames, convertBase64, errorHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Loader from "./Loader";
-import { DndUploadProps } from "@app/types/types";
+import { DnDUploadMultipleProps } from "@app/types/types";
 
-const DndUploadSingle = (props: DndUploadProps) => {
-  const { width, height, url, setUrl } = props;
+const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
+  const { width, height, urls, setUrls } = props;
   const { t } = useTranslation();
 
   const {
-    mutate: uploadProfileImageMutate,
-    isLoading: isUploadProfileImageLoading,
-  } = useMutation(uploadProfileImage, {
+    mutate: uploadReviewImagesMutate,
+    isLoading: isUploadReviewImagesLoading,
+  } = useMutation(uploadReviewImages, {
     onSuccess: (response) => {
-      setUrl(response);
+      setUrls(response);
     },
     onError: errorHandler,
   });
 
-  const uploadImage = async (e: any) => {
-    const file = e.target.files[0];
-    const base64 = await convertBase64(file);
+  const uploadImages = async (e: any) => {
+    const files = e.target.files;
 
-    uploadProfileImageMutate({ image: base64 });
+    const base64Files = files.map(async (file: any) => convertBase64(file));
+    console.log("base64Files: ", base64Files);
+    // const base64 = await convertBase64(file);
+
+    // uploadReviewImagesMutate({ image: base64 });
   };
 
   return (
     <div className="flex w-full items-center justify-center">
-      {url ? (
+      {urls.length ? (
         <img
-          src={url}
+          src={"asdfs"}
           alt="profileImage"
           className="h-[292px] rounded-[10px]"
         />
@@ -41,10 +43,10 @@ const DndUploadSingle = (props: DndUploadProps) => {
           className={classNames(
             "flex h-64 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-[transparent] dark:border-[#DEDEDE]",
             width ? `w-[${width}]` : "w-full",
-            url ? "border border-none" : null
+            urls.length ? "border border-none" : null
           )}
         >
-          {isUploadProfileImageLoading ? (
+          {isUploadReviewImagesLoading ? (
             <div className="flex items-center justify-center">
               <Loader />
             </div>
@@ -77,10 +79,11 @@ const DndUploadSingle = (props: DndUploadProps) => {
                 </p>
               </div>
               <input
-                onChange={uploadImage}
+                onChange={uploadImages}
                 id="dropzone-file"
                 type="file"
                 className="hidden"
+                multiple
               />
             </>
           )}
@@ -90,4 +93,4 @@ const DndUploadSingle = (props: DndUploadProps) => {
   );
 };
 
-export default DndUploadSingle;
+export default DndUploadMiltiple;
