@@ -116,3 +116,12 @@ export const convertBase64 = (file: any) => {
     };
   });
 };
+
+export const shortenString = (string: string | undefined) => {
+  if (string) {
+    if (string.length > 20) {
+      return string.substring(0, 20) + "...";
+    }
+    return string;
+  }
+};

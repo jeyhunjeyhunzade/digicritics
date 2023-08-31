@@ -31,21 +31,24 @@ model Users {
 }
 
 model Review {
-  id            Int      @id @default(autoincrement())
-  reviewTitle   String
-  workName      String
-  category      String
-  reviewGrade   Int
-  tags          String[]
+  id          Int    @id @default(autoincrement())
+  reviewTitle String
+  workName    String
+  category    String
+  reviewGrade Int
+
   reviewContent String
   reviewImages  String[]
 
+  tags     Tag[]
   likes    Like[]
   ratings  Rating[]
   comments Comment[]
 
   userId Int
   user   Users @relation(fields: [userId], references: [id])
+
+  createdTime DateTime @default(now())
 }
 
 model Like {
@@ -75,4 +78,10 @@ model Comment {
 
   user   Users  @relation(fields: [userId], references: [id])
   review Review @relation(fields: [reviewId], references: [id])
+}
+
+model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  reviews Review[] // Establishing a relation with the Review model
 }

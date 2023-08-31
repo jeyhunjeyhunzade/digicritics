@@ -2,7 +2,6 @@ import axios from "axios";
 import { getConfig, serverUrl } from "./apiClient";
 import { CreateNewReviewData, UpdatedUserData } from "@app/types/types";
 
-// createReview `${serverUrl}/signUp`, signUpData
 export const createNewReview = async (
   createNewReviewData: CreateNewReviewData
 ) => {
@@ -11,5 +10,10 @@ export const createNewReview = async (
     createNewReviewData,
     getConfig()
   );
+  return res?.data;
+};
+
+export const getReviews = async () => {
+  const res = await axios.get(`${serverUrl}/reviews`);
   return res?.data;
 };
