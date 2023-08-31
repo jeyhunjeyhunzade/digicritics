@@ -13,7 +13,7 @@ const options: UploadApiOptions = {
   resource_type: "auto",
 };
 
-export const uploadMedia = (image: any) => {
+export const uploadSingleMedia = (image: any) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(image, options, (error, result) => {
       if (result && result.secure_url) {
@@ -22,5 +22,14 @@ export const uploadMedia = (image: any) => {
       console.log("error", error?.message);
       return reject({ message: error?.message });
     });
+  });
+};
+
+export const uploadMultipleMedia = (images: any) => {
+  return new Promise((resolve, reject) => {
+    const uploads = images.map((base: any) => uploadSingleMedia(base));
+    Promise.all(uploads)
+      .then((values) => resolve(values))
+      .catch((err) => reject(err));
   });
 };

@@ -25,3 +25,13 @@ export enum AdminTableAction {
   UNBLOCK = "UNBLOCK",
   DELETE = "DELETE",
 }
+
+//TODO: make categories dynamically
+export enum Category {
+  SPORT = "Sport",
+  MOVIE = "Movies",
+  GAMING = "Gaming",
+  ANIME = "Anime",
+  TECH = "Technology",
+  CITIES = "Cities",
+}

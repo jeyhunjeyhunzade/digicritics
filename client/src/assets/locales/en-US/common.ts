@@ -52,7 +52,10 @@ export default {
     clickToUpload: "Click to upload profile picture",
     orDnD: "or drag and drop",
     saveChanges: "Save changes",
-    deleteProfile: "Delete profile",
+    deleteProfile: "Delete user",
+    decideDeleteAccount: "Are you sure you want to delete your account",
+    cancel: "Cancel",
+    delete: "Delete",
     provideProfileImg: "Please provide profile image",
   },
   ProfileTable: {

@@ -5,7 +5,7 @@ var helmet = require("helmet");
 var compression = require("compression");
 import queries from "./queries";
 import Auth from "./helpers/auth";
-import { uploadMedia } from "./mediaupload";
+import { uploadSingleMedia, uploadMultipleMedia } from "./mediaupload";
 
 //port
 const port = 8000;
@@ -33,10 +33,22 @@ app.patch(
 );
 app.patch("/users/edit", Auth.authenticateToken, queries.Users.updateUser);
 
+//Reviews
+app.post(
+  "/review/createReview",
+  Auth.authenticateToken,
+  queries.Reviews.createReview
+);
+
 //media upload api
 app.post("/uploadMedia", (req, res) => {
-  uploadMedia(req.body.image)
+  uploadSingleMedia(req.body.image)
     .then((url) => res.send(url))
+    .catch((err) => res.status(500).send(err));
+});
+app.post("/uploadMultipleMedia", (req, res) => {
+  uploadMultipleMedia(req.body.images)
+    .then((urls) => res.send(urls))
     .catch((err) => res.status(500).send(err));
 });
 
