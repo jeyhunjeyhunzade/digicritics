@@ -237,11 +237,12 @@ const ReviewEditorModal = () => {
               value={selectedTags}
               onOpen={() => handleBlur()}
               renderInput={(params) => (
+                //@ts-ignore
                 <TextField
                   className="outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                   {...params}
                   fullWidth
-                  placeholder={t("ReviewEditor.tags")}
+                  placeholder={`${t("ReviewEditor.tags")}`}
                 />
               )}
               onChange={(_, value) => {
