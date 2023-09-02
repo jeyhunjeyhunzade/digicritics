@@ -17,3 +17,8 @@ export const getReviews = async () => {
   const res = await axios.get(`${serverUrl}/reviews`);
   return res?.data;
 };
+
+export const getReviewById = async (reviewId: number | string | null) => {
+  const res = await axios.get(`${serverUrl}/reviews/${reviewId}`);
+  return res?.data;
+};

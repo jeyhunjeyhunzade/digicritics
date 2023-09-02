@@ -35,29 +35,19 @@ import {
 import { AdminTableAction, UserStatus } from "@app/types/enums";
 import DownIcon from "@app/assets/icons/DownIcon";
 import UpIcon from "@app/assets/icons/UpIcon";
+import useLogout from "@app/hooks/useLogout";
+import useError from "@app/hooks/useError";
 
 const AdminPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { onError } = useError();
   const [tableData, setTableData] = useState<UsersData[]>([]);
   const [tableAction, setTableAction] = useState<AdminTableAction | string>();
 
   const { setLoggedUser, setLoggedUserId } = useContext(
     AppContext
   ) as AppContextShape;
-
-  const onError = (error: unknown) => {
-    const isAuthenticated = checkAuth();
-    if (!isAuthenticated) {
-      handleLogout();
-    }
-    if (error instanceof AxiosError) {
-      if (error.response?.status === 401) {
-        handleLogout();
-      }
-    }
-    errorHandler(error);
-  };
 
   const onSuccess = (response: ActionsResponse) => {
     queryClient.invalidateQueries(["users"]);
@@ -204,14 +194,6 @@ const AdminPage = () => {
           break;
       }
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("status");
-    setLoggedUserId(null);
-    setLoggedUser(null);
-    navigate(Routes.auth);
   };
 
   return (

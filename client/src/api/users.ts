@@ -8,7 +8,7 @@ export const getUsers = async () => {
 };
 
 export const getUserById = async (id: number | string | null) => {
-  const res = await axios.get(`${serverUrl}/users/${id}`, getConfig());
+  const res = await axios.get(`${serverUrl}/users/${id}`);
   return res?.data;
 };
 

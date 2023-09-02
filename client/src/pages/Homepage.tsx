@@ -12,28 +12,13 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "./App";
 import { AppContextShape, ReviewsData } from "@app/types/types";
 import { useQuery } from "@tanstack/react-query";
+import useError from "@app/hooks/useError";
 
 const Homepage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { setLoggedUser, setLoggedUserId } = useContext(
-    AppContext
-  ) as AppContextShape;
+  const { onError } = useError();
 
   const [reviews, setReviews] = useState<ReviewsData[]>();
-
-  const onError = (error: unknown) => {
-    const isAuthenticated = checkAuth();
-    if (!isAuthenticated) {
-      handleLogout();
-    }
-    if (error instanceof AxiosError) {
-      if (error.response?.status === 401) {
-        handleLogout();
-      }
-    }
-    errorHandler(error);
-  };
 
   const { data: reviewsData, isLoading: isUsersDataLoading } = useQuery<
     ReviewsData[]
@@ -88,14 +73,6 @@ const Homepage = () => {
     </span>
   );
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("status");
-    setLoggedUserId(null);
-    setLoggedUser(null);
-    navigate(Routes.auth);
-  };
-
   return (
     <Layout>
       <div className="flex h-full w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
@@ -103,12 +80,10 @@ const Homepage = () => {
           {t("Homepage.popularReviews")}
         </div>
         <div className="mt-6 flex justify-between">
-          {Array.from({ length: 4 }).map((item: any, i) => (
-            <div key={i}>
-              <Link to={`${Routes.reviewpage}/2`}>
-                <ReviewCard />
-              </Link>
-            </div>
+          {reviews?.map((review: ReviewsData) => (
+            <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
+              <ReviewCard review={review} />
+            </Link>
           ))}
         </div>
 
@@ -117,7 +92,9 @@ const Homepage = () => {
         </div>
         <div className="mt-6 flex justify-between">
           {reviews?.map((review: ReviewsData) => (
-            <ReviewCard review={review} key={review.id} />
+            <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
+              <ReviewCard review={review} />
+            </Link>
           ))}
         </div>
         <div className="mt-10 flex items-start text-2xl dark:text-white">

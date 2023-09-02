@@ -23,10 +23,15 @@ import { AxiosError } from "axios";
 import { queryClient } from "..";
 import { useQuery } from "@tanstack/react-query";
 import useCurrentPath from "@app/hooks/useCurrentPath";
+import AvatarIcon from "@app/assets/icons/AvatarIcon";
+import useLogout from "@app/hooks/useLogout";
+import useError from "@app/hooks/useError";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const { onError } = useError();
+  const { handleLogout } = useLogout();
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -42,19 +47,6 @@ const Navbar = () => {
     setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
 
-  const onError = (error: unknown) => {
-    const isAuthenticated = checkAuth();
-    if (!isAuthenticated) {
-      handleLogout();
-    }
-    if (error instanceof AxiosError) {
-      if (error.response?.status === 401) {
-        handleLogout();
-      }
-    }
-    errorHandler(error);
-  };
-
   const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
     ["userById", loggedUserId],
     () => loggedUserId && getUserById(loggedUserId),
@@ -68,14 +60,6 @@ const Navbar = () => {
     setSelectedLanguage(language);
     i18n.changeLanguage(language);
     setIsLangModalOpen(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("status");
-    setLoggedUserId(null);
-    setLoggedUser(null);
-    navigate(Routes.auth);
   };
 
   const closeProfileModal = () => {
@@ -183,10 +167,14 @@ const Navbar = () => {
               onClick={toggleProfileModal}
               aria-label="Toggle Profile Menu"
             >
-              <img
-                src={loggedUser?.profileImage}
-                className="h-[32px] w-[32px] rounded-[32px]"
-              />
+              {loggedUser?.profileImage ? (
+                <img
+                  src={loggedUser?.profileImage}
+                  className="h-[32px] w-[32px] rounded-[32px]"
+                />
+              ) : (
+                <AvatarIcon size={32} />
+              )}
             </div>
           </>
         ) : (
