@@ -41,6 +41,7 @@ export default {
     yourComment: "Your comment",
     postComment: "Post comment",
     similiarReviews: "Similar reviews",
+    ratings: "ratings",
   },
   Profile: {
     email: "Email",

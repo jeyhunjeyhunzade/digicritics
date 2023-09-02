@@ -6,6 +6,7 @@ import {
 } from "@app/types/types";
 import { useTranslation } from "react-i18next";
 import {
+  calculateAverageRate,
   checkAuth,
   classNames,
   dateFormatter,
@@ -53,7 +54,6 @@ const ReviewCard = (props: ReviewCardProps) => {
     });
 
   useEffect(() => {
-    // console.log("review", review);
     if (review.likes.length) {
       review.likes.forEach((like) => {
         if (like.userId === loggedUserId) {
@@ -64,6 +64,10 @@ const ReviewCard = (props: ReviewCardProps) => {
       });
     } else {
       setLiked(false);
+    }
+
+    if (review.ratings.length) {
+      setRatingValue(calculateAverageRate(review.ratings));
     }
   }, [review]);
 
@@ -113,12 +117,9 @@ const ReviewCard = (props: ReviewCardProps) => {
             {/* TODO: fix dark mode color  */}
             <Rating
               name="simple-controlled"
-              value={ratingValue}
+              value={ratingValue ? ratingValue : 0}
               size="small"
-              disabled={!isAuthenticated}
-              onChange={(event, newValue) => {
-                setRatingValue(newValue);
-              }}
+              disabled
             />
           </div>
         </div>
