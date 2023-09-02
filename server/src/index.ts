@@ -41,6 +41,11 @@ app.post(
 );
 app.get("/reviews", queries.Reviews.getReviews);
 app.get("/reviews/:id", queries.Reviews.getReviewById);
+app.patch(
+  "/reviews/:reviewId/like",
+  Auth.authenticateToken,
+  queries.Reviews.likeReview
+);
 
 //media upload api
 app.post("/uploadMedia", (req, res) => {

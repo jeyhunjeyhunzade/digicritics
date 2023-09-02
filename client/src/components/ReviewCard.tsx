@@ -1,20 +1,80 @@
 import HeartIcon from "@app/assets/icons/HeartIcon";
-import { ReviewsData } from "@app/types/types";
+import {
+  ActionsResponse,
+  AppContextShape,
+  ReviewsData,
+} from "@app/types/types";
 import { useTranslation } from "react-i18next";
-import { checkAuth, dateFormatter, shortenString } from "@app/utils";
+import {
+  checkAuth,
+  classNames,
+  dateFormatter,
+  shortenString,
+  successHandler,
+} from "@app/utils";
 import { Rating } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import useError from "@app/hooks/useError";
+import { queryClient } from "..";
+import { likeReview } from "@app/api/reviews";
+import { AppContext } from "@app/pages/App";
+import { LikeAction } from "@app/types/enums";
 
 interface ReviewCardProps {
-  //TODO: make it required
-  review?: ReviewsData;
+  review: ReviewsData;
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
   const { t } = useTranslation();
+  const { onError } = useError();
   const isAuthenticated = checkAuth();
   const { review } = props;
   const [ratingValue, setRatingValue] = useState<any>();
+  const [liked, setLiked] = useState(false);
+
+  const { loggedUserId } = useContext(AppContext) as AppContextShape;
+
+  const { mutate: likeReviewMutate, isLoading: isLikeReviewLoading } =
+    useMutation(likeReview, {
+      onSuccess: (response: { message: string; action: LikeAction }) => {
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviewById"]);
+        queryClient.invalidateQueries(["userById"]);
+
+        if (response.action === LikeAction.LIKED) {
+          setLiked(true);
+        } else if (response.action === LikeAction.UNLIKED) {
+          setLiked(false);
+        }
+      },
+      onError,
+    });
+
+  useEffect(() => {
+    // console.log("review", review);
+    if (review.likes.length) {
+      review.likes.forEach((like) => {
+        if (like.userId === loggedUserId) {
+          setLiked(true);
+        } else {
+          setLiked(false);
+        }
+      });
+    } else {
+      setLiked(false);
+    }
+  }, [review]);
+
+  const handleLike = () => {
+    if (review && loggedUserId) {
+      likeReviewMutate({
+        userId: loggedUserId,
+        reviewId: review.id,
+      });
+    }
+  };
 
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
@@ -25,9 +85,22 @@ const ReviewCard = (props: ReviewCardProps) => {
           alt="review image"
         />
         <div className="absolute right-[18px] top-[12px]">
-          <div className="flex items-center rounded bg-black bg-opacity-50 p-2">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={(e) => {
+              if (isAuthenticated) {
+                e.preventDefault();
+                handleLike();
+              }
+            }}
+            className={classNames(
+              "flex items-center rounded bg-black bg-opacity-50 p-2",
+              isAuthenticated ? "cursor-pointer" : "cursor-default"
+            )}
+          >
             <span className="mr-1 text-white">{review?.likes.length}</span>
-            <HeartIcon size={16} />
+            <HeartIcon size={16} liked={liked} setLiked={setLiked} />
           </div>
         </div>
       </div>

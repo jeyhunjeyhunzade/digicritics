@@ -35,3 +35,8 @@ export enum Category {
   TECH = "Technology",
   CITIES = "Cities",
 }
+
+export enum LikeAction {
+  LIKED = "LIKED",
+  UNLIKED = "UNLIKED",
+}

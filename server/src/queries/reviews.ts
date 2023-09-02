@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { UserStatus } from "@prisma/client";
 import { prisma } from "../config";
+import { LikeAction } from "../types/enums";
 
 const Reviews = {
   createReview: async (request: Request, response: Response) => {
@@ -92,6 +93,61 @@ const Reviews = {
       }
 
       response.json(review);
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+  likeReview: async (request: Request, response: Response) => {
+    try {
+      const { userId } = request.body;
+      const reviewId = parseInt(request.params.reviewId);
+
+      if (!userId || isNaN(reviewId)) {
+        return response
+          .status(400)
+          .send({ message: "Please provide both userId and a valid reviewId" });
+      }
+
+      const existingLike = await prisma.like.findFirst({
+        where: {
+          AND: {
+            userId: userId,
+            reviewId: reviewId,
+          },
+        },
+      });
+
+      if (existingLike) {
+        await prisma.like.delete({
+          where: {
+            id: existingLike.id,
+          },
+        });
+        return response.status(200).json({
+          message: "Review unliked successfully",
+          action: LikeAction.UNLIKED,
+        });
+      } else {
+        const newLike = await prisma.like.create({
+          data: {
+            userId,
+            reviewId,
+          },
+        });
+
+        if (!newLike) {
+          return response.status(500).send({ message: "Failed to like" });
+        }
+
+        return response.status(200).json({
+          message: "Review liked successfully",
+          action: LikeAction.LIKED,
+        });
+      }
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
