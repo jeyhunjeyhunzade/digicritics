@@ -165,7 +165,9 @@ const ReviewEditorModal = () => {
                     setReviewCategory(e.target.value);
                   }}
                 >
-                  <option value="">{t("ReviewEditor.category")}</option>
+                  <option className="text-[#636060]" value="">
+                    {t("ReviewEditor.category")}
+                  </option>
                   {/* //TODO:  make it dynamic*/}
                   <option value={Category.GAMING}>{Category.GAMING}</option>
                   <option value={Category.MOVIE}>{Category.MOVIE}</option>
@@ -209,7 +211,7 @@ const ReviewEditorModal = () => {
               renderInput={(params) => (
                 //@ts-ignore
                 <TextField
-                  className="outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                  className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                   {...params}
                   fullWidth
                   placeholder={`${t("ReviewEditor.tags")}`}

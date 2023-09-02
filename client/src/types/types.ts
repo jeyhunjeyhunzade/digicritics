@@ -78,6 +78,12 @@ export interface CreateNewReviewData {
   userId: number;
 }
 
+export interface Like {
+  id: number;
+  reviewId: number;
+  userId: number;
+}
+
 export interface ReviewsData {
   id: number;
   reviewTitle: string;
@@ -89,7 +95,7 @@ export interface ReviewsData {
   userId: number;
   createdTime: string;
   tags: ReviewTags[];
-  likes: [];
+  likes: Like[];
   ratings: [];
   comments: [];
   user: Omit<UsersData, "Like" | "Rating">;

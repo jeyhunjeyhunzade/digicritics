@@ -31,9 +31,9 @@ const Homepage = () => {
     reviewsData && setReviews(reviewsData);
   }, [reviewsData]);
 
-  useEffect(() => {
-    console.log("reviews: ", reviews);
-  }, [reviews]);
+  // useEffect(() => {
+  //   console.log("reviews: ", reviews);
+  // }, [reviews]);
 
   const mockTags = [
     { value: "photo", count: 25 },

@@ -22,3 +22,18 @@ export const getReviewById = async (reviewId: number | string | null) => {
   const res = await axios.get(`${serverUrl}/reviews/${reviewId}`);
   return res?.data;
 };
+
+export const likeReview = async ({
+  userId,
+  reviewId,
+}: {
+  userId: number;
+  reviewId: number;
+}) => {
+  const res = await axios.patch(
+    `${serverUrl}/reviews/${reviewId}/like`,
+    { userId },
+    getConfig()
+  );
+  return res?.data;
+};

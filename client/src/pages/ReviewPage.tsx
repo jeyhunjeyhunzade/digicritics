@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import ImageGallery from "react-image-gallery";
 import { Rating } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { getReviewById } from "@app/api/reviews";
+import { getReviewById, likeReview } from "@app/api/reviews";
 import Layout from "@app/components/Layout";
 import Loader from "@app/components/Loader";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import { Routes } from "@app/router/rooter";
-import { GalleryImage, ReviewsData } from "@app/types/types";
-import { checkAuth, dateFormatter, errorHandler } from "@app/utils";
+import { AppContextShape, GalleryImage, ReviewsData } from "@app/types/types";
+import { checkAuth, classNames, dateFormatter, errorHandler } from "@app/utils";
 
 import "react-image-gallery/styles/css/image-gallery.css";
+import HeartIcon from "@app/assets/icons/HeartIcon";
+import { queryClient } from "..";
+import { LikeAction } from "@app/types/enums";
+import { AppContext } from "./App";
 
 const ReviewPage = () => {
   const { id } = useParams();
@@ -22,14 +26,34 @@ const ReviewPage = () => {
   const { onError } = useError();
   const isAuthenticated = checkAuth();
 
+  const { loggedUserId } = useContext(AppContext) as AppContextShape;
+
   const [ratingValue, setRatingValue] = useState<any>();
   const [reviewData, setReviewData] = useState<ReviewsData>();
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [liked, setLiked] = useState(false);
 
   const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
     useQuery<any>(["reviewById", id], () => id && getReviewById(id), {
       onError,
       retry: false,
+    });
+
+  const { mutate: likeReviewMutate, isLoading: isLikeReviewLoading } =
+    useMutation(likeReview, {
+      onSuccess: (response: { message: string; action: LikeAction }) => {
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviewById"]);
+        queryClient.invalidateQueries(["userById"]);
+
+        if (response.action === LikeAction.LIKED) {
+          setLiked(true);
+        } else if (response.action === LikeAction.UNLIKED) {
+          setLiked(false);
+        }
+      },
+      onError,
     });
 
   useEffect(() => {
@@ -49,6 +73,31 @@ const ReviewPage = () => {
     }
   }, [reviewData]);
 
+  useEffect(() => {
+    if (reviewData) {
+      if (reviewData.likes.length) {
+        reviewData.likes.forEach((like) => {
+          if (like.userId === loggedUserId) {
+            setLiked(true);
+          } else {
+            setLiked(false);
+          }
+        });
+      } else {
+        setLiked(false);
+      }
+    }
+  }, [reviewData]);
+
+  const handleLike = () => {
+    if (reviewData && loggedUserId) {
+      likeReviewMutate({
+        userId: loggedUserId,
+        reviewId: reviewData.id,
+      });
+    }
+  };
+
   return (
     <Layout>
       {isReviewByIdLoading ? (
@@ -67,8 +116,35 @@ const ReviewPage = () => {
               )}
             </div>
             <div className="">
-              <div className="flex justify-start text-left text-[40px] font-semibold dark:text-white">
-                {reviewData.reviewTitle}
+              <div className="relative flex justify-between">
+                <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold dark:text-white">
+                  {reviewData.reviewTitle}
+                  {/* Gaseadasdsasadsasadsadsasdasdsads */}
+                </div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    if (isAuthenticated) {
+                      e.preventDefault();
+                      handleLike();
+                    }
+                  }}
+                  className={classNames(
+                    "absolute right-0 top-4 flex items-center",
+                    isAuthenticated ? "cursor-pointer" : "cursor-default"
+                  )}
+                >
+                  <span className="mr-1 text-2xl text-[#2C2C2C] dark:text-white">
+                    {reviewData?.likes.length}
+                  </span>
+                  <HeartIcon
+                    size={24}
+                    liked={liked}
+                    setLiked={setLiked}
+                    color={"#2C2C2C"}
+                  />
+                </div>
               </div>
               <div className="mb-4 flex justify-start text-[32px] font-medium dark:text-white">
                 {reviewData.workName}
@@ -133,13 +209,7 @@ const ReviewPage = () => {
                 {t("Review.similiarReviews")}
               </div>
               <div className="mt-6 flex justify-between">
-                {Array.from({ length: 1 }).map((item: any, i) => (
-                  <div key={i}>
-                    <Link to={`${Routes.reviewpage}/2`}>
-                      <ReviewCard />
-                    </Link>
-                  </div>
-                ))}
+                {/* TODO:  add similiar reviews*/}
               </div>
             </div>
             <div className="mt-20">
