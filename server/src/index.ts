@@ -46,6 +46,11 @@ app.patch(
   Auth.authenticateToken,
   queries.Reviews.likeReview
 );
+app.patch(
+  "/reviews/:reviewId/rate",
+  Auth.authenticateToken,
+  queries.Reviews.rateReview
+);
 
 //media upload api
 app.post("/uploadMedia", (req, res) => {

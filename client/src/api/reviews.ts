@@ -37,3 +37,20 @@ export const likeReview = async ({
   );
   return res?.data;
 };
+
+export const rateReview = async ({
+  userId,
+  reviewId,
+  rating,
+}: {
+  userId: number;
+  reviewId: number;
+  rating: number;
+}) => {
+  const res = await axios.patch(
+    `${serverUrl}/reviews/${reviewId}/rate`,
+    { userId, rating },
+    getConfig()
+  );
+  return res?.data;
+};

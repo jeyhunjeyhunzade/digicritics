@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 import jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
+import { Rate } from "@app/types/types";
 
 export const errorHandler = (error: unknown) => {
   let message = "";
@@ -124,4 +125,16 @@ export const shortenString = (string: string | undefined) => {
     }
     return string;
   }
+};
+
+export const calculateAverageRate = (ratings: Rate[]): number => {
+  let total = 0;
+  let average = 0;
+
+  ratings.forEach((rate) => {
+    total += rate.rating;
+  });
+
+  average = Math.round(total / ratings.length);
+  return average;
 };

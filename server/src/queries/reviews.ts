@@ -156,6 +156,66 @@ const Reviews = {
       }
     }
   },
+  rateReview: async (request: Request, response: Response) => {
+    try {
+      const { userId, rating } = request.body;
+      const reviewId = parseInt(request.params.reviewId);
+
+      if (!userId || isNaN(reviewId)) {
+        return response.status(400).send({
+          message: "Please provide a valid userId, reviewId",
+        });
+      }
+
+      const existingRating = await prisma.rating.findFirst({
+        where: {
+          AND: {
+            userId: userId,
+            reviewId: reviewId,
+          },
+        },
+      });
+
+      if (existingRating) {
+        await prisma.rating.update({
+          where: {
+            id: existingRating.id,
+          },
+          data: {
+            rating: rating,
+          },
+        });
+
+        return response.status(200).json({
+          message: "Review rating updated successfully",
+        });
+      } else {
+        const newRating = await prisma.rating.create({
+          data: {
+            userId,
+            reviewId,
+            rating,
+          },
+        });
+
+        if (!newRating) {
+          return response
+            .status(500)
+            .send({ message: "Failed to rate the review" });
+        }
+
+        return response.status(200).json({
+          message: "Review rated successfully",
+        });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
 };
 
 export default Reviews;

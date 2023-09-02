@@ -5,14 +5,25 @@ import ImageGallery from "react-image-gallery";
 import { Rating } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { getReviewById, likeReview } from "@app/api/reviews";
+import { getReviewById, likeReview, rateReview } from "@app/api/reviews";
 import Layout from "@app/components/Layout";
 import Loader from "@app/components/Loader";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import { Routes } from "@app/router/rooter";
-import { AppContextShape, GalleryImage, ReviewsData } from "@app/types/types";
-import { checkAuth, classNames, dateFormatter, errorHandler } from "@app/utils";
+import {
+  ActionsResponse,
+  AppContextShape,
+  GalleryImage,
+  ReviewsData,
+} from "@app/types/types";
+import {
+  calculateAverageRate,
+  checkAuth,
+  classNames,
+  dateFormatter,
+  errorHandler,
+} from "@app/utils";
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import HeartIcon from "@app/assets/icons/HeartIcon";
@@ -28,7 +39,7 @@ const ReviewPage = () => {
 
   const { loggedUserId } = useContext(AppContext) as AppContextShape;
 
-  const [ratingValue, setRatingValue] = useState<any>();
+  const [ratingValue, setRatingValue] = useState<number>();
   const [reviewData, setReviewData] = useState<ReviewsData>();
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [liked, setLiked] = useState(false);
@@ -52,6 +63,17 @@ const ReviewPage = () => {
         } else if (response.action === LikeAction.UNLIKED) {
           setLiked(false);
         }
+      },
+      onError,
+    });
+
+  const { mutate: rateReviewMutate, isLoading: isRateReviewLoading } =
+    useMutation(rateReview, {
+      onSuccess: (response: ActionsResponse) => {
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviewById"]);
+        queryClient.invalidateQueries(["userById"]);
       },
       onError,
     });
@@ -86,14 +108,28 @@ const ReviewPage = () => {
       } else {
         setLiked(false);
       }
+
+      setRatingValue(calculateAverageRate(reviewData.ratings));
     }
   }, [reviewData]);
+
+  useEffect(() => {}, [ratingValue]);
 
   const handleLike = () => {
     if (reviewData && loggedUserId) {
       likeReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData.id,
+      });
+    }
+  };
+
+  const handleRate = (rating: number) => {
+    if (loggedUserId && reviewData && ratingValue) {
+      rateReviewMutate({
+        userId: loggedUserId,
+        reviewId: reviewData?.id,
+        rating,
       });
     }
   };
@@ -119,7 +155,6 @@ const ReviewPage = () => {
               <div className="relative flex justify-between">
                 <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold dark:text-white">
                   {reviewData.reviewTitle}
-                  {/* Gaseadasdsasadsasadsadsasdasdsads */}
                 </div>
                 <div
                   role="button"
@@ -187,18 +222,21 @@ const ReviewPage = () => {
               <div className="flex h-8">
                 <Rating
                   name="simple-controlled"
-                  // TODO: calculate rates and give calculated rate
-                  value={ratingValue}
+                  value={ratingValue ? ratingValue : 0}
                   size="large"
                   disabled={!isAuthenticated}
-                  onChange={(event, newValue) => {
-                    setRatingValue(newValue);
+                  onChange={(e, newValue) => {
+                    newValue && handleRate(newValue);
                   }}
                 />
                 <span className="ml-4 self-center dark:text-white">
-                  {/* TODO: calculate rates */}
-                  {reviewData.ratings.length}
+                  {ratingValue}
                 </span>
+                <div className="ml-6 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
+                  {reviewData.ratings.length
+                    ? `${reviewData.ratings.length} ${t("Review.ratings")}`
+                    : null}
+                </div>
               </div>
               <p className="mt-[38px] text-left dark:text-white">
                 {reviewData.reviewContent}
