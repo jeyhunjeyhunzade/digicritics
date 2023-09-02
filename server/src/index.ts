@@ -21,7 +21,7 @@ app.use(compression());
 //Users
 app.post("/login", queries.Users.loginUser);
 app.post("/signUp", queries.Users.createUser);
-app.get("/users/:id", Auth.authenticateToken, queries.Users.getUserById);
+app.get("/users/:id", queries.Users.getUserById);
 app.get("/users", Auth.authenticateToken, queries.Users.getUsers);
 app.delete("/users", Auth.authenticateToken, queries.Users.deleteUser);
 app.patch("/users/block", Auth.authenticateToken, queries.Users.blockUser);
@@ -40,17 +40,18 @@ app.post(
   queries.Reviews.createReview
 );
 app.get("/reviews", queries.Reviews.getReviews);
+app.get("/reviews/:id", queries.Reviews.getReviewById);
 
 //media upload api
 app.post("/uploadMedia", (req, res) => {
   uploadSingleMedia(req.body.image)
     .then((url) => res.send(url))
-    .catch((err) => res.status(500).send(err));
+    .catch((err) => res.status(500).send({ message: err }));
 });
 app.post("/uploadMultipleMedia", (req, res) => {
   uploadMultipleMedia(req.body.images)
     .then((urls) => res.send(urls))
-    .catch((err) => res.status(500).send(err));
+    .catch((err) => res.status(500).send({ message: err }));
 });
 
 app.listen(port, () => {

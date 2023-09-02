@@ -1,8 +1,9 @@
 import HeartIcon from "@app/assets/icons/HeartIcon";
-import ReviewStar from "@app/assets/icons/ReviewStar";
 import { ReviewsData } from "@app/types/types";
 import { useTranslation } from "react-i18next";
-import { dateFormatter, shortenString } from "@app/utils";
+import { checkAuth, dateFormatter, shortenString } from "@app/utils";
+import { Rating } from "@mui/material";
+import { useState } from "react";
 
 interface ReviewCardProps {
   //TODO: make it required
@@ -11,7 +12,9 @@ interface ReviewCardProps {
 
 const ReviewCard = (props: ReviewCardProps) => {
   const { t } = useTranslation();
+  const isAuthenticated = checkAuth();
   const { review } = props;
+  const [ratingValue, setRatingValue] = useState<any>();
 
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
@@ -33,7 +36,18 @@ const ReviewCard = (props: ReviewCardProps) => {
           <div className="flex text-base font-bold dark:text-white">
             {shortenString(review?.reviewTitle)}
           </div>
-          <ReviewStar />
+          <div className="flex items-center">
+            {/* TODO: fix dark mode color  */}
+            <Rating
+              name="simple-controlled"
+              value={ratingValue}
+              size="small"
+              disabled={!isAuthenticated}
+              onChange={(event, newValue) => {
+                setRatingValue(newValue);
+              }}
+            />
+          </div>
         </div>
         <div className="flex justify-start font-medium dark:text-white">
           {review?.workName}

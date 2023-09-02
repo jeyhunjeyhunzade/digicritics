@@ -19,16 +19,16 @@ import { Category } from "@app/types/enums";
 
 import { tags } from "@app/mock/tagsData";
 import { Autocomplete, Chip, TextField } from "@mui/material";
+import useLogout from "@app/hooks/useLogout";
+import useError from "@app/hooks/useError";
 
 const ReviewEditorModal = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { onError } = useError();
   const {
     isDarkMode,
     isReviewEditorOpen,
     setIsReviewEditorOpen,
-    setLoggedUserId,
-    setLoggedUser,
     loggedUserId,
   } = useContext(AppContext) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
@@ -38,27 +38,6 @@ const ReviewEditorModal = () => {
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[] | any>([]);
   const [urls, setUrls] = useState<string[]>([]);
-
-  const [blurred, setBlurred] = useState(false);
-
-  const handleBlur = () => {
-    if (!blurred) {
-      setBlurred(true);
-    }
-  };
-
-  const onError = (error: unknown) => {
-    const isAuthenticated = checkAuth();
-    if (!isAuthenticated) {
-      handleLogout();
-    }
-    if (error instanceof AxiosError) {
-      if (error.response?.status === 401) {
-        handleLogout();
-      }
-    }
-    errorHandler(error);
-  };
 
   const { mutate: createNewReviewMutate, isLoading: isCreateNewReviewLoading } =
     useMutation(createNewReview, {
@@ -100,14 +79,6 @@ const ReviewEditorModal = () => {
   const closeReviewEditorModal = () => {
     setIsReviewEditorOpen(false);
     resetFields();
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("status");
-    setLoggedUserId(null);
-    setLoggedUser(null);
-    navigate(Routes.auth);
   };
 
   const handleShareReview = () => {
@@ -235,7 +206,6 @@ const ReviewEditorModal = () => {
               options={tags}
               autoSelect
               value={selectedTags}
-              onOpen={() => handleBlur()}
               renderInput={(params) => (
                 //@ts-ignore
                 <TextField

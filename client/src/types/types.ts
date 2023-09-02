@@ -99,3 +99,7 @@ export interface ReviewTags {
   id: number;
   name: string;
 }
+
+export interface GalleryImage {
+  original: string;
+}
