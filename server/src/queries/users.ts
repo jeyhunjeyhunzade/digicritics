@@ -155,6 +155,7 @@ const Users = {
         },
         select: {
           id: true,
+          status: true,
         },
       });
 

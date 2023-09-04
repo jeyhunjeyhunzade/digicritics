@@ -1,7 +1,7 @@
-import { Status, UserStatus } from "@app/types/enums";
+import { UserStatus } from "@app/types/enums";
 import { classNames } from "@app/utils";
 
-const StatusPill = ({ value }: { value: Status }) => {
+const StatusPill = ({ value }: { value: UserStatus }) => {
   const status = value ? value : "unknown";
 
   return (

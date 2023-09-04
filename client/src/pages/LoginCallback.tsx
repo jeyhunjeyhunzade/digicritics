@@ -1,12 +1,15 @@
 import { useContext, useEffect } from "react";
+import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { createAccount } from "@app/api/auth";
 import { getUserByEmail } from "@app/api/users";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
+import useLogout from "@app/hooks/useLogout";
 import { Routes } from "@app/router/rooter";
-import { AuthAction } from "@app/types/enums";
+import { AuthAction, UserStatus } from "@app/types/enums";
 import { AppContextShape } from "@app/types/types";
 import { errorHandler, successHandler } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -15,10 +18,12 @@ import { queryClient } from "..";
 import { AppContext } from "./App";
 
 const LoginCallBack = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth0();
   const { onError } = useError();
   const { config } = useGetConfig();
+  const { handleLogout } = useLogout();
   const { setLoggedUser, setLoggedUserId } = useContext(
     AppContext
   ) as AppContextShape;
@@ -39,7 +44,6 @@ const LoginCallBack = () => {
 
   const { mutate: getUserByEmailMutate } = useMutation(getUserByEmail, {
     onSuccess: (response) => {
-      console.log("response: ", response);
       if (response.action === AuthAction.REGISTER_REQUIRED) {
         if (user?.email)
           createAccountMutate({
@@ -48,11 +52,19 @@ const LoginCallBack = () => {
             profileImage: user.picture,
           });
       } else {
-        setLoggedUserId(response.id);
-        localStorage.setItem("loggedUserId", response.id);
-        queryClient.invalidateQueries(["userById"]);
-        queryClient.invalidateQueries(["users"]);
-        navigate(Routes.homepage);
+        console.log("response: ", response);
+        if (response.status === UserStatus.BLOCKED) {
+          toast.error(t("Loader.blocked"));
+          setTimeout(() => {
+            handleLogout();
+          }, 2000);
+        } else {
+          setLoggedUserId(response.id);
+          localStorage.setItem("loggedUserId", response.id);
+          queryClient.invalidateQueries(["userById"]);
+          queryClient.invalidateQueries(["users"]);
+          navigate(Routes.homepage);
+        }
       }
     },
     onError,
@@ -60,7 +72,6 @@ const LoginCallBack = () => {
 
   useEffect(() => {
     if (user?.email && user?.name && config) {
-      console.log("start check");
       getUserByEmailMutate({
         email: user.email,
         config,
