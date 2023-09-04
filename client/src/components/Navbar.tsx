@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoginButton from "./LoginButton";
 import SearchInput from "./SearchInput";
 import SignupButton from "./SignupButton";
+import ToggleTheme from "./ToggleTheme";
 
 const Navbar = () => {
   const { isAuthenticated } = useAuth0();
