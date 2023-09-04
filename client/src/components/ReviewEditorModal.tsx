@@ -1,30 +1,30 @@
-import MDEditor from "@uiw/react-md-editor";
 import { useContext, useEffect, useState } from "react";
-import Modal from "react-modal";
-import { useTranslation } from "react-i18next";
-
-import CloseIcon from "@app/assets/icons/CloseIcon";
-import { AppContext } from "@app/pages/App";
-import { AppContextShape } from "@app/types/types";
-import DndUploadMiltiple from "./DndUploadMultiple";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "..";
-import { checkAuth, errorHandler, successHandler } from "@app/utils";
-import { createNewReview } from "@app/api/reviews";
-import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
-import { Routes } from "@app/router/rooter";
 import toast from "react-hot-toast";
-import { Category } from "@app/types/enums";
-
-import { tags } from "@app/mock/tagsData";
-import { Autocomplete, Chip, TextField } from "@mui/material";
-import useLogout from "@app/hooks/useLogout";
+import { useTranslation } from "react-i18next";
+import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
+import { createNewReview } from "@app/api/reviews";
+import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
+import useGetConfig from "@app/hooks/useGetConfig";
+import useLogout from "@app/hooks/useLogout";
+import { tags } from "@app/mock/tagsData";
+import { AppContext } from "@app/pages/App";
+import { Routes } from "@app/router/rooter";
+import { Category } from "@app/types/enums";
+import { AppContextShape } from "@app/types/types";
+import { checkAuth, errorHandler, successHandler } from "@app/utils";
+import { Autocomplete, Chip, TextField } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import MDEditor from "@uiw/react-md-editor";
+import { AxiosError } from "axios";
+import { queryClient } from "..";
+import DndUploadMiltiple from "./DndUploadMultiple";
 
 const ReviewEditorModal = () => {
   const { t } = useTranslation();
   const { onError } = useError();
+  const { config } = useGetConfig();
   const {
     isDarkMode,
     isReviewEditorOpen,
@@ -88,7 +88,8 @@ const ReviewEditorModal = () => {
       reviewContent &&
       reviewGrade &&
       reviewCategory &&
-      tags.length
+      tags.length &&
+      config
     ) {
       if (loggedUserId) {
         createNewReviewMutate({
@@ -101,6 +102,7 @@ const ReviewEditorModal = () => {
           reviewImages: urls,
           //TODO: need condition for admin
           userId: loggedUserId,
+          config,
         });
       }
     } else {
@@ -124,7 +126,11 @@ const ReviewEditorModal = () => {
       style={customReviewEditorModalStyles}
     >
       <span
+        role="button"
+        tabIndex={0}
+        aria-label="close review editor modal"
         onClick={closeReviewEditorModal}
+        onKeyDown={closeReviewEditorModal}
         className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
       >
         <CloseIcon size={24} />
@@ -209,7 +215,6 @@ const ReviewEditorModal = () => {
               autoSelect
               value={selectedTags}
               renderInput={(params) => (
-                //@ts-ignore
                 <TextField
                   className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                   {...params}

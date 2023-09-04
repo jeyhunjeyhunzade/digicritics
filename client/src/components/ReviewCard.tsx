@@ -1,10 +1,16 @@
+import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { likeReview } from "@app/api/reviews";
 import HeartIcon from "@app/assets/icons/HeartIcon";
+import useError from "@app/hooks/useError";
+import useGetConfig from "@app/hooks/useGetConfig";
+import { AppContext } from "@app/pages/App";
+import { LikeAction } from "@app/types/enums";
 import {
   ActionsResponse,
   AppContextShape,
   ReviewsData,
 } from "@app/types/types";
-import { useTranslation } from "react-i18next";
 import {
   calculateAverageRate,
   checkAuth,
@@ -13,14 +19,10 @@ import {
   shortenString,
   successHandler,
 } from "@app/utils";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import useError from "@app/hooks/useError";
 import { queryClient } from "..";
-import { likeReview } from "@app/api/reviews";
-import { AppContext } from "@app/pages/App";
-import { LikeAction } from "@app/types/enums";
 
 interface ReviewCardProps {
   review: ReviewsData;
@@ -29,7 +31,9 @@ interface ReviewCardProps {
 const ReviewCard = (props: ReviewCardProps) => {
   const { t } = useTranslation();
   const { onError } = useError();
-  const isAuthenticated = checkAuth();
+  const { config } = useGetConfig();
+  const { isAuthenticated } = useAuth0();
+
   const { review } = props;
   const [ratingValue, setRatingValue] = useState<any>();
   const [liked, setLiked] = useState(false);
@@ -72,10 +76,11 @@ const ReviewCard = (props: ReviewCardProps) => {
   }, [review]);
 
   const handleLike = () => {
-    if (review && loggedUserId) {
+    if (review && loggedUserId && config) {
       likeReviewMutate({
         userId: loggedUserId,
         reviewId: review.id,
+        config,
       });
     }
   };
@@ -86,13 +91,20 @@ const ReviewCard = (props: ReviewCardProps) => {
         <img
           className="h-[194px] w-full"
           src={review?.reviewImages[0]}
-          alt="review image"
+          alt="reviewImage"
         />
         <div className="absolute right-[18px] top-[12px]">
           <div
             role="button"
+            aria-label="like review"
             tabIndex={0}
             onClick={(e) => {
+              if (isAuthenticated) {
+                e.preventDefault();
+                handleLike();
+              }
+            }}
+            onKeyDown={(e) => {
               if (isAuthenticated) {
                 e.preventDefault();
                 handleLike();
@@ -119,7 +131,7 @@ const ReviewCard = (props: ReviewCardProps) => {
               name="simple-controlled"
               value={ratingValue ? ratingValue : 0}
               size="small"
-              disabled
+              readOnly
             />
           </div>
         </div>

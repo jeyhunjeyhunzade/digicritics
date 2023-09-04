@@ -1,23 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import { Routes } from "@app/router/rooter";
-import Layout from "@app/components/Layout";
-import ReviewCard from "@app/components/ReviewCard";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TagCloud } from "react-tagcloud";
 import { Link } from "react-router-dom";
+import { TagCloud } from "react-tagcloud";
 import { getReviews } from "@app/api/reviews";
-import { checkAuth, errorHandler } from "@app/utils";
-import { AxiosError } from "axios";
-import { useContext, useEffect, useState } from "react";
-import { AppContext } from "./App";
-import { AppContextShape, ReviewsData } from "@app/types/types";
-import { useQuery } from "@tanstack/react-query";
+import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
+import Layout from "@app/layout/AppLayout";
+import { Routes } from "@app/router/rooter";
+import { ReviewsData } from "@app/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 const Homepage = () => {
   const { t } = useTranslation();
   const { onError } = useError();
-
   const [reviews, setReviews] = useState<ReviewsData[]>();
 
   const { data: reviewsData, isLoading: isUsersDataLoading } = useQuery<
@@ -30,10 +25,6 @@ const Homepage = () => {
   useEffect(() => {
     reviewsData && setReviews(reviewsData);
   }, [reviewsData]);
-
-  // useEffect(() => {
-  //   console.log("reviews: ", reviews);
-  // }, [reviews]);
 
   const mockTags = [
     { value: "photo", count: 25 },

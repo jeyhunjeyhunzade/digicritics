@@ -1,21 +1,24 @@
-import { AppContext } from "@app/pages/App";
-import { Routes } from "@app/router/rooter";
-import { AppContextShape } from "@app/types/types";
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { AppContext } from "@app/pages/App";
+import { AppContextShape } from "@app/types/types";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const useLogout = () => {
-  const navigate = useNavigate();
+  const { logout } = useAuth0();
   const { setLoggedUser, setLoggedUserId } = useContext(
     AppContext
   ) as AppContextShape;
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    });
+    localStorage.removeItem("loggedUserId");
     localStorage.removeItem("status");
     setLoggedUserId(null);
     setLoggedUser(null);
-    navigate(Routes.auth);
   };
 
   return { handleLogout };

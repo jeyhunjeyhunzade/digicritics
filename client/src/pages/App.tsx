@@ -1,9 +1,9 @@
-import { Routes, router } from "@app/router/rooter";
+import { createContext, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
-import { AppContextShape, LoggedUser } from "@app/types/types";
-import { createContext, useEffect, useState } from "react";
-import { checkAuth, getLoggedUserId } from "@app/utils";
+import { router } from "@app/router/rooter";
+import { ApiConfig, AppContextShape, LoggedUser } from "@app/types/types";
+import { getLoggedUserId } from "@app/utils";
 
 export const AppContext = createContext<AppContextShape | null>(null);
 
@@ -12,6 +12,7 @@ const App = () => {
   const [isReviewEditorOpen, setIsReviewEditorOpen] = useState(false);
   const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
+  const [config, setConfig] = useState<ApiConfig>();
 
   useEffect(() => {
     const id = getLoggedUserId();
@@ -32,6 +33,8 @@ const App = () => {
         loggedUser,
         setLoggedUser,
         setLoggedUserId,
+        config,
+        setConfig,
       }}
     >
       <div>

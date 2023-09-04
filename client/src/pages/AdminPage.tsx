@@ -1,8 +1,8 @@
-import SearchIcon from "@app/assets/icons/SearchIcon";
-import Layout from "@app/components/Layout";
-import StatusPill from "@app/components/StatusPill";
-import { useContext, useEffect, useMemo, useState } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-key */
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import {
   Column,
   useGlobalFilter,
@@ -11,55 +11,48 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
-import { useRowSelectColumn } from "@lineup-lite/hooks";
-import { AxiosError } from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import { Routes } from "@app/router/rooter";
-import { AppContext } from "./App";
-import { ActionsResponse, AppContextShape, UsersData } from "@app/types/types";
-import {
-  checkAuth,
-  dateFormatter,
-  errorHandler,
-  successHandler,
-} from "@app/utils";
-import { queryClient } from "..";
-import { getUsers } from "@app/api/users";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   blockAccounts,
   deleteAccounts,
-  updateUserRole,
   unBlockAccounts,
+  updateUserRole,
 } from "@app/api/auth";
-import { AdminTableAction, UserStatus } from "@app/types/enums";
+import { getUsers } from "@app/api/users";
 import DownIcon from "@app/assets/icons/DownIcon";
+import SearchIcon from "@app/assets/icons/SearchIcon";
 import UpIcon from "@app/assets/icons/UpIcon";
-import useLogout from "@app/hooks/useLogout";
+import StatusPill from "@app/components/StatusPill";
 import useError from "@app/hooks/useError";
+import useGetConfig from "@app/hooks/useGetConfig";
+import Layout from "@app/layout/AppLayout";
+import { Routes } from "@app/router/rooter";
+import { AdminTableAction, UserStatus } from "@app/types/enums";
+import { ActionsResponse, UsersData } from "@app/types/types";
+import { dateFormatter, successHandler } from "@app/utils";
+import { useRowSelectColumn } from "@lineup-lite/hooks";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "..";
 
 const AdminPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { onError } = useError();
+  const { config } = useGetConfig();
   const [tableData, setTableData] = useState<UsersData[]>([]);
   const [tableAction, setTableAction] = useState<AdminTableAction | string>();
-
-  const { setLoggedUser, setLoggedUserId } = useContext(
-    AppContext
-  ) as AppContextShape;
 
   const onSuccess = (response: ActionsResponse) => {
     queryClient.invalidateQueries(["users"]);
     successHandler(response);
   };
 
-  const { data: usersData, isLoading: isUsersDataLoading } = useQuery<
-    UsersData[]
-  >(["users"], getUsers, {
-    onError,
-    retry: false,
-  });
+  const { data: usersData, isLoading: isUsersDataLoading } = useQuery<any>(
+    ["users", config],
+    () => config && getUsers(config),
+    {
+      onError,
+      retry: false,
+    }
+  );
 
   const { mutate: mutateUpdateUserRole } = useMutation(updateUserRole, {
     onSuccess,
@@ -169,28 +162,30 @@ const AdminPage = () => {
 
   const handleActionApply = () => {
     const selectedIds = selectedFlatRows.map((item) => item.values?.id);
-    if (tableAction) {
+    if (tableAction && config) {
       switch (tableAction) {
         case AdminTableAction.MAKEADMIN:
           mutateUpdateUserRole({
             userIds: selectedIds,
             status: UserStatus.ADMIN,
+            config,
           });
           break;
         case AdminTableAction.MAKEUSER:
           mutateUpdateUserRole({
             userIds: selectedIds,
             status: UserStatus.USER,
+            config,
           });
           break;
         case AdminTableAction.BLOCK:
-          mutateBlock(selectedIds);
+          mutateBlock({ userIds: selectedIds, config });
           break;
         case AdminTableAction.UNBLOCK:
-          mutateUnBlock(selectedIds);
+          mutateUnBlock({ userIds: selectedIds, config });
           break;
         case AdminTableAction.DELETE:
-          mutateDelete(selectedIds);
+          mutateDelete({ userIds: selectedIds, config });
           break;
       }
     }

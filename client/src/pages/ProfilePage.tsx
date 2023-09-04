@@ -1,7 +1,9 @@
-import SearchIcon from "@app/assets/icons/SearchIcon";
-import Layout from "@app/components/Layout";
+/* eslint-disable react/jsx-key */
 import { useEffect, useMemo, useState } from "react";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import Modal from "react-modal";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Column,
   useGlobalFilter,
@@ -9,46 +11,35 @@ import {
   useRowSelect,
   useTable,
 } from "react-table";
-import Modal from "react-modal";
-
-import { reviewsData } from "@app/mock/reviewsData";
-import TableActions from "@app/components/TableActions";
-import PlusIcon from "@app/assets/icons/PlusIcon";
-import EditIcon from "@app/assets/icons/EditIcon";
-import DndUpload from "@app/components/DndUploadSingle";
-import CloseIcon from "@app/assets/icons/CloseIcon";
-import { AppContext } from "@app/pages/App";
-import {
-  ActionsResponse,
-  AppContextShape,
-  LoggedUser,
-  UsersData,
-} from "@app/types/types";
-import { useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  checkAuth,
-  dateFormatter,
-  errorHandler,
-  successHandler,
-} from "@app/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserById, updateUser } from "@app/api/users";
-import { queryClient } from "..";
 import { deleteAccounts } from "@app/api/auth";
-import { AxiosError } from "axios";
-import { Routes } from "@app/router/rooter";
-import Loader from "@app/components/Loader";
-import toast from "react-hot-toast";
-import { UserStatus } from "@app/types/enums";
+import { getUserById, updateUser } from "@app/api/users";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
+import CloseIcon from "@app/assets/icons/CloseIcon";
+import EditIcon from "@app/assets/icons/EditIcon";
+import PlusIcon from "@app/assets/icons/PlusIcon";
+import SearchIcon from "@app/assets/icons/SearchIcon";
+import DndUpload from "@app/components/DndUploadSingle";
+import Loader from "@app/components/Loader";
+import TableActions from "@app/components/TableActions";
 import useError from "@app/hooks/useError";
+import useGetConfig from "@app/hooks/useGetConfig";
+import Layout from "@app/layout/AppLayout";
+import { reviewsData } from "@app/mock/reviewsData";
+import { AppContext } from "@app/pages/App";
+import { Routes } from "@app/router/rooter";
+import { UserStatus } from "@app/types/enums";
+import { AppContextShape, UsersData } from "@app/types/types";
+import { dateFormatter, errorHandler, successHandler } from "@app/utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { queryClient } from "..";
 
 const ProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { onError } = useError();
+  const { config } = useGetConfig();
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
   const [newFullName, setNewFullName] = useState<string>("");
   const [url, setUrl] = useState<string>();
@@ -60,7 +51,6 @@ const ProfilePage = () => {
   const {
     isDarkMode,
     setIsReviewEditorOpen,
-    loggedUserId,
     loggedUser,
     setLoggedUser,
     setLoggedUserId,
@@ -90,17 +80,17 @@ const ProfilePage = () => {
       onSuccess: (response) => {
         queryClient.invalidateQueries(["users"]);
         successHandler(response);
-        localStorage.removeItem("token");
+        localStorage.removeItem("loggedUserId");
         localStorage.removeItem("status");
         setLoggedUserId(null);
         setLoggedUser(null);
-        navigate(Routes.auth);
+        navigate(Routes.homepage);
       },
       onError: (error) => {
         if (error instanceof AxiosError) {
           console.log(error);
           if (error.response?.status === 401) {
-            navigate(Routes.auth);
+            navigate(Routes.homepage);
           }
         }
         errorHandler(error);
@@ -255,6 +245,7 @@ const ProfilePage = () => {
         id: +id,
         fullName: newFullName,
         profileImage: url ? url : profileData?.profileImage,
+        config,
       });
     }
   };
@@ -265,8 +256,8 @@ const ProfilePage = () => {
   };
 
   const handleDeleteAccount = () => {
-    if (id) {
-      deleteUserMutate([+id]);
+    if (id && config) {
+      deleteUserMutate({ userIds: [+id], config });
     }
   };
 
@@ -283,7 +274,7 @@ const ProfilePage = () => {
               {profileData.profileImage ? (
                 <img
                   src={profileData.profileImage}
-                  alt="profile image"
+                  alt="profileImage"
                   className="max-h-[215px] w-[160px] rounded-[8px]"
                 />
               ) : (
@@ -456,7 +447,11 @@ const ProfilePage = () => {
               ) : (
                 <>
                   <span
+                    role="button"
+                    tabIndex={0}
+                    aria-label="close edit profile modal"
                     onClick={closeEditProfileModal}
+                    onKeyDown={closeEditProfileModal}
                     className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
                   >
                     <CloseIcon size={24} />

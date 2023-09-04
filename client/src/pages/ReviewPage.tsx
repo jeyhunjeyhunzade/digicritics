@@ -1,41 +1,35 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
 import ImageGallery from "react-image-gallery";
-import { Rating } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
+import { useParams } from "react-router-dom";
 import { getReviewById, likeReview, rateReview } from "@app/api/reviews";
-import Layout from "@app/components/Layout";
+import HeartIcon from "@app/assets/icons/HeartIcon";
 import Loader from "@app/components/Loader";
-import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
-import { Routes } from "@app/router/rooter";
+import useGetConfig from "@app/hooks/useGetConfig";
+import Layout from "@app/layout/AppLayout";
+import { LikeAction } from "@app/types/enums";
 import {
   ActionsResponse,
   AppContextShape,
   GalleryImage,
   ReviewsData,
 } from "@app/types/types";
-import {
-  calculateAverageRate,
-  checkAuth,
-  classNames,
-  dateFormatter,
-  errorHandler,
-} from "@app/utils";
+import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Rating } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "..";
+import { AppContext } from "./App";
 
 import "react-image-gallery/styles/css/image-gallery.css";
-import HeartIcon from "@app/assets/icons/HeartIcon";
-import { queryClient } from "..";
-import { LikeAction } from "@app/types/enums";
-import { AppContext } from "./App";
 
 const ReviewPage = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const { onError } = useError();
-  const isAuthenticated = checkAuth();
+  const { config } = useGetConfig();
+  const { isAuthenticated } = useAuth0();
 
   const { loggedUserId } = useContext(AppContext) as AppContextShape;
 
@@ -113,23 +107,23 @@ const ReviewPage = () => {
     }
   }, [reviewData]);
 
-  useEffect(() => {}, [ratingValue]);
-
   const handleLike = () => {
-    if (reviewData && loggedUserId) {
+    if (reviewData && loggedUserId && config) {
       likeReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData.id,
+        config,
       });
     }
   };
 
   const handleRate = (rating: number) => {
-    if (loggedUserId && reviewData && ratingValue) {
+    if (loggedUserId && reviewData && ratingValue && config) {
       rateReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData?.id,
         rating,
+        config,
       });
     }
   };
@@ -145,6 +139,7 @@ const ReviewPage = () => {
           <div className="p-20 dark:bg-[#1B1B1B]">
             <div>
               {galleryImages.length && (
+                // TODO:  USE swiper
                 <ImageGallery
                   items={galleryImages}
                   additionalClass="float-left mb-12 mr-8 h-full w-[620px] rounded-[20px] shadow-cardShadow bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5"
@@ -159,7 +154,14 @@ const ReviewPage = () => {
                 <div
                   role="button"
                   tabIndex={0}
+                  aria-label="like review"
                   onClick={(e) => {
+                    if (isAuthenticated) {
+                      e.preventDefault();
+                      handleLike();
+                    }
+                  }}
+                  onKeyDown={(e) => {
                     if (isAuthenticated) {
                       e.preventDefault();
                       handleLike();
@@ -250,20 +252,27 @@ const ReviewPage = () => {
                 {/* TODO:  add similiar reviews*/}
               </div>
             </div>
-            <div className="mt-20">
-              <textarea
-                placeholder={t("Review.yourComment")}
-                className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:text-white dark:placeholder:text-white"
-              ></textarea>
+            <div className="mb-20 mt-20 flex items-start text-2xl dark:text-white">
+              {t("Review.comments")}
             </div>
-            <div className="my-4 flex justify-end">
-              <button
-                type="button"
-                className="flex h-[48px] w-[182px] items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                {t("Review.postComment")}
-              </button>
-            </div>
+            {isAuthenticated && (
+              <>
+                <div className="mt-20">
+                  <textarea
+                    placeholder={t("Review.yourComment")}
+                    className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:text-white dark:placeholder:text-white"
+                  ></textarea>
+                </div>
+                <div className="my-4 flex justify-end">
+                  <button
+                    type="button"
+                    className="flex h-[48px] w-[182px] items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    {t("Review.postComment")}
+                  </button>
+                </div>
+              </>
+            )}
             <div className="mb-10 flex flex-col">
               <div className="flex flex-col">
                 <div className="flex items-center">
@@ -275,6 +284,7 @@ const ReviewPage = () => {
                   >
                     <img
                       src="/testprofile.jpeg"
+                      alt="userProfilePhoto"
                       className="h-[44px] w-[44px] rounded-[32px]"
                     />
                   </div>
@@ -287,11 +297,11 @@ const ReviewPage = () => {
                 </div>
               </div>
               <div className="mt-1 text-left dark:text-white">
-                "At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis praesentium voluptatum deleniti atque corrupti quos
-                dolores et quas molestias excepturi sint occaecati cupiditate
-                non provident, similique sunt in culpa qui officia deserunt
-                mollitia animi, id est laborum et dolorum fuga.
+                &quotAt vero eos et accusamus et iusto odio dignissimos ducimus
+                qui blanditiis praesentium voluptatum deleniti atque corrupti
+                quos dolores et quas molestias excepturi sint occaecati
+                cupiditate non provident, similique sunt in culpa qui officia
+                deserunt mollitia animi, id est laborum et dolorum fuga.
               </div>
             </div>
           </div>

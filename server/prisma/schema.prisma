@@ -21,7 +21,6 @@ model Users {
   fullName     String
   email        String     @unique
   status       UserStatus @default(USER)
-  password     String     @db.VarChar(255)
   profileImage String?
   createdTime  DateTime   @default(now())
   reviews      Review[]
