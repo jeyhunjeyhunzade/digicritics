@@ -111,7 +111,7 @@ const ReviewEditorModal = () => {
     setReviewWorkName("");
     setReviewCategory("");
     setReviewGrade(undefined);
-    selectedTags([]);
+    setSelectedTags([]);
     setReviewContent("");
   };
 

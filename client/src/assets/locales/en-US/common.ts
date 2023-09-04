@@ -2,6 +2,7 @@ export default {
   Loader: {
     loading: "Loading",
     wait: "Wait a second",
+    blocked: "You are blocked",
   },
   Login: {
     title: "Login",

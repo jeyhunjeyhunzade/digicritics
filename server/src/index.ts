@@ -25,7 +25,7 @@ app.post("/users/email", queries.Users.getUserIdByEmail);
 app.get("/users/:id", jwtCheck, queries.Users.getUserById);
 app.get("/users", jwtCheck, queries.Users.getUsers);
 app.delete("/users", jwtCheck, queries.Users.deleteUser);
-app.patch("/users/block", jwtCheck, queries.Users.blockUser);
+app.patch("/users/block", queries.Users.blockUser);
 app.patch("/users/unblock", jwtCheck, queries.Users.unBlockUser);
 app.patch("/users/setAdmin", jwtCheck, queries.Users.updateUserRole);
 app.patch("/users/edit", jwtCheck, queries.Users.updateUser);

@@ -58,7 +58,13 @@ const ProfilePage = () => {
 
   const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
     ["userById", id, config],
-    () => id && config && getUserById({ id: +id, config }),
+    () => {
+      if (id && config) {
+        return getUserById({ id: +id, config });
+      } else {
+        return null;
+      }
+    },
     {
       onError,
       retry: false,
