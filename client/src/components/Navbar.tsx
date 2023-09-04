@@ -7,6 +7,7 @@ import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import WorldIcon from "@app/assets/icons/WorldIcon";
 import useCurrentPath from "@app/hooks/useCurrentPath";
 import useError from "@app/hooks/useError";
+import useGetConfig from "@app/hooks/useGetConfig";
 import useLogout from "@app/hooks/useLogout";
 import { AppContext } from "@app/pages/App";
 import { Routes } from "@app/router/rooter";
@@ -25,6 +26,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { onError } = useError();
+  const { config } = useGetConfig();
   const { handleLogout } = useLogout();
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
@@ -40,8 +42,14 @@ const Navbar = () => {
   } = useContext(AppContext) as AppContextShape;
 
   const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
-    ["userById", loggedUserId],
-    () => loggedUserId && getUserById(loggedUserId),
+    ["userById", loggedUserId, config],
+    () => {
+      if (loggedUserId && config) {
+        return getUserById({ id: loggedUserId, config });
+      } else {
+        return null;
+      }
+    },
     {
       onError,
       retry: false,

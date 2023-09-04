@@ -10,15 +10,15 @@ const useLogout = () => {
   ) as AppContextShape;
 
   const handleLogout = () => {
-    logout({
-      logoutParams: {
-        returnTo: window.location.origin,
-      },
-    });
-    localStorage.removeItem("loggedUserId");
-    localStorage.removeItem("status");
-    setLoggedUserId(null);
-    setLoggedUser(null);
+    // logout({
+    //   logoutParams: {
+    //     returnTo: window.location.origin,
+    //   },
+    // });
+    // localStorage.removeItem("loggedUserId");
+    // localStorage.removeItem("status");
+    // setLoggedUserId(null);
+    // setLoggedUser(null);
   };
 
   return { handleLogout };

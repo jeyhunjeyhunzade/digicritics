@@ -57,8 +57,8 @@ const ProfilePage = () => {
   } = useContext(AppContext) as AppContextShape;
 
   const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
-    ["userById", id],
-    () => id && getUserById(id),
+    ["userById", id, config],
+    () => id && config && getUserById({ id: +id, config }),
     {
       onError,
       retry: false,

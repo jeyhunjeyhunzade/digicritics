@@ -24,32 +24,6 @@ export interface ActionsResponse {
   message: string;
 }
 
-export interface LoginParams {
-  email: string;
-  password: string;
-}
-
-export interface SignUpParams {
-  email: string;
-  password?: string;
-  name?: string;
-  profileImage?: string;
-  config?: ApiConfig;
-}
-
-export interface LikeReviewParams {
-  userId: number;
-  reviewId: number;
-  config: ApiConfig;
-}
-
-export interface RateReviewParams {
-  userId: number;
-  reviewId: number;
-  rating: number;
-  config: ApiConfig;
-}
-
 export interface LoggedUser {
   id: number;
   fullName: string;
@@ -91,18 +65,6 @@ export interface DnDUploadMultipleProps {
   setUrls: Dispatch<SetStateAction<string[]>>;
 }
 
-export interface CreateNewReviewParams {
-  reviewTitle: string;
-  workName: string;
-  category: string | undefined;
-  reviewGrade: number;
-  tags: string[];
-  reviewContent: string;
-  reviewImages: string[];
-  userId: number;
-  config: ApiConfig;
-}
-
 export interface Like {
   id: number;
   reviewId: number;
@@ -140,4 +102,47 @@ export interface ReviewTags {
 
 export interface GalleryImage {
   original: string;
+}
+
+//Params
+export interface LoginParams {
+  email: string;
+  password: string;
+}
+
+export interface SignUpParams {
+  email: string;
+  name?: string;
+  profileImage?: string;
+  config?: ApiConfig;
+}
+
+export interface LikeReviewParams {
+  userId: number;
+  reviewId: number;
+  config: ApiConfig;
+}
+
+export interface RateReviewParams {
+  userId: number;
+  reviewId: number;
+  rating: number;
+  config: ApiConfig;
+}
+
+export interface CreateNewReviewParams {
+  reviewTitle: string;
+  workName: string;
+  category: string | undefined;
+  reviewGrade: number;
+  tags: string[];
+  reviewContent: string;
+  reviewImages: string[];
+  userId: number;
+  config: ApiConfig;
+}
+
+export interface GetUserByIdParams {
+  id: number;
+  config: ApiConfig;
 }

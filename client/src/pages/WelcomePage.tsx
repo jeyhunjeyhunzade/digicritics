@@ -35,7 +35,6 @@ const WelcomePage = () => {
     if (user?.email && user.name) {
       createAccountMutate({
         email: user.email,
-        password: "121212",
         name: user.name,
         profileImage: user.picture,
       });

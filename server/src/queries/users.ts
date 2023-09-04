@@ -1,4 +1,3 @@
-import Auth from "../helpers/auth";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { UserStatus } from "@prisma/client";
@@ -39,15 +38,9 @@ const Users = {
   },
 
   createUser: async (request: Request, response: Response) => {
-    const { email, password, name, profileImage } = request.body;
-    if (!email || !password || !name) {
+    const { email, name, profileImage } = request.body;
+    if (!email || !name) {
       return response.status(400).send({ message: "Some values are missing" });
-    }
-
-    if (!Auth.isValidEmail(email)) {
-      return response
-        .status(400)
-        .send({ message: "Please enter a valid email address" });
     }
 
     try {
@@ -68,13 +61,10 @@ const Users = {
       }
     }
 
-    const hashPassword = Auth.hashPassword(password);
-
     try {
       const newUser = await prisma.users.create({
         data: {
           email: email,
-          password: hashPassword,
           fullName: name,
           profileImage: profileImage,
         },

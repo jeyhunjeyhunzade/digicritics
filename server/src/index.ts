@@ -3,20 +3,12 @@ import express from "express";
 import cors from "cors";
 var helmet = require("helmet");
 var compression = require("compression");
-import queries from "./queries";
-// import Auth from "./helpers/auth";
-const { auth } = require("express-oauth2-jwt-bearer");
 import { uploadSingleMedia, uploadMultipleMedia } from "./mediaupload";
+import queries from "./queries";
+import { jwtCheck } from "./helpers/auth";
 
 //port
 const port = 8000;
-
-const jwtCheck = auth({
-  //TODO: move to env
-  audience: "https://digicritics.vercel.app",
-  issuerBaseURL: "https://dev-ah47hws0zyr60owp.eu.auth0.com/",
-  tokenSigningAlg: "HS256",
-});
 
 //middleware
 const app = express();
