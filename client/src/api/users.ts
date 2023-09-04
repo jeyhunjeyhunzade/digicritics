@@ -1,4 +1,9 @@
-import { ApiConfig, SignUpParams, UpdatedUserData } from "@app/types/types";
+import {
+  ApiConfig,
+  GetUserByIdParams,
+  SignUpParams,
+  UpdatedUserData,
+} from "@app/types/types";
 import axios from "axios";
 import { serverUrl } from "./apiClient";
 
@@ -7,8 +12,9 @@ export const getUsers = async (config: ApiConfig) => {
   return res?.data;
 };
 
-export const getUserById = async (id: number | string | null) => {
-  const res = await axios.get(`${serverUrl}/users/${id}`);
+export const getUserById = async (getUserByIdParams: GetUserByIdParams) => {
+  const { id, config } = getUserByIdParams;
+  const res = await axios.get(`${serverUrl}/users/${id}`, config);
   return res?.data;
 };
 
@@ -16,8 +22,8 @@ export const getUserByEmail = async (getUserByEmailParams: SignUpParams) => {
   const { config } = getUserByEmailParams;
   const res = await axios.post(
     `${serverUrl}/users/email`,
-    getUserByEmailParams
-    // config
+    getUserByEmailParams,
+    config
   );
   return res?.data;
 };

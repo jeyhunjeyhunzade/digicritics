@@ -1,5 +1,3 @@
-import Auth from "../helpers/auth";
-import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { UserStatus } from "@prisma/client";
 import { prisma } from "../config";
