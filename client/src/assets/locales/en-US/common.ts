@@ -1,10 +1,15 @@
 export default {
+  Loader: {
+    loading: "Loading",
+    wait: "Wait a second",
+  },
   Login: {
     title: "Login",
   },
   Navbar: {
     login: "Log in",
     logout: "Log out",
+    signup: "Sign up",
     english: "English",
     russian: "Russian",
     profile: "Profile",
@@ -42,6 +47,7 @@ export default {
     postComment: "Post comment",
     similiarReviews: "Similar reviews",
     ratings: "ratings",
+    comments: "Comments",
   },
   Profile: {
     email: "Email",

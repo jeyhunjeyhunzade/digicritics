@@ -1,10 +1,10 @@
+import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { uploadReviewImages } from "@app/api/users";
+import { DnDUploadMultipleProps } from "@app/types/types";
 import { classNames, convertBase64, errorHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
 import Loader from "./Loader";
-import { DnDUploadMultipleProps } from "@app/types/types";
-import toast from "react-hot-toast";
 
 const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
   const { width, height, urls, setUrls } = props;
@@ -41,10 +41,11 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
     <div className="flex w-full items-center justify-center">
       {urls.length ? (
         <div className="flex h-64 w-[548px] items-center justify-center space-x-[25px] rounded-lg border-2 border-dashed border-gray-300 bg-[transparent] dark:border-[#DEDEDE]">
-          {urls.map((url: string) => (
+          {urls.map((url: string, i) => (
             <img
+              key={i}
               src={url}
-              alt="review image"
+              alt="reviewImages"
               className="h-[223px] w-[150px] rounded-[8px] shadow-reviewImagesShadow"
             />
           ))}

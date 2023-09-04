@@ -1,5 +1,5 @@
-import SearchIcon from "@app/assets/icons/SearchIcon";
 import { useTranslation } from "react-i18next";
+import SearchIcon from "@app/assets/icons/SearchIcon";
 
 const SearchInput = () => {
   const { t } = useTranslation();

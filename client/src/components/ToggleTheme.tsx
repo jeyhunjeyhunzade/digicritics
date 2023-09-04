@@ -1,6 +1,6 @@
-import { AppContextShape } from "@app/types/types";
 import { useContext, useEffect } from "react";
 import { AppContext } from "@app/pages/App";
+import { AppContextShape } from "@app/types/types";
 import { classNames } from "@app/utils";
 
 const ToggleTheme = () => {

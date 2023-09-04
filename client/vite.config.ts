@@ -8,4 +8,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ["@emotion/styled"],
   },
+  define: {
+    "process.env": process.env,
+  },
 });

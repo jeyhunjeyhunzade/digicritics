@@ -10,21 +10,44 @@ export interface AppContextShape {
   loggedUser: LoggedUser | null;
   setLoggedUser: Dispatch<SetStateAction<LoggedUser | null>>;
   setLoggedUserId: Dispatch<SetStateAction<number | null>>;
+  config: ApiConfig | undefined;
+  setConfig: Dispatch<SetStateAction<ApiConfig | undefined>>;
+}
+
+export interface ApiConfig {
+  headers: {
+    Authorization: string;
+  };
 }
 
 export interface ActionsResponse {
   message: string;
 }
 
-export interface LoginData {
+export interface LoginParams {
   email: string;
   password: string;
 }
 
-export interface SignUpData {
+export interface SignUpParams {
   email: string;
-  password: string;
-  name: string;
+  password?: string;
+  name?: string;
+  profileImage?: string;
+  config?: ApiConfig;
+}
+
+export interface LikeReviewParams {
+  userId: number;
+  reviewId: number;
+  config: ApiConfig;
+}
+
+export interface RateReviewParams {
+  userId: number;
+  reviewId: number;
+  rating: number;
+  config: ApiConfig;
 }
 
 export interface LoggedUser {
@@ -40,6 +63,7 @@ export interface UpdatedUserData {
   id: number | string | undefined;
   fullName: string;
   profileImage: string | undefined;
+  config?: ApiConfig;
 }
 
 export interface UsersData {
@@ -67,7 +91,7 @@ export interface DnDUploadMultipleProps {
   setUrls: Dispatch<SetStateAction<string[]>>;
 }
 
-export interface CreateNewReviewData {
+export interface CreateNewReviewParams {
   reviewTitle: string;
   workName: string;
   category: string | undefined;
@@ -76,6 +100,7 @@ export interface CreateNewReviewData {
   reviewContent: string;
   reviewImages: string[];
   userId: number;
+  config: ApiConfig;
 }
 
 export interface Like {

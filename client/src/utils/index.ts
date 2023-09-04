@@ -1,8 +1,7 @@
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-import jwt from "jsonwebtoken";
-import jwt_decode from "jwt-decode";
 import { Rate } from "@app/types/types";
+import { AxiosError } from "axios";
+import jwt_decode from "jwt-decode";
 
 export const errorHandler = (error: unknown) => {
   let message = "";
@@ -87,14 +86,10 @@ export const checkJwtExpiration = (): boolean => {
 };
 
 export const getLoggedUserId = () => {
-  let userId: number;
-  const token = localStorage.getItem("token");
-  let decodedToken: { exp: number; iat: number; userId: number };
+  const loggedUserId = localStorage.getItem("loggedUserId");
 
-  if (token) {
-    decodedToken = jwt_decode(token);
-    userId = decodedToken.userId;
-    return userId;
+  if (loggedUserId) {
+    return +loggedUserId;
   }
 };
 

@@ -1,6 +1,6 @@
+import { useContext } from "react";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
-import { useContext } from "react";
 
 const DownIcon = ({ size, color }: { size: number; color?: string }) => {
   const { isDarkMode } = useContext(AppContext) as AppContextShape;

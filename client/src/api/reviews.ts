@@ -1,14 +1,21 @@
+import {
+  ApiConfig,
+  CreateNewReviewParams,
+  LikeReviewParams,
+  RateReviewParams,
+  UpdatedUserData,
+} from "@app/types/types";
 import axios from "axios";
-import { getConfig, serverUrl } from "./apiClient";
-import { CreateNewReviewData, UpdatedUserData } from "@app/types/types";
+import { serverUrl } from "./apiClient";
 
 export const createNewReview = async (
-  createNewReviewData: CreateNewReviewData
+  createNewReviewData: CreateNewReviewParams
 ) => {
+  const { config } = createNewReviewData;
   const res = await axios.post(
     `${serverUrl}/review/createReview`,
     createNewReviewData,
-    getConfig()
+    config
   );
   return res?.data;
 };
@@ -23,34 +30,22 @@ export const getReviewById = async (reviewId: number | string | null) => {
   return res?.data;
 };
 
-export const likeReview = async ({
-  userId,
-  reviewId,
-}: {
-  userId: number;
-  reviewId: number;
-}) => {
+export const likeReview = async (likeReviewParams: LikeReviewParams) => {
+  const { reviewId, userId, config } = likeReviewParams;
   const res = await axios.patch(
     `${serverUrl}/reviews/${reviewId}/like`,
     { userId },
-    getConfig()
+    config
   );
   return res?.data;
 };
 
-export const rateReview = async ({
-  userId,
-  reviewId,
-  rating,
-}: {
-  userId: number;
-  reviewId: number;
-  rating: number;
-}) => {
+export const rateReview = async (rateReviewParams: RateReviewParams) => {
+  const { reviewId, userId, rating, config } = rateReviewParams;
   const res = await axios.patch(
     `${serverUrl}/reviews/${reviewId}/rate`,
     { userId, rating },
-    getConfig()
+    config
   );
   return res?.data;
 };

@@ -1,33 +1,27 @@
 import { useContext, useEffect, useState } from "react";
-import Modal from "react-modal";
 import { useTranslation } from "react-i18next";
+import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
-
-import WorldIcon from "@app/assets/icons/WorldIcon";
-import { Languages, UserStatus } from "@app/types/enums";
-import {
-  checkAuth,
-  classNames,
-  errorHandler,
-  shorteningFullName,
-  successHandler,
-} from "@app/utils";
-import SearchInput from "./SearchInput";
-import ToggleTheme from "./ToggleTheme";
-import ReviewEditorModal from "./ReviewEditorModal";
-import { Routes } from "@app/router/rooter";
-import { AppContext } from "@app/pages/App";
-import { ActionsResponse, AppContextShape, LoggedUser } from "@app/types/types";
 import { getUserById } from "@app/api/users";
-import { AxiosError } from "axios";
-import { queryClient } from "..";
-import { useQuery } from "@tanstack/react-query";
-import useCurrentPath from "@app/hooks/useCurrentPath";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
-import useLogout from "@app/hooks/useLogout";
+import WorldIcon from "@app/assets/icons/WorldIcon";
+import useCurrentPath from "@app/hooks/useCurrentPath";
 import useError from "@app/hooks/useError";
+import useLogout from "@app/hooks/useLogout";
+import { AppContext } from "@app/pages/App";
+import { Routes } from "@app/router/rooter";
+import { Languages, UserStatus } from "@app/types/enums";
+import { AppContextShape } from "@app/types/types";
+import { classNames, shorteningFullName } from "@app/utils";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useQuery } from "@tanstack/react-query";
+import LoginButton from "./LoginButton";
+import SearchInput from "./SearchInput";
+import SignupButton from "./SignupButton";
+import ToggleTheme from "./ToggleTheme";
 
 const Navbar = () => {
+  const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { onError } = useError();
@@ -35,7 +29,6 @@ const Navbar = () => {
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const isAuthenticated = checkAuth();
   const currentPath = useCurrentPath();
 
   const {
@@ -44,7 +37,6 @@ const Navbar = () => {
     loggedUserId,
     loggedUser,
     setLoggedUser,
-    setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
 
   const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
@@ -165,11 +157,13 @@ const Navbar = () => {
               tabIndex={0}
               className="cursor-pointer"
               onClick={toggleProfileModal}
+              onKeyDown={toggleProfileModal}
               aria-label="Toggle Profile Menu"
             >
               {loggedUser?.profileImage ? (
                 <img
                   src={loggedUser?.profileImage}
+                  alt="profileImage"
                   className="h-[32px] w-[32px] rounded-[32px]"
                 />
               ) : (
@@ -178,12 +172,10 @@ const Navbar = () => {
             </div>
           </>
         ) : (
-          <button
-            className="flex h-5 h-[32px] w-[80px] items-center justify-center whitespace-nowrap rounded border-2 border-white px-1 py-2 text-base text-white"
-            onClick={() => navigate(Routes.auth)}
-          >
-            {t("Navbar.login")}
-          </button>
+          <>
+            <LoginButton />
+            <SignupButton />
+          </>
         )}
       </div>
       <Modal

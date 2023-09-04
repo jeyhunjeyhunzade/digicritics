@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { uploadProfileImage } from "@app/api/users";
+import { DndUploadProps } from "@app/types/types";
 import { classNames, convertBase64, errorHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import Loader from "./Loader";
-import { DndUploadProps } from "@app/types/types";
 
 const DndUploadSingle = (props: DndUploadProps) => {
   const { width, height, url, setUrl } = props;
