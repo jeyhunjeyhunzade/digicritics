@@ -1,23 +1,19 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { useNavigate } from "react-router-dom";
 import { createNewReview } from "@app/api/reviews";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
-import useLogout from "@app/hooks/useLogout";
 import { tags } from "@app/mock/tagsData";
 import { AppContext } from "@app/pages/App";
-import { Routes } from "@app/router/rooter";
 import { Category } from "@app/types/enums";
 import { AppContextShape } from "@app/types/types";
-import { checkAuth, errorHandler, successHandler } from "@app/utils";
-import { Autocomplete, Chip, TextField } from "@mui/material";
+import { successHandler } from "@app/utils";
+import { Autocomplete, TextField } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
-import { AxiosError } from "axios";
 import { queryClient } from "..";
 import DndUploadMiltiple from "./DndUploadMultiple";
 
@@ -219,6 +215,7 @@ const ReviewEditorModal = () => {
                   className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                   {...params}
                   fullWidth
+                  InputLabelProps={{ children: null }}
                   placeholder={`${t("ReviewEditor.tags")}`}
                 />
               )}
