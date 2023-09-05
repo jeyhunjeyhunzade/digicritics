@@ -30,6 +30,11 @@ export const getReviewById = async (reviewId: number | string | null) => {
   return res?.data;
 };
 
+export const getTags = async () => {
+  const res = await axios.get(`${serverUrl}/tags`);
+  return res?.data;
+};
+
 export const likeReview = async (likeReviewParams: LikeReviewParams) => {
   const { reviewId, userId, config } = likeReviewParams;
   const res = await axios.patch(

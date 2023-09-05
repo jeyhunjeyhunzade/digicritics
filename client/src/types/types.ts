@@ -33,24 +33,6 @@ export interface LoggedUser {
   createdTime: string;
 }
 
-export interface UpdatedUserData {
-  id: number | string | undefined;
-  fullName: string;
-  profileImage: string | undefined;
-  config?: ApiConfig;
-}
-
-export interface UsersData {
-  id: number;
-  fullName: string;
-  email: string;
-  profileImage: string;
-  status: UserStatus;
-  createdTime: string;
-  Like: any;
-  Rating: any;
-}
-
 export interface DndUploadProps {
   width?: string;
   height?: string;
@@ -78,12 +60,57 @@ export interface Rate {
   rating: number;
 }
 
+export interface ReviewsTable {
+  id: number;
+  reviewTitle: string;
+  workName: string;
+  category: string;
+  reviewGrade: number;
+  createdTime: string;
+  likes: number;
+  ratings: number;
+}
+
+export interface ReviewTags {
+  id: number;
+  name: string;
+}
+
+export interface GalleryImage {
+  original: string;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+}
+
+//Response
+export interface UpdatedUserData {
+  id: number | string | undefined;
+  fullName: string;
+  profileImage: string | undefined;
+  config?: ApiConfig;
+}
+
+export interface UsersData {
+  id: number;
+  fullName: string;
+  email: string;
+  profileImage: string;
+  status: UserStatus;
+  createdTime: string;
+  Like: Like[];
+  Rating: Rate[];
+  reviews: Omit<ReviewsData, "user">[];
+}
+
 export interface ReviewsData {
   id: number;
   reviewTitle: string;
   workName: string;
   category: string;
-  reviewGrade: 7;
+  reviewGrade: number;
   reviewContent: string;
   reviewImages: string[];
   userId: number;
@@ -95,13 +122,8 @@ export interface ReviewsData {
   user: Omit<UsersData, "Like" | "Rating">;
 }
 
-export interface ReviewTags {
-  id: number;
-  name: string;
-}
-
-export interface GalleryImage {
-  original: string;
+export interface TagsData {
+  tags: Tag[];
 }
 
 //Params

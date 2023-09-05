@@ -34,7 +34,7 @@ export const checkAuth = (): boolean => {
 export const dateFormatter = (
   date: Date | string,
   withHours = false
-): Date | string | any => {
+): string => {
   const dateTime = new Date(date);
 
   let options: Intl.DateTimeFormatOptions = {
@@ -50,7 +50,6 @@ export const dateFormatter = (
   const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
     dateTime
   );
-
   return formattedDateTime;
 };
 

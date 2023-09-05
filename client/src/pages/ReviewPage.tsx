@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getReviewById, likeReview, rateReview } from "@app/api/reviews";
 import HeartIcon from "@app/assets/icons/HeartIcon";
 import ImageSlider from "@app/components/ImageSlider";
@@ -8,6 +9,7 @@ import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import Layout from "@app/layout/AppLayout";
+import { Routes } from "@app/router/rooter";
 import { LikeAction } from "@app/types/enums";
 import {
   ActionsResponse,
@@ -30,7 +32,7 @@ const ReviewPage = () => {
 
   const { loggedUserId } = useContext(AppContext) as AppContextShape;
 
-  const [ratingValue, setRatingValue] = useState<number>();
+  const [ratingValue, setRatingValue] = useState<number>(0);
   const [reviewData, setReviewData] = useState<ReviewsData>();
   const [liked, setLiked] = useState(false);
 
@@ -101,7 +103,7 @@ const ReviewPage = () => {
   };
 
   const handleRate = (rating: number) => {
-    if (loggedUserId && reviewData && ratingValue && config) {
+    if (loggedUserId && reviewData && config) {
       rateReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData?.id,
@@ -186,22 +188,23 @@ const ReviewPage = () => {
               </div>
               <div className="mb-2 flex">
                 <div className="flex justify-start text-2xl">
-                  <span className="font-medium	 dark:text-white">
+                  <span className="font-medium dark:text-white">
                     {`${t("Review.createdby")}:`}
                   </span>
-                  <span className="ml-1 dark:text-white">
-                    {reviewData.user.fullName}
-                  </span>
+                  <Link to={`${Routes.profile}/${reviewData.userId}`}>
+                    <span className="ml-1 dark:text-white">
+                      {reviewData.user.fullName}
+                    </span>
+                  </Link>
                 </div>
                 <div className="ml-4 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
-                  {reviewData?.createdTime &&
-                    dateFormatter(reviewData.createdTime)}
+                  {dateFormatter(reviewData?.createdTime)}
                 </div>
               </div>
               <div className="flex h-8">
                 <Rating
                   name="simple-controlled"
-                  value={ratingValue ? ratingValue : 0}
+                  value={ratingValue}
                   size="large"
                   disabled={!isAuthenticated}
                   onChange={(e, newValue) => {
@@ -209,7 +212,7 @@ const ReviewPage = () => {
                   }}
                 />
                 <span className="ml-4 self-center dark:text-white">
-                  {ratingValue}
+                  {ratingValue ? ratingValue : null}
                 </span>
                 <div className="ml-6 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
                   {reviewData.ratings.length
@@ -221,8 +224,8 @@ const ReviewPage = () => {
                 {reviewData.reviewContent}
               </p>
             </div>
-            <div className="flex flex-col">
-              <div className="mt-20 flex items-start text-2xl dark:text-white">
+            <div>
+              <div className="mt-40 flex items-start text-2xl dark:text-white">
                 {t("Review.similiarReviews")}
               </div>
               <div className="mt-6 flex justify-between">

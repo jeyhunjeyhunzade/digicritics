@@ -70,7 +70,7 @@ const Homepage = () => {
         <div className="flex items-start text-2xl dark:text-white">
           {t("Homepage.popularReviews")}
         </div>
-        <div className="mt-6 flex justify-between">
+        <div className="mt-6 grid grid-cols-4 gap-4">
           {reviews?.map((review: ReviewsData) => (
             <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
               <ReviewCard review={review} />
@@ -81,7 +81,7 @@ const Homepage = () => {
         <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.recentlyAdded")}
         </div>
-        <div className="mt-6 flex justify-between">
+        <div className="mt-6 grid grid-cols-4 gap-4">
           {reviews?.map((review: ReviewsData) => (
             <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
               <ReviewCard review={review} />

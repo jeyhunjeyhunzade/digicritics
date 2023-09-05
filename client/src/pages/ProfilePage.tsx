@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Column,
   useGlobalFilter,
@@ -12,24 +12,36 @@ import {
   useTable,
 } from "react-table";
 import { deleteAccounts } from "@app/api/auth";
+import { getReviews } from "@app/api/reviews";
 import { getUserById, updateUser } from "@app/api/users";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import CloseIcon from "@app/assets/icons/CloseIcon";
+import DownIcon from "@app/assets/icons/DownIcon";
 import EditIcon from "@app/assets/icons/EditIcon";
 import PlusIcon from "@app/assets/icons/PlusIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
+import UpIcon from "@app/assets/icons/UpIcon";
 import DndUpload from "@app/components/DndUploadSingle";
 import Loader from "@app/components/Loader";
 import TableActions from "@app/components/TableActions";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import Layout from "@app/layout/AppLayout";
-import { reviewsData } from "@app/mock/reviewsData";
 import { AppContext } from "@app/pages/App";
 import { Routes } from "@app/router/rooter";
 import { UserStatus } from "@app/types/enums";
-import { AppContextShape, UsersData } from "@app/types/types";
-import { dateFormatter, errorHandler, successHandler } from "@app/utils";
+import {
+  AppContextShape,
+  ReviewsData,
+  ReviewsTable,
+  UsersData,
+} from "@app/types/types";
+import {
+  calculateAverageRate,
+  dateFormatter,
+  errorHandler,
+  successHandler,
+} from "@app/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { queryClient } from "..";
@@ -47,6 +59,7 @@ const ProfilePage = () => {
   const [isOwnPage, setIsOwnPage] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeleteProfileModaOpen, setDeleteProfileModaOpen] = useState(false);
+  const [tableData, setTableData] = useState<ReviewsTable[]>([]);
 
   const {
     isDarkMode,
@@ -56,20 +69,21 @@ const ProfilePage = () => {
     setLoggedUserId,
   } = useContext(AppContext) as AppContextShape;
 
-  const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
-    ["userById", id, config],
-    () => {
-      if (id && config) {
-        return getUserById({ id: +id, config });
-      } else {
-        return null;
+  const { data: userByIdData, isLoading: isUserByIdLoading } =
+    useQuery<UsersData>(
+      ["userById", id, config],
+      () => {
+        if (id && config) {
+          return getUserById({ id: +id, config });
+        } else {
+          return Promise.resolve([]);
+        }
+      },
+      {
+        onError,
+        retry: false,
       }
-    },
-    {
-      onError,
-      retry: false,
-    }
-  );
+    );
 
   const { mutate: updateUserMutate, isLoading: isUpdateUserMutateLoading } =
     useMutation(updateUser, {
@@ -113,31 +127,43 @@ const ProfilePage = () => {
       },
       {
         Header: t("ProfileTable.reviewName"),
-        accessor: "reviewName",
+        accessor: "reviewTitle",
+        sortType: "basic",
+        Cell: ({ row }: { row: any }) => (
+          <Link to={`${Routes.reviewpage}/${row.values.id}`}>
+            {row.values.reviewTitle}
+          </Link>
+        ),
       },
       {
         Header: t("ProfileTable.category"),
         accessor: "category",
+        sortType: "basic",
       },
       {
         Header: t("ProfileTable.createdDate"),
-        accessor: "createdDate",
+        accessor: "createdTime",
+        sortType: "basic",
       },
       {
         Header: t("ProfileTable.authorGrade"),
-        accessor: "authorGrade",
+        accessor: "reviewGrade",
+        sortType: "basic",
       },
       {
         Header: t("ProfileTable.rating"),
-        accessor: "rating",
+        accessor: "ratings",
+        sortType: "basic",
       },
       {
         Header: t("ProfileTable.likes"),
-        accessor: "like",
+        accessor: "likes",
+        sortType: "basic",
       },
       {
         Header: t("ProfileTable.actions"),
         accessor: "actions",
+        sortType: "basic",
         Cell: TableActions,
       },
     ],
@@ -153,15 +179,15 @@ const ProfilePage = () => {
     setPageSize,
     selectedFlatRows,
   } = useTable(
-    { columns, data: reviewsData },
+    { columns, data: tableData },
     useGlobalFilter,
     usePagination,
     useRowSelect
   );
 
   useEffect(() => {
-    reviewsData?.length && setPageSize(reviewsData?.length);
-  }, [setPageSize, reviewsData?.length]);
+    profileData?.reviews.length && setPageSize(profileData?.reviews.length);
+  }, [setPageSize, profileData?.reviews]);
 
   useEffect(() => {
     userByIdData && setProfileData(userByIdData);
@@ -184,6 +210,28 @@ const ProfilePage = () => {
       }
     }
   }, [loggedUser, profileData]);
+
+  useEffect(() => {
+    if (profileData?.reviews) {
+      const formatDataForTable: ReviewsTable[] = profileData.reviews.map(
+        (review: Omit<ReviewsData, "user">) => {
+          return {
+            id: review.id,
+            reviewTitle: review.reviewTitle,
+            workName: review.workName,
+            category: review.category,
+            reviewGrade: review.reviewGrade,
+            likes: review.likes.length,
+            ratings: review.ratings.length
+              ? calculateAverageRate(review.ratings)
+              : 0,
+            createdTime: dateFormatter(review.createdTime),
+          };
+        }
+      );
+      setTableData(formatDataForTable);
+    }
+  }, [profileData]);
 
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
@@ -275,7 +323,7 @@ const ProfilePage = () => {
         </div>
       ) : (
         profileData && (
-          <div className="flex w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
+          <div className="flex min-h-[91vh] w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
             <div className="mb-10 flex w-full justify-start">
               {profileData.profileImage ? (
                 <img
@@ -314,7 +362,8 @@ const ProfilePage = () => {
                             {t("Profile.created")}
                           </td>
                           <td className="pl-6 font-normal">
-                            {dateFormatter(profileData.createdTime)}
+                            {profileData.createdTime &&
+                              dateFormatter(profileData.createdTime)}
                           </td>
                         </tr>
                       </tbody>
@@ -406,9 +455,27 @@ const ProfilePage = () => {
                           {...column.getHeaderProps()}
                           className="px-6 py-5 text-base font-medium text-[#636060]"
                         >
-                          {column.render("Header")}
-                          {column.id === "selection" &&
-                            column.render("Summary")}
+                          <div className="flex">
+                            {column.render("Header")}
+                            {column.id === "selection" &&
+                              column.render("Summary")}
+                            {typeof column.Header === "string" && (
+                              <span className="ml-1 self-center">
+                                {column.isSorted ? (
+                                  column.isSortedDesc ? (
+                                    <DownIcon size={14} />
+                                  ) : (
+                                    <UpIcon size={14} />
+                                  )
+                                ) : (
+                                  <span className="flex">
+                                    <DownIcon size={14} />
+                                    <UpIcon size={14} />
+                                  </span>
+                                )}
+                              </span>
+                            )}
+                          </div>
                         </th>
                       ))}
                     </tr>

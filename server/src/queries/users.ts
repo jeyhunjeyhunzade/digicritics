@@ -126,6 +126,12 @@ const Users = {
           status: true,
           profileImage: true,
           createdTime: true,
+          reviews: {
+            include: {
+              likes: true,
+              ratings: true,
+            },
+          },
           Like: true,
           Rating: true,
         },
@@ -276,10 +282,10 @@ const Users = {
     try {
       const { userIds, status } = request.body;
 
-      if (!userIds || !userIds.length) {
+      if (!userIds || !userIds.length || !status) {
         return response
           .status(400)
-          .send({ message: "Please provide at least one id" });
+          .send({ message: "Please provide at least one id or status" });
       }
 
       await prisma.users.updateMany({

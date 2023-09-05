@@ -1,18 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { createNewReview } from "@app/api/reviews";
+import { createNewReview, getTags } from "@app/api/reviews";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
-import { tags } from "@app/mock/tagsData";
 import { AppContext } from "@app/pages/App";
 import { Category } from "@app/types/enums";
-import { AppContextShape } from "@app/types/types";
+import { AppContextShape, TagsData } from "@app/types/types";
 import { successHandler } from "@app/utils";
 import { Autocomplete, TextField } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
 import { queryClient } from "..";
 import DndUploadMiltiple from "./DndUploadMultiple";
@@ -34,17 +33,37 @@ const ReviewEditorModal = () => {
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[] | any>([]);
   const [urls, setUrls] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
+
+  const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
+    ["tags"],
+    getTags,
+    {
+      onError,
+      retry: false,
+    }
+  );
 
   const { mutate: createNewReviewMutate, isLoading: isCreateNewReviewLoading } =
     useMutation(createNewReview, {
       onSuccess: (response) => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["tags"]);
+
         successHandler(response);
         closeReviewEditorModal();
       },
       onError,
     });
+
+  useEffect(() => {
+    if (tagsData) {
+      const tagNames = tagsData.tags.map((tag) => tag.name);
+      setTags(tagNames);
+    }
+  }, [tagsData]);
 
   const customReviewEditorModalStyles = {
     content: {
@@ -84,7 +103,7 @@ const ReviewEditorModal = () => {
       reviewContent &&
       reviewGrade &&
       reviewCategory &&
-      tags.length &&
+      selectedTags.length &&
       config
     ) {
       if (loggedUserId) {
@@ -201,11 +220,10 @@ const ReviewEditorModal = () => {
             </div>
           </div>
           <div className="flex">
-            {/* //TODO: get tags dynamically */}
+            {/* //TODO: get tags dynamically and max 3 tag*/}
             <Autocomplete
               className="w-[548px] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
               multiple
-              limitTags={4}
               freeSolo
               options={tags}
               autoSelect

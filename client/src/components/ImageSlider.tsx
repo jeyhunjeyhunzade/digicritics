@@ -17,7 +17,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
     >
       {images.map((image: string, i) => (
         <SwiperSlide key={i}>
-          <img src={image} alt="review" />
+          <img src={image} alt="review" className="h-[720px] w-[620px]" />
         </SwiperSlide>
       ))}
     </Swiper>
