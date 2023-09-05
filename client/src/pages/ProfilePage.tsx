@@ -213,7 +213,6 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (profileData?.reviews) {
-      console.log("reviews:", profileData.reviews);
       const formatDataForTable: ReviewsTable[] = profileData.reviews.map(
         (review: Omit<ReviewsData, "user">) => {
           return {
