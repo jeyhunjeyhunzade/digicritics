@@ -116,7 +116,6 @@ export interface ReviewsData {
   id: number;
   reviewTitle: string;
   workName: string;
-  category: string;
   reviewGrade: number;
   reviewContent: string;
   reviewImages: string[];
@@ -125,6 +124,7 @@ export interface ReviewsData {
   tags: ReviewTags[];
   likes: Like[];
   ratings: Rate[];
+  category: Category;
   comments: [];
   user: Omit<UsersData, "Like" | "Rating">;
 }

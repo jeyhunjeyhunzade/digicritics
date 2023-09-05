@@ -144,7 +144,7 @@ const CategoryEditorModal = () => {
               categories.map((category, i) => (
                 <div
                   key={i}
-                  className="mb-4 mr-4 flex h-fit w-fit rounded-[4px] bg-[#EFEFEF] px-4 py-2 dark:bg-[#3F3F3F]"
+                  className="mr-4 flex h-fit w-fit rounded-[4px] bg-[#EFEFEF] px-4 py-2 dark:bg-[#3F3F3F]"
                 >
                   <div className="mr-6 text-base leading-6 text-[#2c2c2c] dark:text-white">
                     {category.name}

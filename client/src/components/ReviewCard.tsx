@@ -142,7 +142,7 @@ const ReviewCard = (props: ReviewCardProps) => {
           <span className="font-medium dark:text-white">{`${t(
             "Review.category"
           )}:`}</span>
-          <span className="ml-1 dark:text-white">{review?.category}</span>
+          <span className="ml-1 dark:text-white">{review?.category?.name}</span>
         </div>
         <div className="flex justify-start text-sm">
           <span className="font-medium dark:text-white">

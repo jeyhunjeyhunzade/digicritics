@@ -17,6 +17,16 @@ const Reviews = {
         userId,
       } = request.body;
 
+      const existingCategory = await prisma.category.findUnique({
+        where: {
+          name: category,
+        },
+      });
+
+      if (!existingCategory) {
+        return response.status(400).json({ message: "Category not found" });
+      }
+
       const existingTags = await prisma.tag.findMany({
         where: {
           name: {
@@ -40,12 +50,14 @@ const Reviews = {
         data: {
           reviewTitle,
           workName,
-          category,
           reviewGrade,
           reviewContent,
           reviewImages,
           user: {
             connect: { id: userId },
+          },
+          category: {
+            connect: { id: existingCategory.id },
           },
           tags: {
             connect: existingTagIds.map((id) => ({ id })), // Connect to existing tags
@@ -75,6 +87,7 @@ const Reviews = {
           likes: true,
           ratings: true,
           comments: true,
+          category: true,
           user: true,
         },
       });
