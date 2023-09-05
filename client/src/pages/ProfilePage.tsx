@@ -217,7 +217,11 @@ const ProfilePage = () => {
       const formatDataForTable: ReviewsTable[] = profileData.reviews.map(
         (review: Omit<ReviewsData, "user">) => {
           return {
-            ...review,
+            id: review.id,
+            reviewTitle: review.reviewTitle,
+            workName: review.workName,
+            category: review.category,
+            reviewGrade: review.reviewGrade,
             likes: review.likes.length,
             ratings: review.ratings.length
               ? calculateAverageRate(review.ratings)
@@ -226,6 +230,7 @@ const ProfilePage = () => {
           };
         }
       );
+      console.log("formatDataForTable: ", formatDataForTable);
       setTableData(formatDataForTable);
     }
   }, [profileData]);

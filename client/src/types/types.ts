@@ -65,7 +65,7 @@ export interface ReviewsTable {
   reviewTitle: string;
   workName: string;
   category: string;
-  reviewGrade: 7;
+  reviewGrade: number;
   createdTime: string;
   likes: number;
   ratings: number;
