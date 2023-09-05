@@ -27,11 +27,12 @@ app.get("/users", jwtCheck, queries.Users.getUsers);
 app.delete("/users", jwtCheck, queries.Users.deleteUser);
 app.patch("/users/block", queries.Users.blockUser);
 app.patch("/users/unblock", jwtCheck, queries.Users.unBlockUser);
-app.patch("/users/setAdmin", jwtCheck, queries.Users.updateUserRole);
+app.patch("/users/updaterole", queries.Users.updateUserRole);
 app.patch("/users/edit", jwtCheck, queries.Users.updateUser);
 
 //Reviews
 app.get("/reviews", queries.Reviews.getReviews);
+app.get("/tags", queries.Reviews.getTags);
 app.post("/review/createReview", jwtCheck, queries.Reviews.createReview);
 app.get("/reviews/:id", queries.Reviews.getReviewById);
 app.patch("/reviews/:reviewId/like", jwtCheck, queries.Reviews.likeReview);

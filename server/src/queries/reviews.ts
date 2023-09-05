@@ -17,6 +17,25 @@ const Reviews = {
         userId,
       } = request.body;
 
+      const existingTags = await prisma.tag.findMany({
+        where: {
+          name: {
+            in: tags,
+          },
+        },
+      });
+
+      const existingTagIds = existingTags.map((tag) => tag.id);
+
+      const tagAssociations = tags.map((tagName: string) => {
+        const tagId = existingTagIds.find((id) => {
+          const tag = existingTags.find((tag) => tag.name === tagName);
+          return tag ? tag.id === id : false;
+        });
+
+        return tagId ? { id: tagId } : { name: tagName };
+      });
+
       const newReview = await prisma.review.create({
         data: {
           reviewTitle,
@@ -29,9 +48,8 @@ const Reviews = {
             connect: { id: userId },
           },
           tags: {
-            create: tags.map((tagName: string) => ({
-              name: tagName,
-            })),
+            connect: existingTagIds.map((id) => ({ id })), // Connect to existing tags
+            create: tagAssociations.filter((tag: any) => !("id" in tag)), // Create new tags
           },
         },
       });
@@ -44,10 +62,11 @@ const Reviews = {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
       } else {
-        return response.status(500).send({ message: "unknown error" });
+        return response.status(500).send({ message: "Unknown error" });
       }
     }
   },
+
   getReviews: async (request: Request, response: Response) => {
     try {
       const reviews = await prisma.review.findMany({
@@ -69,6 +88,7 @@ const Reviews = {
       }
     }
   },
+
   getReviewById: async (request: Request, response: Response) => {
     try {
       const { id } = request.params;
@@ -99,6 +119,24 @@ const Reviews = {
       }
     }
   },
+
+  getTags: async (request: Request, response: Response) => {
+    try {
+      const tags = await prisma.tag.findMany();
+
+      response.json({
+        message: "Tags retrieved successfully",
+        tags,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
   likeReview: async (request: Request, response: Response) => {
     try {
       const { userId } = request.body;

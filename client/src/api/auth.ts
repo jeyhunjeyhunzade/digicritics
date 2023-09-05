@@ -59,7 +59,7 @@ export const updateUserRole = async (updateUserRoleParams: {
   const { userIds, status, config } = updateUserRoleParams;
 
   const res = await axios.patch(
-    `${serverUrl}/users/setAdmin`,
+    `${serverUrl}/users/updaterole`,
     { userIds, status },
     config
   );

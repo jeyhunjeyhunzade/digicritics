@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -47,7 +46,13 @@ const AdminPage = () => {
 
   const { data: usersData, isLoading: isUsersDataLoading } = useQuery<any>(
     ["users", config],
-    () => config && getUsers(config),
+    () => {
+      if (config) {
+        return getUsers(config);
+      } else {
+        return null;
+      }
+    },
     {
       onError,
       retry: false,
@@ -85,7 +90,7 @@ const AdminPage = () => {
         Header: t("ProfileTable.userName"),
         accessor: "fullName",
         sortType: "basic",
-        Cell: ({ row }) => (
+        Cell: ({ row }: { row: any }) => (
           <Link to={`${Routes.profile}/${row.values.id}`}>
             {row.values.fullName}
           </Link>
@@ -99,16 +104,6 @@ const AdminPage = () => {
       {
         Header: t("ProfileTable.registerDate"),
         accessor: "createdTime",
-        sortType: "datetime",
-      },
-      {
-        Header: t("ProfileTable.likes"),
-        accessor: "likes",
-        sortType: "basic",
-      },
-      {
-        Header: t("ProfileTable.userRating"),
-        accessor: "userRating",
         sortType: "basic",
       },
       {
@@ -150,9 +145,7 @@ const AdminPage = () => {
         (user: UsersData) => {
           return {
             ...user,
-            //TODO: add rating calculation
             createdTime: dateFormatter(user.createdTime),
-            likes: user.Like.length,
           };
         }
       );
@@ -193,7 +186,7 @@ const AdminPage = () => {
 
   return (
     <Layout>
-      <div className="flex h-[90vh] w-full flex-col px-20 py-20 dark:bg-[#1B1B1B]">
+      <div className="flex w-full flex-col px-20 py-20 dark:bg-[#1B1B1B]">
         <div className="flex w-full justify-between">
           <div className="flex">
             <div className="relative">

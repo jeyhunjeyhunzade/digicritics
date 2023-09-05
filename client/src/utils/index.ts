@@ -50,7 +50,6 @@ export const dateFormatter = (
   const formattedDateTime = new Intl.DateTimeFormat("en-US", options).format(
     dateTime
   );
-
   return formattedDateTime;
 };
 
