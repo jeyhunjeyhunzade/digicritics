@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import ImageGallery from "react-image-gallery";
 import { useParams } from "react-router-dom";
 import { getReviewById, likeReview, rateReview } from "@app/api/reviews";
 import HeartIcon from "@app/assets/icons/HeartIcon";
+import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
@@ -12,7 +12,6 @@ import { LikeAction } from "@app/types/enums";
 import {
   ActionsResponse,
   AppContextShape,
-  GalleryImage,
   ReviewsData,
 } from "@app/types/types";
 import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
@@ -21,8 +20,6 @@ import { Rating } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "..";
 import { AppContext } from "./App";
-
-import "react-image-gallery/styles/css/image-gallery.css";
 
 const ReviewPage = () => {
   const { id } = useParams();
@@ -35,7 +32,6 @@ const ReviewPage = () => {
 
   const [ratingValue, setRatingValue] = useState<number>();
   const [reviewData, setReviewData] = useState<ReviewsData>();
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [liked, setLiked] = useState(false);
 
   const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
@@ -75,19 +71,6 @@ const ReviewPage = () => {
   useEffect(() => {
     reviewByIdData && setReviewData(reviewByIdData);
   }, [reviewByIdData]);
-
-  useEffect(() => {
-    if (reviewData) {
-      const galleryImages: GalleryImage[] = reviewData.reviewImages.map(
-        (image: string) => {
-          return {
-            original: image,
-          };
-        }
-      );
-      setGalleryImages(galleryImages);
-    }
-  }, [reviewData]);
 
   useEffect(() => {
     if (reviewData) {
@@ -138,13 +121,7 @@ const ReviewPage = () => {
         reviewData && (
           <div className="p-20 dark:bg-[#1B1B1B]">
             <div>
-              {galleryImages.length && (
-                // TODO:  USE swiper
-                <ImageGallery
-                  items={galleryImages}
-                  additionalClass="float-left mb-12 mr-8 h-full w-[620px] rounded-[20px] shadow-cardShadow bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5"
-                />
-              )}
+              <ImageSlider images={reviewData.reviewImages} />
             </div>
             <div className="">
               <div className="relative flex justify-between">

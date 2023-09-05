@@ -91,7 +91,7 @@ const ReviewCard = (props: ReviewCardProps) => {
         <img
           className="h-[194px] w-full"
           src={review?.reviewImages[0]}
-          alt="reviewImage"
+          alt="review"
         />
         <div className="absolute right-[18px] top-[12px]">
           <div

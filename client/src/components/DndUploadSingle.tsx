@@ -30,11 +30,7 @@ const DndUploadSingle = (props: DndUploadProps) => {
   return (
     <div className="flex w-full items-center justify-center">
       {url ? (
-        <img
-          src={url}
-          alt="profileImage"
-          className="h-[292px] rounded-[10px]"
-        />
+        <img src={url} alt="profile" className="h-[292px] rounded-[10px]" />
       ) : (
         <label
           htmlFor="dropzone-file"

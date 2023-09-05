@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react(), tsConfigPaths(), svgr()],
   optimizeDeps: {
     include: ["@emotion/styled"],
+    exclude: ["swiper", "swiper/module-name"],
   },
   define: {
     "process.env": process.env,
