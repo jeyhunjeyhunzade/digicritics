@@ -34,8 +34,8 @@ model Review {
   id          Int    @id @default(autoincrement())
   reviewTitle String
   workName    String
-  category    String
   reviewGrade Int
+  categoryId  Int?
 
   reviewContent String
   reviewImages  String[]
@@ -45,8 +45,9 @@ model Review {
   ratings  Rating[]
   comments Comment[]
 
-  userId Int
-  user   Users @relation(fields: [userId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+  userId   Int
+  user     Users     @relation(fields: [userId], references: [id])
 
   createdTime DateTime @default(now())
 }
@@ -81,6 +82,12 @@ model Comment {
 }
 
 model Tag {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  reviews Review[]
+}
+
+model Category {
   id      Int      @id @default(autoincrement())
   name    String   @unique
   reviews Review[]

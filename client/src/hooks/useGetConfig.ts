@@ -21,7 +21,7 @@ const useGetConfig = () => {
           const apiConfig = await getConfig();
           setConfig(apiConfig);
         } catch (error) {
-          console.error("Error fetching config:", error);
+          console.error("Error resolving config:", error);
         }
       }
     };

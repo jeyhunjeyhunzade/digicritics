@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
+import CategoryEditorModal from "@app/components/CategoryEditorModal";
 import Loader from "@app/components/Loader";
 import Navbar from "@app/components/Navbar";
 import ReviewEditorModal from "@app/components/ReviewEditorModal";
@@ -25,6 +26,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           </header>
           <main className="flex items-center justify-center">{children}</main>
           <ReviewEditorModal />
+          <CategoryEditorModal />
         </>
       )}
     </>

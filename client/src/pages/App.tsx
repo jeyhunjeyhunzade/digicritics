@@ -10,6 +10,7 @@ export const AppContext = createContext<AppContextShape | null>(null);
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isReviewEditorOpen, setIsReviewEditorOpen] = useState(false);
+  const [isCategoryEditorOpen, setCategoryEditorOpen] = useState(false);
   const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
   const [config, setConfig] = useState<ApiConfig>();
@@ -35,6 +36,8 @@ const App = () => {
         setLoggedUserId,
         config,
         setConfig,
+        isCategoryEditorOpen,
+        setCategoryEditorOpen,
       }}
     >
       <div>

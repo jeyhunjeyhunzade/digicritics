@@ -52,7 +52,6 @@ const LoginCallBack = () => {
             profileImage: user.picture,
           });
       } else {
-        console.log("response: ", response);
         if (response.status === UserStatus.BLOCKED) {
           toast.error(t("Loader.blocked"));
           setTimeout(() => {

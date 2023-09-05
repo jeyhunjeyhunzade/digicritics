@@ -32,7 +32,6 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
       const base = await convertBase64(files[i]);
       base64s.push(base);
     }
-    console.log("base64s: ", base64s);
 
     uploadReviewImagesMutate({ images: base64s });
   };
