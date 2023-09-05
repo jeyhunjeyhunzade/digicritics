@@ -83,3 +83,26 @@ button[data-name="fullscreen"] {
   outline: none !important;
   outline: 0 !important;
 }
+
+/* image slider custom styles */
+.swiper-button-prev, .swiper-button-next {
+  padding: 35px 20px;
+  border-radius: 4px;
+  color: #013549;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red);
+  background-size: 200% 100%;
+  animation: rainbow 2s linear infinite;
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

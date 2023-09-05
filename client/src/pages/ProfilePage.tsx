@@ -280,7 +280,7 @@ const ProfilePage = () => {
               {profileData.profileImage ? (
                 <img
                   src={profileData.profileImage}
-                  alt="profileImage"
+                  alt="profile"
                   className="max-h-[215px] w-[160px] rounded-[8px]"
                 />
               ) : (

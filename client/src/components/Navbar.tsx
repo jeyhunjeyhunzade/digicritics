@@ -171,7 +171,7 @@ const Navbar = () => {
               {loggedUser?.profileImage ? (
                 <img
                   src={loggedUser?.profileImage}
-                  alt="profileImage"
+                  alt="profile"
                   className="h-[32px] w-[32px] rounded-[32px]"
                 />
               ) : (

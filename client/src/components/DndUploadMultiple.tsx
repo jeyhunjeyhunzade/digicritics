@@ -45,7 +45,7 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
             <img
               key={i}
               src={url}
-              alt="reviewImages"
+              alt="review"
               className="h-[223px] w-[150px] rounded-[8px] shadow-reviewImagesShadow"
             />
           ))}
