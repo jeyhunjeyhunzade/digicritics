@@ -19,6 +19,7 @@ export default {
     user: "User",
     admin: "Admin",
     adminPage: "Admin page",
+    categoryEditor: "Category Editor",
   },
   Auth: {
     email: "Email address",
@@ -101,6 +102,10 @@ export default {
     tags: "Tags",
     cancel: "Cancel",
     shareReview: "Share review",
+  },
+  CategoryEditor: {
+    newCategory: "New category",
+    save: "Save",
   },
   Toast: {
     allRequiredFields: "Please fill the all fields",

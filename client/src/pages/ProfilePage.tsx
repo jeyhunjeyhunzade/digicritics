@@ -9,10 +9,10 @@ import {
   useGlobalFilter,
   usePagination,
   useRowSelect,
+  useSortBy,
   useTable,
 } from "react-table";
 import { deleteAccounts } from "@app/api/auth";
-import { getReviews } from "@app/api/reviews";
 import { getUserById, updateUser } from "@app/api/users";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import CloseIcon from "@app/assets/icons/CloseIcon";
@@ -127,11 +127,11 @@ const ProfilePage = () => {
       },
       {
         Header: t("ProfileTable.reviewName"),
-        accessor: "reviewTitle",
+        accessor: "workName",
         sortType: "basic",
         Cell: ({ row }: { row: any }) => (
           <Link to={`${Routes.reviewpage}/${row.values.id}`}>
-            {row.values.reviewTitle}
+            {row.values.workName}
           </Link>
         ),
       },
@@ -176,11 +176,13 @@ const ProfilePage = () => {
     headerGroups,
     prepareRow,
     page,
+    state,
     setPageSize,
-    selectedFlatRows,
+    setGlobalFilter,
   } = useTable(
     { columns, data: tableData },
     useGlobalFilter,
+    useSortBy,
     usePagination,
     useRowSelect
   );
@@ -289,10 +291,6 @@ const ProfilePage = () => {
     },
   };
 
-  useEffect(() => {
-    url && console.log("image url: ", url);
-  }, [url]);
-
   const handleUpdateUser = () => {
     if (id) {
       updateUserMutate({
@@ -354,8 +352,9 @@ const ProfilePage = () => {
                         </tr>
                         <tr className="mb-2">
                           <td className="font-medium">{t("Profile.likes")}</td>
-                          {/* TODO:  user total likes*/}
-                          <td className="pl-6 font-normal">21</td>
+                          <td className="pl-6 font-normal">
+                            {profileData?.Like?.length}
+                          </td>
                         </tr>
                         <tr>
                           <td className="font-medium">
@@ -395,6 +394,8 @@ const ProfilePage = () => {
                 <input
                   type="text"
                   placeholder={t("ProfileTable.search")}
+                  value={state.globalFilter || ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
                   className="h-[44px] w-[628px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#2C2C2C] outline-none focus:ring-0 dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -403,8 +404,7 @@ const ProfilePage = () => {
               </div>
               <div className="h-[44px] w-[302px]">
                 <select
-                  id="region"
-                  name="region"
+                  name="category"
                   className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                   // value={region}
                   // onChange={(e) => {
@@ -452,7 +452,9 @@ const ProfilePage = () => {
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
                         <th
-                          {...column.getHeaderProps()}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps()
+                          )}
                           className="px-6 py-5 text-base font-medium text-[#636060]"
                         >
                           <div className="flex">
@@ -490,7 +492,7 @@ const ProfilePage = () => {
                     return (
                       <tr
                         {...row.getRowProps()}
-                        className="rounded-[8px] bg-white dark:bg-[#2C2C2C]"
+                        className="rounded-[8px] bg-white text-left dark:bg-[#2C2C2C]"
                       >
                         {row.cells.map((cell) => {
                           return (

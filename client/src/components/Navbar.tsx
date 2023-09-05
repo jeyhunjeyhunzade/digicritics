@@ -34,6 +34,7 @@ const Navbar = () => {
   const currentPath = useCurrentPath();
 
   const {
+    setCategoryEditorOpen,
     setIsReviewEditorOpen,
     isDarkMode,
     loggedUserId,
@@ -226,12 +227,24 @@ const Navbar = () => {
           {t("Navbar.profile")}
         </button>
         {loggedUser?.status === UserStatus.ADMIN && (
-          <button
-            onClick={() => navigate(Routes.adminpage)}
-            className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
-          >
-            {t("Navbar.adminPage")}
-          </button>
+          <>
+            <button
+              onClick={() => navigate(Routes.adminpage)}
+              className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+            >
+              {t("Navbar.adminPage")}
+            </button>
+            <button
+              onClick={() => {
+                setCategoryEditorOpen(true);
+                setIsReviewEditorOpen(false);
+                setIsProfileModalOpen(false);
+              }}
+              className="delay-30 flex w-full px-4 py-2 text-sm text-gray-800 transition ease-in hover:bg-[#046085] hover:text-white focus:outline-none dark:text-white"
+            >
+              {t("Navbar.categoryEditor")}
+            </button>
+          </>
         )}
         <button
           onClick={() => {

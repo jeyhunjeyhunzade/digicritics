@@ -137,6 +137,91 @@ const Reviews = {
     }
   },
 
+  createCategory: async (request: Request, response: Response) => {
+    try {
+      const { categoryName } = request.body;
+
+      const existingCategory = await prisma.category.findUnique({
+        where: {
+          name: categoryName,
+        },
+      });
+
+      if (existingCategory) {
+        return response.status(400).json({
+          message: "Category with this name already exists",
+        });
+      }
+
+      const newCategory = await prisma.category.create({
+        data: {
+          name: categoryName,
+        },
+      });
+
+      response.json({
+        message: "Category created successfully",
+        category: newCategory,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).json({ message: error.message });
+      } else {
+        return response.status(500).json({ message: "Unknown error" });
+      }
+    }
+  },
+
+  deleteCategory: async (request: Request, response: Response) => {
+    try {
+      const { categoryName } = request.body;
+
+      const existingCategory = await prisma.category.findUnique({
+        where: {
+          name: categoryName,
+        },
+      });
+
+      if (!existingCategory) {
+        return response.status(404).json({
+          message: "Category not found",
+        });
+      }
+
+      await prisma.category.delete({
+        where: {
+          id: existingCategory.id,
+        },
+      });
+
+      response.json({
+        message: "Category deleted successfully",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).json({ message: error.message });
+      } else {
+        return response.status(500).json({ message: "Unknown error" });
+      }
+    }
+  },
+
+  getCategories: async (request: Request, response: Response) => {
+    try {
+      const categories = await prisma.category.findMany();
+
+      response.json({
+        categories,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).json({ message: error.message });
+      } else {
+        return response.status(500).json({ message: "Unknown error" });
+      }
+    }
+  },
+
   likeReview: async (request: Request, response: Response) => {
     try {
       const { userId } = request.body;

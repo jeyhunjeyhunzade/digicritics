@@ -33,10 +33,13 @@ app.patch("/users/edit", jwtCheck, queries.Users.updateUser);
 //Reviews
 app.get("/reviews", queries.Reviews.getReviews);
 app.get("/tags", queries.Reviews.getTags);
+app.get("/categories", queries.Reviews.getCategories);
+app.post("/createCategory", jwtCheck, queries.Reviews.createCategory);
 app.post("/review/createReview", jwtCheck, queries.Reviews.createReview);
 app.get("/reviews/:id", queries.Reviews.getReviewById);
 app.patch("/reviews/:reviewId/like", jwtCheck, queries.Reviews.likeReview);
 app.patch("/reviews/:reviewId/rate", jwtCheck, queries.Reviews.rateReview);
+app.delete("/deleteCategory", jwtCheck, queries.Reviews.deleteCategory);
 
 //media upload api
 app.post("/uploadMedia", (req, res) => {

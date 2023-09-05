@@ -12,6 +12,8 @@ export interface AppContextShape {
   setLoggedUserId: Dispatch<SetStateAction<number | null>>;
   config: ApiConfig | undefined;
   setConfig: Dispatch<SetStateAction<ApiConfig | undefined>>;
+  isCategoryEditorOpen: boolean;
+  setCategoryEditorOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface ApiConfig {
@@ -85,6 +87,11 @@ export interface Tag {
   name: string;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+}
+
 //Response
 export interface UpdatedUserData {
   id: number | string | undefined;
@@ -124,6 +131,10 @@ export interface ReviewsData {
 
 export interface TagsData {
   tags: Tag[];
+}
+
+export interface CategoriesData {
+  categories: Category[];
 }
 
 //Params

@@ -9,12 +9,12 @@ import axios from "axios";
 import { serverUrl } from "./apiClient";
 
 export const createNewReview = async (
-  createNewReviewData: CreateNewReviewParams
+  createNewReviewParams: CreateNewReviewParams
 ) => {
-  const { config } = createNewReviewData;
+  const { config } = createNewReviewParams;
   const res = await axios.post(
     `${serverUrl}/review/createReview`,
-    createNewReviewData,
+    createNewReviewParams,
     config
   );
   return res?.data;
@@ -32,6 +32,38 @@ export const getReviewById = async (reviewId: number | string | null) => {
 
 export const getTags = async () => {
   const res = await axios.get(`${serverUrl}/tags`);
+  return res?.data;
+};
+
+export const getCategories = async () => {
+  const res = await axios.get(`${serverUrl}/categories`);
+  return res?.data;
+};
+
+export const createNewCategory = async ({
+  categoryName,
+  config,
+}: {
+  categoryName: string;
+  config: ApiConfig;
+}) => {
+  const res = await axios.post(
+    `${serverUrl}/createCategory`,
+    { categoryName },
+    config
+  );
+  return res?.data;
+};
+
+export const deleteCategory = async (deleteAccountsParams: {
+  categoryName: string;
+  config: ApiConfig;
+}) => {
+  const { categoryName, config } = deleteAccountsParams;
+  const res = await axios.delete(`${serverUrl}/deleteCategory`, {
+    data: { categoryName },
+    ...config,
+  });
   return res?.data;
 };
 
