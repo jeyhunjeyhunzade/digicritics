@@ -170,7 +170,7 @@ const ReviewPage = () => {
                   {`${t("Review.category")}:`}
                 </span>
                 <span className="ml-1 dark:text-white">
-                  {reviewData.category}
+                  {reviewData.category.name}
                 </span>
               </div>
               <div className="mb-3 flex justify-start text-2xl">
