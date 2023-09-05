@@ -21,16 +21,6 @@ export enum AdminTableAction {
   DELETE = "DELETE",
 }
 
-//TODO: make categories dynamically
-export enum Category {
-  SPORT = "Sport",
-  MOVIE = "Movies",
-  GAMING = "Gaming",
-  ANIME = "Anime",
-  TECH = "Technology",
-  CITIES = "Cities",
-}
-
 export enum LikeAction {
   LIKED = "LIKED",
   UNLIKED = "UNLIKED",

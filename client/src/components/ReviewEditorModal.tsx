@@ -2,13 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { createNewReview, getTags } from "@app/api/reviews";
+import { createNewReview, getCategories, getTags } from "@app/api/reviews";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { AppContext } from "@app/pages/App";
-import { Category } from "@app/types/enums";
-import { AppContextShape, TagsData } from "@app/types/types";
+import {
+  AppContextShape,
+  CategoriesData,
+  Category,
+  TagsData,
+} from "@app/types/types";
 import { successHandler } from "@app/utils";
 import { Autocomplete, TextField } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -29,11 +33,12 @@ const ReviewEditorModal = () => {
   const [reviewContent, setReviewContent] = useState<any>("");
   const [reviewTitle, setReviewTitle] = useState("");
   const [reviewWorkName, setReviewWorkName] = useState("");
-  const [reviewCategory, setReviewCategory] = useState<Category | string>();
+  const [reviewCategory, setReviewCategory] = useState("");
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[] | any>([]);
   const [urls, setUrls] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
     ["tags"],
@@ -43,6 +48,12 @@ const ReviewEditorModal = () => {
       retry: false,
     }
   );
+
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useQuery<CategoriesData>(["categories"], getCategories, {
+      onError,
+      retry: false,
+    });
 
   const { mutate: createNewReviewMutate, isLoading: isCreateNewReviewLoading } =
     useMutation(createNewReview, {
@@ -64,6 +75,12 @@ const ReviewEditorModal = () => {
       setTags(tagNames);
     }
   }, [tagsData]);
+
+  useEffect(() => {
+    if (categoriesData) {
+      setCategories(categoriesData.categories);
+    }
+  }, [categoriesData]);
 
   const customReviewEditorModalStyles = {
     content: {
@@ -189,13 +206,11 @@ const ReviewEditorModal = () => {
                   <option className="text-[#636060]" value="">
                     {t("ReviewEditor.category")}
                   </option>
-                  {/* //TODO:  make it dynamic*/}
-                  <option value={Category.GAMING}>{Category.GAMING}</option>
-                  <option value={Category.MOVIE}>{Category.MOVIE}</option>
-                  <option value={Category.ANIME}>{Category.ANIME}</option>
-                  <option value={Category.TECH}>{Category.TECH}</option>
-                  <option value={Category.SPORT}>{Category.SPORT}</option>
-                  <option value={Category.CITIES}>{Category.CITIES}</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

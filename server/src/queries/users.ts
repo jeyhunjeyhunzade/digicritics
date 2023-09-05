@@ -130,6 +130,7 @@ const Users = {
             include: {
               likes: true,
               ratings: true,
+              category: true,
             },
           },
           Like: true,

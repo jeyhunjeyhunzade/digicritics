@@ -13,6 +13,7 @@ import {
   useTable,
 } from "react-table";
 import { deleteAccounts } from "@app/api/auth";
+import { getCategories } from "@app/api/reviews";
 import { getUserById, updateUser } from "@app/api/users";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import CloseIcon from "@app/assets/icons/CloseIcon";
@@ -32,6 +33,8 @@ import { Routes } from "@app/router/rooter";
 import { UserStatus } from "@app/types/enums";
 import {
   AppContextShape,
+  CategoriesData,
+  Category,
   ReviewsData,
   ReviewsTable,
   UsersData,
@@ -60,6 +63,8 @@ const ProfilePage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeleteProfileModaOpen, setDeleteProfileModaOpen] = useState(false);
   const [tableData, setTableData] = useState<ReviewsTable[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedSortOption, setSelectedSortOption] = useState("");
 
   const {
     isDarkMode,
@@ -84,6 +89,12 @@ const ProfilePage = () => {
         retry: false,
       }
     );
+
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useQuery<CategoriesData>(["categories"], getCategories, {
+      onError,
+      retry: false,
+    });
 
   const { mutate: updateUserMutate, isLoading: isUpdateUserMutateLoading } =
     useMutation(updateUser, {
@@ -117,7 +128,8 @@ const ProfilePage = () => {
       },
     });
 
-  const isLoading = isUpdateUserMutateLoading || isDeleteUserLoading;
+  const isLoading =
+    isUpdateUserMutateLoading || isDeleteUserLoading || isCategoriesLoading;
 
   const columns: Column<any>[] = useMemo(
     () => [
@@ -180,7 +192,10 @@ const ProfilePage = () => {
     setPageSize,
     setGlobalFilter,
   } = useTable(
-    { columns, data: tableData },
+    {
+      columns,
+      data: tableData,
+    },
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -221,7 +236,7 @@ const ProfilePage = () => {
             id: review.id,
             reviewTitle: review.reviewTitle,
             workName: review.workName,
-            category: review.category,
+            category: review?.category?.name,
             reviewGrade: review.reviewGrade,
             likes: review.likes.length,
             ratings: review.ratings.length
@@ -234,6 +249,10 @@ const ProfilePage = () => {
       setTableData(formatDataForTable);
     }
   }, [profileData]);
+
+  useEffect(() => {
+    categoriesData && setCategories(categoriesData.categories);
+  }, [categoriesData]);
 
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
@@ -406,39 +425,39 @@ const ProfilePage = () => {
                 <select
                   name="category"
                   className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  // value={region}
-                  // onChange={(e) => {
-                  //   setRegion(e.target.value);
-                  // }}
+                  value={state.globalFilter || ""}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
                 >
                   <option value="">{t("Review.category")}</option>
-                  <option>Games</option>
-                  <option>Movies</option>
-                  <option>Sport</option>
-                  <option>Games</option>
-                  <option>Movies</option>
-                  <option>Sport</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="ml-6 h-[44px] w-[302px] bg-[transparent]">
                 <select
-                  id="region"
-                  name="region"
+                  name="sortBy"
                   placeholder={t("ProfileTable.sortBy")}
                   className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  // value={region}
-                  // onChange={(e) => {
-                  //   setRegion(e.target.value);
-                  // }}
+                  value={selectedSortOption}
+                  // onChange={handleSortChange}
                 >
                   <option value="">{t("ProfileTable.sortBy")}</option>
-                  <option>{t("ProfileTable.reviewName")}</option>
-                  <option>{t("ProfileTable.category")}</option>
-                  <option>{t("ProfileTable.createdDate")}</option>
-                  <option>{t("ProfileTable.authorGrade")}</option>
-                  <option>{t("ProfileTable.rating")}</option>
-                  <option>{t("ProfileTable.likes")}</option>
-                  <option>{t("ProfileTable.actions")}</option>
+                  <option value="workName">
+                    {t("ProfileTable.reviewName")}
+                  </option>
+                  <option value="category">{t("ProfileTable.category")}</option>
+                  <option value="createdTime">
+                    {t("ProfileTable.createdDate")}
+                  </option>
+                  <option value="reviewGrade">
+                    {t("ProfileTable.authorGrade")}
+                  </option>
+                  <option value="ratings">{t("ProfileTable.rating")}</option>
+                  <option value="likes">{t("ProfileTable.likes")}</option>
+                  <option value="actions">{t("ProfileTable.actions")}</option>
                 </select>
               </div>
             </div>
