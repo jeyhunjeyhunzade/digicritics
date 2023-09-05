@@ -230,7 +230,6 @@ const ProfilePage = () => {
           };
         }
       );
-      console.log("formatDataForTable: ", formatDataForTable);
       setTableData(formatDataForTable);
     }
   }, [profileData]);
