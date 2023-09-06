@@ -1,5 +1,6 @@
 import {
   ApiConfig,
+  CommentReviewParams,
   CreateNewReviewParams,
   LikeReviewParams,
   RateReviewParams,
@@ -82,6 +83,23 @@ export const rateReview = async (rateReviewParams: RateReviewParams) => {
   const res = await axios.patch(
     `${serverUrl}/reviews/${reviewId}/rate`,
     { userId, rating },
+    config
+  );
+  return res?.data;
+};
+
+export const getCommentsForReview = async (reviewId: string | number) => {
+  const res = await axios.get(`${serverUrl}/reviews/${reviewId}/comments`);
+  return res?.data;
+};
+
+export const commentReview = async (
+  commentReviewParams: CommentReviewParams
+) => {
+  const { reviewId, userId, content, config } = commentReviewParams;
+  const res = await axios.patch(
+    `${serverUrl}/reviews/${reviewId}/addComment`,
+    { userId, content },
     config
   );
   return res?.data;

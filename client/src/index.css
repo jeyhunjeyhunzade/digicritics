@@ -98,6 +98,12 @@ button[data-name="fullscreen"] {
   animation: rainbow 2s linear infinite;
 }
 
+.noComments {
+  background: linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red);
+  background-size: 200% 100%;
+  animation: rainbow 2s linear infinite;
+}
+
 @keyframes rainbow {
   0% {
     background-position: 200% 0;
