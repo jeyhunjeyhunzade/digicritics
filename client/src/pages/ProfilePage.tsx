@@ -408,7 +408,7 @@ const ProfilePage = () => {
                 )}
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-start">
               <div className="relative mr-6">
                 <input
                   type="text"
@@ -436,7 +436,7 @@ const ProfilePage = () => {
                   ))}
                 </select>
               </div>
-              <div className="ml-6 h-[44px] w-[302px] bg-[transparent]">
+              {/* <div className="ml-6 h-[44px] w-[302px] bg-[transparent]">
                 <select
                   name="sortBy"
                   placeholder={t("ProfileTable.sortBy")}
@@ -459,7 +459,7 @@ const ProfilePage = () => {
                   <option value="likes">{t("ProfileTable.likes")}</option>
                   <option value="actions">{t("ProfileTable.actions")}</option>
                 </select>
-              </div>
+              </div> */}
             </div>
             <div>
               <table

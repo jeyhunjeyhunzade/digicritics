@@ -50,6 +50,10 @@ export default {
     similiarReviews: "Similar reviews",
     ratings: "ratings",
     comments: "Comments",
+    noComments: {
+      title: "No comments yet",
+      description: "Be the first to share your thoughts!",
+    },
   },
   Profile: {
     email: "Email",

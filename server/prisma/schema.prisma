@@ -72,10 +72,11 @@ model Rating {
 }
 
 model Comment {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  reviewId Int
-  content  String
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  reviewId    Int
+  content     String
+  createdTime DateTime @default(now())
 
   user   Users  @relation(fields: [userId], references: [id])
   review Review @relation(fields: [reviewId], references: [id])

@@ -37,6 +37,7 @@
     "react-table": "^7.8.0",
     "react-tagcloud": "^2.3.1",
     "react-transition-state": "^2.0.2",
+    "socket.io-client": "^4.7.2",
     "swiper": "^10.2.0",
     "vite-tsconfig-paths": "^4.0.5"
   },

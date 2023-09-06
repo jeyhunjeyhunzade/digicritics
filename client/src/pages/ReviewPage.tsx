@@ -1,9 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { getReviewById, likeReview, rateReview } from "@app/api/reviews";
+import {
+  commentReview,
+  getCommentsForReview,
+  getReviewById,
+  likeReview,
+  rateReview,
+} from "@app/api/reviews";
+import socket from "@app/api/socket";
+import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import HeartIcon from "@app/assets/icons/HeartIcon";
+import CommentsSpinner from "@app/components/CommentsSpinner";
 import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
@@ -14,6 +23,8 @@ import { LikeAction } from "@app/types/enums";
 import {
   ActionsResponse,
   AppContextShape,
+  Comment,
+  CommentsSocketData,
   ReviewsData,
 } from "@app/types/types";
 import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
@@ -26,6 +37,7 @@ import { AppContext } from "./App";
 const ReviewPage = () => {
   const { id } = useParams();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { onError } = useError();
   const { config } = useGetConfig();
   const { isAuthenticated } = useAuth0();
@@ -35,9 +47,17 @@ const ReviewPage = () => {
   const [ratingValue, setRatingValue] = useState<number>(0);
   const [reviewData, setReviewData] = useState<ReviewsData>();
   const [liked, setLiked] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<Comment[]>([]);
 
   const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
     useQuery<any>(["reviewById", id], () => id && getReviewById(id), {
+      onError,
+      retry: false,
+    });
+
+  const { data: commentsForReviewData, isLoading: isCommentsForReviewLoading } =
+    useQuery<any>(["comments", id], () => id && getCommentsForReview(id), {
       onError,
       retry: false,
     });
@@ -70,6 +90,19 @@ const ReviewPage = () => {
       onError,
     });
 
+  const { mutate: commentReviewMutate, isLoading: isCommentReviewLoading } =
+    useMutation(commentReview, {
+      onSuccess: (response: ActionsResponse) => {
+        setComment("");
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviewById"]);
+        queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["comments"]);
+      },
+      onError,
+    });
+
   useEffect(() => {
     reviewByIdData && setReviewData(reviewByIdData);
   }, [reviewByIdData]);
@@ -92,6 +125,26 @@ const ReviewPage = () => {
     }
   }, [reviewData]);
 
+  useEffect(() => {
+    commentsForReviewData && setComments(commentsForReviewData.comments);
+  }, [commentsForReviewData]);
+
+  useEffect(() => {
+    const getMessagesListener = (data: CommentsSocketData) => {
+      const { newComment } = data;
+
+      if (id && newComment.reviewId === +id) {
+        setComments((prevComments) => [newComment, ...prevComments]);
+      }
+    };
+
+    socket.on("getComments", getMessagesListener);
+
+    return () => {
+      socket.off("getComments", getMessagesListener);
+    };
+  }, []);
+
   const handleLike = () => {
     if (reviewData && loggedUserId && config) {
       likeReviewMutate({
@@ -109,6 +162,17 @@ const ReviewPage = () => {
         reviewId: reviewData?.id,
         rating,
         config,
+      });
+    }
+  };
+
+  const handleAddComment = () => {
+    if (comment && config && id && loggedUserId) {
+      commentReviewMutate({
+        reviewId: id,
+        userId: loggedUserId,
+        content: comment,
+        config: config,
       });
     }
   };
@@ -170,7 +234,7 @@ const ReviewPage = () => {
                   {`${t("Review.category")}:`}
                 </span>
                 <span className="ml-1 dark:text-white">
-                  {reviewData.category.name}
+                  {reviewData?.category?.name}
                 </span>
               </div>
               <div className="mb-3 flex justify-start text-2xl">
@@ -240,12 +304,20 @@ const ReviewPage = () => {
                 <div className="mt-20">
                   <textarea
                     placeholder={t("Review.yourComment")}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleAddComment();
+                      }
+                    }}
                     className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:text-white dark:placeholder:text-white"
                   ></textarea>
                 </div>
                 <div className="my-4 flex justify-end">
                   <button
                     type="button"
+                    onClick={handleAddComment}
                     className="flex h-[48px] w-[182px] items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     {t("Review.postComment")}
@@ -253,36 +325,66 @@ const ReviewPage = () => {
                 </div>
               </>
             )}
-            <div className="mb-10 flex flex-col">
-              <div className="flex flex-col">
-                <div className="flex items-center">
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className="cursor-pointer"
-                    aria-label="Go to user page"
-                  >
-                    <img
-                      src="/testprofile.jpeg"
-                      alt="userProfilePhoto"
-                      className="h-[44px] w-[44px] rounded-[32px]"
-                    />
+            <div className="mt-10 flex flex-col">
+              {isCommentsForReviewLoading ? (
+                <>
+                  <CommentsSpinner />
+                  <CommentsSpinner />
+                </>
+              ) : comments.length ? (
+                comments.map((comment) => (
+                  <div key={comment.id} className="mb-10">
+                    <div className="mb-1 flex flex-col">
+                      <div className="flex items-center">
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          onClick={() =>
+                            navigate(`${Routes.profile}/${comment.userId}`)
+                          }
+                          onKeyDown={() =>
+                            navigate(`${Routes.profile}/${comment.userId}`)
+                          }
+                          className="cursor-pointer"
+                          aria-label="Go to user page"
+                        >
+                          {comment.user.profileImage ? (
+                            <img
+                              src={comment.user.profileImage}
+                              alt="userProfilePhoto"
+                              className="h-[44px] w-[44px] rounded-[32px]"
+                            />
+                          ) : (
+                            <div className="flex">
+                              <AvatarIcon size={44} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="ml-2 flex flex-col items-start dark:text-white">
+                          <span className="text-lg font-medium">
+                            {comment.user.fullName}
+                          </span>
+                          <span className="text-sm text-[#989292]">
+                            {dateFormatter(comment.createdTime)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-1 text-left dark:text-white">
+                      {comment.content}
+                    </div>
                   </div>
-                  <div className="ml-2 flex flex-col items-start dark:text-white">
-                    <span className="text-lg font-medium">
-                      Jeyhun Jeyhunzade
-                    </span>
-                    <span className="text-sm text-[#989292]">24/08/2023</span>
-                  </div>
+                ))
+              ) : (
+                <div className="rounded-lg bg-gradientBlue p-4 text-white shadow-lg">
+                  <p className="text-2xl font-bold">
+                    {t("Review.noComments.title")}
+                  </p>
+                  <p className="mt-2 text-sm">
+                    {t("Review.noComments.description")}
+                  </p>
                 </div>
-              </div>
-              <div className="mt-1 text-left dark:text-white">
-                &quotAt vero eos et accusamus et iusto odio dignissimos ducimus
-                qui blanditiis praesentium voluptatum deleniti atque corrupti
-                quos dolores et quas molestias excepturi sint occaecati
-                cupiditate non provident, similique sunt in culpa qui officia
-                deserunt mollitia animi, id est laborum et dolorum fuga.
-              </div>
+              )}
             </div>
           </div>
         )

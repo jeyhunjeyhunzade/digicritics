@@ -87,6 +87,15 @@ export interface Tag {
   name: string;
 }
 
+export interface Comment {
+  id: number;
+  userId: number;
+  reviewId: number;
+  content: string;
+  createdTime: string;
+  user: Omit<UsersData, "Like" | "Rating" | "reviews">;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -137,6 +146,14 @@ export interface CategoriesData {
   categories: Category[];
 }
 
+export interface CommentsData {
+  comments: Comment[];
+}
+
+export interface CommentsSocketData {
+  newComment: Comment;
+}
+
 //Params
 export interface LoginParams {
   email: string;
@@ -160,6 +177,13 @@ export interface RateReviewParams {
   userId: number;
   reviewId: number;
   rating: number;
+  config: ApiConfig;
+}
+
+export interface CommentReviewParams {
+  userId: string | number;
+  reviewId: string | number;
+  content: string;
   config: ApiConfig;
 }
 

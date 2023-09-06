@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserStatus } from "@prisma/client";
 import { prisma } from "../config";
+import { io } from "../socket";
 import { LikeAction } from "../types/enums";
 
 const Reviews = {
@@ -290,6 +291,7 @@ const Reviews = {
       }
     }
   },
+
   rateReview: async (request: Request, response: Response) => {
     try {
       const { userId, rating } = request.body;
@@ -342,6 +344,82 @@ const Reviews = {
           message: "Review rated successfully",
         });
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
+  addCommentToReview: async (request: Request, response: Response) => {
+    try {
+      const { userId, content } = request.body;
+      const reviewId = parseInt(request.params.reviewId);
+
+      const existingReview = await prisma.review.findUnique({
+        where: {
+          id: reviewId,
+        },
+      });
+
+      if (!existingReview) {
+        return response.status(400).json({ message: "Review not found" });
+      }
+
+      const newComment = await prisma.comment.create({
+        data: {
+          content,
+          user: {
+            connect: { id: userId },
+          },
+          review: {
+            connect: { id: reviewId },
+          },
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      io.emit("getComments", {
+        newComment,
+      });
+
+      response.json({
+        message: "Comment added to the review successfully",
+        comment: newComment,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
+  getCommentsForReview: async (request: Request, response: Response) => {
+    try {
+      const { reviewId } = request.params;
+
+      const comments = await prisma.comment.findMany({
+        where: {
+          reviewId: parseInt(reviewId),
+        },
+        include: {
+          user: true,
+        },
+        orderBy: {
+          id: "desc",
+        },
+      });
+
+      response.json({
+        message: "Comments retrieved successfully",
+        comments,
+      });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
