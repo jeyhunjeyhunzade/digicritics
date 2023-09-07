@@ -42,6 +42,7 @@ app.get("/categories", queries.Reviews.getCategories);
 app.get("/reviews/:id", queries.Reviews.getReviewById);
 app.post("/createCategory", jwtCheck, queries.Reviews.createCategory);
 app.post("/review/createReview", jwtCheck, queries.Reviews.createReview);
+app.post("/getFullTextSearch", queries.Reviews.getFullTextSearch);
 app.patch("/reviews/:reviewId/like", jwtCheck, queries.Reviews.likeReview);
 app.patch("/reviews/:reviewId/rate", jwtCheck, queries.Reviews.rateReview);
 app.patch(

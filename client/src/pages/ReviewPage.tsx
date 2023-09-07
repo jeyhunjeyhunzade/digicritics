@@ -191,7 +191,7 @@ const ReviewPage = () => {
             </div>
             <div className="">
               <div className="relative flex justify-between">
-                <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold dark:text-white">
+                <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold	leading-[52px] dark:text-white">
                   {reviewData.reviewTitle}
                 </div>
                 <div
@@ -278,7 +278,7 @@ const ReviewPage = () => {
                 <span className="ml-4 self-center dark:text-white">
                   {ratingValue ? ratingValue : null}
                 </span>
-                <div className="ml-6 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
+                <div className="ml-6 self-center text-base text-[#717171] dark:text-[#9C9C9C]">
                   {reviewData.ratings.length
                     ? `${reviewData.ratings.length} ${t("Review.ratings")}`
                     : null}
@@ -333,7 +333,10 @@ const ReviewPage = () => {
                 </>
               ) : comments.length ? (
                 comments.map((comment) => (
-                  <div key={comment.id} className="mb-10">
+                  <div
+                    key={comment.id}
+                    className="mb-10 border-b border-[#DEDEDE] py-6"
+                  >
                     <div className="mb-1 flex flex-col">
                       <div className="flex items-center">
                         <div
@@ -370,7 +373,7 @@ const ReviewPage = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-1 text-left dark:text-white">
+                    <div className="mt-1 text-left italic dark:text-white">
                       {comment.content}
                     </div>
                   </div>

@@ -112,3 +112,7 @@ button[data-name="fullscreen"] {
     background-position: -200% 0;
   }
 }
+
+.bodyTransition {
+  transition: all .3s ease;
+}

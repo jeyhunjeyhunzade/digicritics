@@ -104,3 +104,8 @@ export const commentReview = async (
   );
   return res?.data;
 };
+
+export const getFullTextSearch = async (searchQuery: string) => {
+  const res = await axios.post(`${serverUrl}/getFullTextSearch`, searchQuery);
+  return res?.data;
+};
