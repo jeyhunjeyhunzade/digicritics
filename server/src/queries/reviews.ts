@@ -4,6 +4,7 @@ import { prisma } from "../config";
 import { io } from "../socket";
 import { LikeAction } from "../types/enums";
 
+// TODO: refactor this
 const Reviews = {
   createReview: async (request: Request, response: Response) => {
     try {
@@ -425,6 +426,62 @@ const Reviews = {
         return response.status(500).send({ message: error.message });
       } else {
         return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
+  getFullTextSearch: async (request: Request, response: Response) => {
+    try {
+      const { searchQuery } = request.body;
+
+      if (!searchQuery) {
+        return response
+          .status(400)
+          .send({ message: "Search query is required." });
+      }
+
+      const reviews = await prisma.review.findMany({
+        where: {
+          OR: [
+            {
+              reviewTitle: {
+                search: searchQuery,
+              },
+            },
+            {
+              workName: {
+                search: searchQuery,
+              },
+            },
+            {
+              reviewContent: {
+                search: searchQuery,
+              },
+            },
+          ],
+        },
+        include: {
+          tags: true,
+          likes: true,
+          ratings: true,
+          comments: {
+            where: {
+              content: {
+                search: searchQuery,
+              },
+            },
+          },
+          category: true,
+          user: true,
+        },
+      });
+
+      response.json(reviews);
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "unknown error" });
       }
     }
   },

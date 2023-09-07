@@ -88,11 +88,10 @@ const ReviewCard = (props: ReviewCardProps) => {
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
       <div className="relative">
-        <img
-          className="h-[194px] w-full"
-          src={review?.reviewImages[0]}
-          alt="review"
-        />
+        <div
+          style={{ backgroundImage: `url(${review?.reviewImages[0]})` }}
+          className={`h-[194px] w-full bg-cover bg-center`}
+        ></div>
         <div className="absolute right-[18px] top-[12px]">
           <div
             role="button"
@@ -122,7 +121,7 @@ const ReviewCard = (props: ReviewCardProps) => {
       </div>
       <div className="flex flex-col p-4">
         <div className="mb-1 flex justify-between">
-          <div className="flex text-base font-bold dark:text-white">
+          <div className="flex text-base font-bold leading-[18px] dark:text-white">
             {shortenString(review?.reviewTitle)}
           </div>
           <div className="flex items-center">
@@ -135,42 +134,46 @@ const ReviewCard = (props: ReviewCardProps) => {
             />
           </div>
         </div>
-        <div className="flex justify-start font-medium dark:text-white">
+        <div className="flex justify-start font-medium leading-[18px] dark:text-white">
           {review?.workName}
         </div>
         <div className="flex justify-start text-sm">
-          <span className="font-medium dark:text-white">{`${t(
+          <span className="font-medium leading-[18px] dark:text-white">{`${t(
             "Review.category"
           )}:`}</span>
-          <span className="ml-1 dark:text-white">{review?.category?.name}</span>
+          <span className="ml-1 leading-[18px] dark:text-white">
+            {review?.category?.name}
+          </span>
         </div>
         <div className="flex justify-start text-sm">
-          <span className="font-medium dark:text-white">
+          <span className="font-medium leading-[18px] dark:text-white">
             {`${t("Review.tags")}:`}
           </span>
           {review?.tags.map((tag) => (
             <span
               key={tag.id}
-              className="ml-1 dark:text-white"
+              className="ml-1 leading-[18px] dark:text-white"
             >{`#${tag.name}`}</span>
           ))}
         </div>
         <div className="flex justify-start text-sm">
-          <span className="font-medium dark:text-white">
+          <span className="font-medium leading-[18px] dark:text-white">
             {`${t("Review.authorGrade")}:`}
           </span>
-          <span className="ml-1 dark:text-white">{review?.reviewGrade}</span>
+          <span className="ml-1 leading-[18px] dark:text-white">
+            {review?.reviewGrade}
+          </span>
         </div>
         <div className="flex justify-between">
           <div className="flex justify-start text-sm">
             <span className="font-medium dark:text-white">{`${t(
               "Review.createdby"
             )}:`}</span>
-            <span className="ml-1 dark:text-white">
+            <span className="ml-1 leading-[18px] dark:text-white">
               {review?.user.fullName}
             </span>
           </div>
-          <div className="self-end text-xs text-[#717171] dark:text-[#9C9C9C]">
+          <div className="self-end text-xs leading-[18px] text-[#717171] dark:text-[#9C9C9C]">
             {review?.createdTime && dateFormatter(review.createdTime)}
           </div>
         </div>
