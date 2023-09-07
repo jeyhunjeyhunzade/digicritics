@@ -8,9 +8,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/jsx-runtime",
-    "plugin:jsx-a11y/recommended",
-    "plugin:react-app",
-    "plugin:react-app/jest"
+    "plugin:jsx-a11y/recommended"
   ],
   "overrides": [
     // override "simple-import-sort" config

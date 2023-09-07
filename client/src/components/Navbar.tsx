@@ -2,12 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
-import { getFullTextSearch } from "@app/api/reviews";
 import { getUserById } from "@app/api/users";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import WorldIcon from "@app/assets/icons/WorldIcon";
 import useCurrentPath from "@app/hooks/useCurrentPath";
-import useDebounce from "@app/hooks/useDebounce";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import useLogout from "@app/hooks/useLogout";
@@ -15,9 +13,9 @@ import { AppContext } from "@app/pages/App";
 import { Routes } from "@app/router/rooter";
 import { Languages, UserStatus } from "@app/types/enums";
 import { AppContextShape } from "@app/types/types";
-import { classNames, errorHandler, shorteningFullName } from "@app/utils";
+import { classNames, shorteningFullName } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import LoginButton from "./LoginButton";
 import SearchInput from "./SearchInput";
 import SignupButton from "./SignupButton";
@@ -34,8 +32,6 @@ const Navbar = () => {
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedInputValue = useDebounce(searchQuery, 500);
 
   const {
     setCategoryEditorOpen,
@@ -60,19 +56,6 @@ const Navbar = () => {
       retry: false,
     }
   );
-
-  const { mutate: searchReviewMutate, isLoading: isSearchReviewLoading } =
-    useMutation(getFullTextSearch, {
-      onSuccess: () => {
-        // setNewCategory("");
-      },
-      onError: errorHandler,
-    });
-
-  useEffect(() => {
-    debouncedInputValue &&
-      console.log("debouncedInputValue: ", debouncedInputValue);
-  }, [debouncedInputValue]);
 
   const handleLanguageChange = (language: Languages) => {
     setSelectedLanguage(language);
@@ -156,10 +139,7 @@ const Navbar = () => {
         <Link to={Routes.homepage}>Digicritics</Link>
       </div>
       <div className="flex w-[70%] items-center justify-end">
-        <SearchInput
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <SearchInput />
         <ToggleTheme />
         <button
           onClick={toggleLanguageModal}
