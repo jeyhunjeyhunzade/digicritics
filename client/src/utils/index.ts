@@ -112,10 +112,10 @@ export const convertBase64 = (file: any) => {
   });
 };
 
-export const shortenString = (string: string | undefined) => {
+export const shortenString = (string: string | undefined, cutFrom: number) => {
   if (string) {
-    if (string.length > 20) {
-      return string.substring(0, 20) + "...";
+    if (string.length > cutFrom) {
+      return string.substring(0, cutFrom) + "...";
     }
     return string;
   }

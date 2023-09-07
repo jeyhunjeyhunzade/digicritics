@@ -20,6 +20,7 @@ export default {
     admin: "Admin",
     adminPage: "Admin page",
     categoryEditor: "Category Editor",
+    nothingFound: "Nothing found :(",
   },
   Auth: {
     email: "Email address",

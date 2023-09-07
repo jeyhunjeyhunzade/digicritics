@@ -122,7 +122,7 @@ const ReviewCard = (props: ReviewCardProps) => {
       <div className="flex flex-col p-4">
         <div className="mb-1 flex justify-between">
           <div className="flex text-base font-bold leading-[18px] dark:text-white">
-            {shortenString(review?.reviewTitle)}
+            {shortenString(review?.reviewTitle, 20)}
           </div>
           <div className="flex items-center">
             {/* TODO: fix dark mode color  */}

@@ -9,6 +9,7 @@ module.exports = {
         cardShadow: "0px 4px 16px 0px rgba(0, 0, 0, 0.07)",
         tableRowShadow: "0px 4px 17px 0px rgba(0, 0, 0, 0.08)",
         reviewImagesShadow: "0px 4px 12px 0px rgba(0, 0, 0, 0.08)",
+        searchModalShadow: "0px 4px 25px 0px rgba(0, 0, 0, 0.2)",
       },
       backgroundImage: {
         gradientBlue: "linear-gradient(135deg, #03425B 0%, #0386BA 100%)",
