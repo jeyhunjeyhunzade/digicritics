@@ -64,7 +64,6 @@ const ProfilePage = () => {
   const [isDeleteProfileModaOpen, setDeleteProfileModaOpen] = useState(false);
   const [tableData, setTableData] = useState<ReviewsTable[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedSortOption, setSelectedSortOption] = useState("");
 
   const {
     isDarkMode,
@@ -436,30 +435,6 @@ const ProfilePage = () => {
                   ))}
                 </select>
               </div>
-              {/* <div className="ml-6 h-[44px] w-[302px] bg-[transparent]">
-                <select
-                  name="sortBy"
-                  placeholder={t("ProfileTable.sortBy")}
-                  className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  value={selectedSortOption}
-                  // onChange={handleSortChange}
-                >
-                  <option value="">{t("ProfileTable.sortBy")}</option>
-                  <option value="workName">
-                    {t("ProfileTable.reviewName")}
-                  </option>
-                  <option value="category">{t("ProfileTable.category")}</option>
-                  <option value="createdTime">
-                    {t("ProfileTable.createdDate")}
-                  </option>
-                  <option value="reviewGrade">
-                    {t("ProfileTable.authorGrade")}
-                  </option>
-                  <option value="ratings">{t("ProfileTable.rating")}</option>
-                  <option value="likes">{t("ProfileTable.likes")}</option>
-                  <option value="actions">{t("ProfileTable.actions")}</option>
-                </select>
-              </div> */}
             </div>
             <div>
               <table

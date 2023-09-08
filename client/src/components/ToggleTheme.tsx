@@ -22,7 +22,6 @@ const ToggleTheme = () => {
     themeToggleDarkIcon?.classList.toggle("hidden");
     themeToggleLightIcon?.classList.toggle("hidden");
 
-    // if set via local storage previously
     if (savedThemeMode) {
       if (savedThemeMode === "light") {
         document.documentElement.classList.add("dark");
@@ -33,8 +32,6 @@ const ToggleTheme = () => {
         localStorage.setItem("color-theme", "light");
         setIsDarkMode(false);
       }
-
-      // if NOT set via local storage previously
     } else {
       if (document.documentElement.classList.contains("dark")) {
         document.documentElement.classList.remove("dark");

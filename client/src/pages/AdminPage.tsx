@@ -20,6 +20,7 @@ import { getUsers } from "@app/api/users";
 import DownIcon from "@app/assets/icons/DownIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
 import UpIcon from "@app/assets/icons/UpIcon";
+import Loader from "@app/components/Loader";
 import StatusPill from "@app/components/StatusPill";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
@@ -44,13 +45,23 @@ const AdminPage = () => {
     successHandler(response);
   };
 
-  const { data: usersData, isLoading: isUsersDataLoading } = useQuery<any>(
+  // () => {
+  //   if (id && config) {
+  //     return getUserById({ id: +id, config });
+  //   } else {
+  //     return Promise.resolve([]);
+  //   }
+  // },
+
+  const { data: usersData, isLoading: isUsersDataLoading } = useQuery<
+    UsersData[]
+  >(
     ["users", config],
     () => {
       if (config) {
         return getUsers(config);
       } else {
-        return null;
+        return Promise.resolve([]);
       }
     },
     {
@@ -241,66 +252,75 @@ const AdminPage = () => {
             </button>
           </div>
         </div>
-        <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
-          <thead className="bg-gray-10">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} className="text-left">
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-6 py-5 text-base font-medium text-[#636060]"
-                  >
-                    <div className="flex">
-                      {column.render("Header")}
-                      {column.id === "selection" && column.render("Summary")}
-                      {typeof column.Header === "string" && (
-                        <span className="ml-1 self-center">
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <DownIcon size={14} />
-                            ) : (
-                              <UpIcon size={14} />
-                            )
-                          ) : (
-                            <span className="flex">
-                              <DownIcon size={14} />
-                              <UpIcon size={14} />
-                            </span>
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody
-            {...getTableBodyProps()}
-            className="divide-y bg-white shadow-tableRowShadow dark:divide-[#1B1B1B]"
-          >
-            {page.map((row) => {
-              prepareRow(row);
-              return (
+        {isUsersDataLoading ? (
+          <div className="flex items-center justify-center">
+            <Loader />
+          </div>
+        ) : (
+          <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
+            <thead className="bg-gray-10">
+              {headerGroups.map((headerGroup) => (
                 <tr
-                  {...row.getRowProps()}
-                  className="rounded-[8px] bg-white text-left dark:bg-[#2C2C2C]"
+                  {...headerGroup.getHeaderGroupProps()}
+                  className="text-left"
                 >
-                  {row.cells.map((cell) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        className="whitespace-nowrap px-6 py-5 text-base dark:text-white"
-                      >
-                        {cell.render("Cell")}
-                      </td>
-                    );
-                  })}
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      className="px-6 py-5 text-base font-medium text-[#636060]"
+                    >
+                      <div className="flex">
+                        {column.render("Header")}
+                        {column.id === "selection" && column.render("Summary")}
+                        {typeof column.Header === "string" && (
+                          <span className="ml-1 self-center">
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <DownIcon size={14} />
+                              ) : (
+                                <UpIcon size={14} />
+                              )
+                            ) : (
+                              <span className="flex">
+                                <DownIcon size={14} />
+                                <UpIcon size={14} />
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody
+              {...getTableBodyProps()}
+              className="divide-y bg-white shadow-tableRowShadow dark:divide-[#1B1B1B]"
+            >
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr
+                    {...row.getRowProps()}
+                    className="rounded-[8px] bg-white text-left dark:bg-[#2C2C2C]"
+                  >
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          className="whitespace-nowrap px-6 py-5 text-base dark:text-white"
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </Layout>
   );

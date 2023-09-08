@@ -19,6 +19,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
 import { queryClient } from "..";
 import DndUploadMiltiple from "./DndUploadMultiple";
+import Loader from "./Loader";
 
 const ReviewEditorModal = () => {
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ const ReviewEditorModal = () => {
   const [reviewWorkName, setReviewWorkName] = useState("");
   const [reviewCategory, setReviewCategory] = useState("");
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
-  const [selectedTags, setSelectedTags] = useState<string[] | any>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -68,6 +69,9 @@ const ReviewEditorModal = () => {
       },
       onError,
     });
+
+  const isLoading =
+    isTagsLoading || isCategoriesLoading || isCreateNewReviewLoading;
 
   useEffect(() => {
     if (tagsData) {
@@ -167,127 +171,137 @@ const ReviewEditorModal = () => {
       >
         <CloseIcon size={24} />
       </span>
-      <div className="flex flex-col">
-        <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
-          {t("ReviewEditor.title")}
+      {isLoading ? (
+        <div className="flex h-full items-center justify-center">
+          <Loader />
         </div>
-        <div className="mb-6 flex justify-between">
-          <input
-            type="text"
-            value={reviewTitle}
-            onChange={(e) => {
-              setReviewTitle(e.target.value);
-            }}
-            placeholder={t("ReviewEditor.reviewTitle")}
-            className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
-          />
-          <input
-            type="text"
-            value={reviewWorkName}
-            onChange={(e) => {
-              setReviewWorkName(e.target.value);
-            }}
-            placeholder={t("ReviewEditor.workName")}
-            className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
-          />
-        </div>
-        <div className="mb-6 flex justify-between">
-          <div className="flex">
-            <div className="mr-3 flex">
-              <div className="h-[48px] w-[262px]">
+      ) : (
+        <div className="flex flex-col">
+          <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">
+            {t("ReviewEditor.title")}
+          </div>
+          <div className="mb-6 flex justify-between">
+            <input
+              type="text"
+              value={reviewTitle}
+              onChange={(e) => {
+                setReviewTitle(e.target.value);
+              }}
+              placeholder={t("ReviewEditor.reviewTitle")}
+              className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+            />
+            <input
+              type="text"
+              value={reviewWorkName}
+              onChange={(e) => {
+                setReviewWorkName(e.target.value);
+              }}
+              placeholder={t("ReviewEditor.workName")}
+              className="mt-12 h-[48px] w-[548px] rounded-[6px] border border-solid border-[#DEDEDE] bg-[transparent] px-4 py-2 pr-10 placeholder-[#636060] outline-none focus:ring-0 dark:border-[#DEDEDE] dark:text-[#C2C1BE] dark:placeholder-[#9D9D9D]"
+            />
+          </div>
+          <div className="mb-6 flex justify-between">
+            <div className="flex">
+              <div className="mr-3 flex">
+                <div className="h-[48px] w-[262px]">
+                  <select
+                    name="category"
+                    className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                    value={reviewCategory}
+                    onChange={(e) => {
+                      setReviewCategory(e.target.value);
+                    }}
+                  >
+                    <option className="text-[#636060]" value="">
+                      {t("ReviewEditor.category")}
+                    </option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex">
                 <select
-                  name="category"
-                  className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  value={reviewCategory}
+                  name="reviewGrade"
+                  className="block h-[48px] w-[274px] rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                  value={reviewGrade && reviewGrade}
                   onChange={(e) => {
-                    setReviewCategory(e.target.value);
+                    setReviewGrade(+e.target.value);
                   }}
                 >
-                  <option className="text-[#636060]" value="">
-                    {t("ReviewEditor.category")}
-                  </option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
+                  <option value="">{t("ReviewEditor.reviewGrade")}</option>
+                  {Array.from({ length: 10 }, (_, index) => index + 1).map(
+                    (grade) => (
+                      <option key={grade} value={grade}>
+                        {grade}
+                      </option>
+                    )
+                  )}
                 </select>
               </div>
             </div>
             <div className="flex">
-              <select
-                name="reviewGrade"
-                className="block h-[48px] w-[274px] rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                value={reviewGrade && reviewGrade}
-                onChange={(e) => {
-                  setReviewGrade(+e.target.value);
-                }}
-              >
-                <option value="">{t("ReviewEditor.reviewGrade")}</option>
-                {Array.from({ length: 10 }, (_, index) => index + 1).map(
-                  (grade) => (
-                    <option key={grade} value={grade}>
-                      {grade}
-                    </option>
-                  )
+              {/* //TODO: get tags dynamically and max 3 tag*/}
+              <Autocomplete
+                className="w-[548px] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                multiple
+                freeSolo
+                options={tags}
+                autoSelect
+                value={selectedTags}
+                renderInput={(params) => (
+                  <TextField
+                    className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                    {...params}
+                    fullWidth
+                    InputLabelProps={{ children: null }}
+                    placeholder={`${t("ReviewEditor.tags")}`}
+                  />
                 )}
-              </select>
+                onChange={(_, value) => {
+                  setSelectedTags(value);
+                }}
+              />
             </div>
           </div>
-          <div className="flex">
-            {/* //TODO: get tags dynamically and max 3 tag*/}
-            <Autocomplete
-              className="w-[548px] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-              multiple
-              freeSolo
-              options={tags}
-              autoSelect
-              value={selectedTags}
-              renderInput={(params) => (
-                <TextField
-                  className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
-                  {...params}
-                  fullWidth
-                  InputLabelProps={{ children: null }}
-                  placeholder={`${t("ReviewEditor.tags")}`}
-                />
-              )}
-              onChange={(_, value) => {
-                setSelectedTags(value);
-              }}
-            />
+          <div className="flex justify-between">
+            <div>
+              <MDEditor
+                value={reviewContent}
+                onChange={setReviewContent}
+                height={"258px"}
+                className="w-[548px] dark:text-[#C2C1BE]"
+                previewOptions={previewStyles}
+                style={{ backgroundColor: "transparent" }}
+              />
+            </div>
+            <div>
+              <DndUploadMiltiple
+                width={"548px"}
+                urls={urls}
+                setUrls={setUrls}
+              />
+            </div>
+          </div>
+          <div className="mt-10 flex justify-end">
+            <button
+              onClick={closeReviewEditorModal}
+              className="flex h-[44px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#DEDEDE] dark:text-white"
+            >
+              {t("ReviewEditor.cancel")}
+            </button>
+            <button
+              onClick={handleShareReview}
+              className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+            >
+              <span className="pr-2">{t("ReviewEditor.shareReview")}</span>
+            </button>
           </div>
         </div>
-        <div className="flex justify-between">
-          <div>
-            <MDEditor
-              value={reviewContent}
-              onChange={setReviewContent}
-              height={"258px"}
-              className="w-[548px] dark:text-[#C2C1BE]"
-              previewOptions={previewStyles}
-              style={{ backgroundColor: "transparent" }}
-            />
-          </div>
-          <div>
-            <DndUploadMiltiple width={"548px"} urls={urls} setUrls={setUrls} />
-          </div>
-        </div>
-        <div className="mt-10 flex justify-end">
-          <button
-            onClick={closeReviewEditorModal}
-            className="flex h-[44px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#DEDEDE] dark:text-white"
-          >
-            {t("ReviewEditor.cancel")}
-          </button>
-          <button
-            onClick={handleShareReview}
-            className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
-          >
-            <span className="pr-2">{t("ReviewEditor.shareReview")}</span>
-          </button>
-        </div>
-      </div>
+      )}
     </Modal>
   );
 };

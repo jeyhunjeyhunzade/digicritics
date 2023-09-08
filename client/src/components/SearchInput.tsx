@@ -7,11 +7,13 @@ import useDebounce from "@app/hooks/useDebounce";
 import { Routes } from "@app/router/rooter";
 import { ReviewsData } from "@app/types/types";
 import { classNames, errorHandler, shortenString } from "@app/utils";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "@tanstack/react-query";
 import SearchBarSpinner from "./SearchBarSpinner";
 
 const SearchInput = () => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth0();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedInputValue = useDebounce(searchQuery, 500);
@@ -82,7 +84,12 @@ const SearchInput = () => {
           isModalOpen ? "block" : "hidden"
         } h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden md:inset-0`}
       >
-        <div className="relative left-[62%] top-[8%] h-[444px] w-[520px] overflow-y-scroll rounded-[16px] bg-white px-6 py-3 shadow-searchModalShadow dark:bg-[#2C2C2C]">
+        <div
+          className={classNames(
+            "relative left-[52%] top-[9%] h-[444px] w-[520px] overflow-y-scroll rounded-[16px] bg-white px-6 py-3 shadow-searchModalShadow dark:bg-[#2C2C2C]",
+            isAuthenticated ? "left-[62%] top-[8%]" : null
+          )}
+        >
           {isSearchReviewLoading ? (
             <div className="flex flex-col">
               <div className="border-b border-solid border-[#EFEFEF]">

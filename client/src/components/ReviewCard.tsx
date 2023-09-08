@@ -6,18 +6,12 @@ import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { AppContext } from "@app/pages/App";
 import { LikeAction } from "@app/types/enums";
-import {
-  ActionsResponse,
-  AppContextShape,
-  ReviewsData,
-} from "@app/types/types";
+import { AppContextShape, ReviewsData } from "@app/types/types";
 import {
   calculateAverageRate,
-  checkAuth,
   classNames,
   dateFormatter,
   shortenString,
-  successHandler,
 } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
@@ -35,7 +29,7 @@ const ReviewCard = (props: ReviewCardProps) => {
   const { isAuthenticated } = useAuth0();
 
   const { review } = props;
-  const [ratingValue, setRatingValue] = useState<any>();
+  const [ratingValue, setRatingValue] = useState<number>();
   const [liked, setLiked] = useState(false);
 
   const { loggedUserId } = useContext(AppContext) as AppContextShape;
@@ -76,7 +70,7 @@ const ReviewCard = (props: ReviewCardProps) => {
   }, [review]);
 
   const handleLike = () => {
-    if (review && loggedUserId && config) {
+    if (review && loggedUserId && config && !isLikeReviewLoading) {
       likeReviewMutate({
         userId: loggedUserId,
         reviewId: review.id,

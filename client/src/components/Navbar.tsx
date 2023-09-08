@@ -12,11 +12,12 @@ import useLogout from "@app/hooks/useLogout";
 import { AppContext } from "@app/pages/App";
 import { Routes } from "@app/router/rooter";
 import { Languages, UserStatus } from "@app/types/enums";
-import { AppContextShape } from "@app/types/types";
+import { AppContextShape, LoggedUser } from "@app/types/types";
 import { classNames, shorteningFullName } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useQuery } from "@tanstack/react-query";
 import LoginButton from "./LoginButton";
+import NavbarSpinner from "./NavbarSpinner";
 import SearchInput from "./SearchInput";
 import SignupButton from "./SignupButton";
 import ToggleTheme from "./ToggleTheme";
@@ -42,20 +43,21 @@ const Navbar = () => {
     setLoggedUser,
   } = useContext(AppContext) as AppContextShape;
 
-  const { data: userByIdData, isLoading: isUserByIdLoading } = useQuery<any>(
-    ["userById", loggedUserId, config],
-    () => {
-      if (loggedUserId && config) {
-        return getUserById({ id: loggedUserId, config });
-      } else {
-        return null;
+  const { data: userByIdData, isLoading: isUserByIdLoading } =
+    useQuery<LoggedUser | null>(
+      ["userById", loggedUserId, config],
+      () => {
+        if (loggedUserId && config) {
+          return getUserById({ id: loggedUserId, config });
+        } else {
+          return null;
+        }
+      },
+      {
+        onError,
+        retry: false,
       }
-    },
-    {
-      onError,
-      retry: false,
-    }
-  );
+    );
 
   const handleLanguageChange = (language: Languages) => {
     setSelectedLanguage(language);
@@ -81,9 +83,9 @@ const Navbar = () => {
 
   const watchUserRole = () => {
     const savedRole = localStorage.getItem("status");
-    const actualRole = userByIdData.status;
+    const actualRole = userByIdData?.status;
 
-    if (savedRole !== actualRole) {
+    if (actualRole && savedRole !== actualRole) {
       localStorage.setItem("status", actualRole);
     }
 
@@ -150,36 +152,40 @@ const Navbar = () => {
         </button>
 
         {isAuthenticated ? (
-          <>
-            <div className="mr-2 flex flex-col">
-              <div className="text-sm text-white">
-                {loggedUser && shorteningFullName(loggedUser?.fullName)}
+          isUserByIdLoading ? (
+            <NavbarSpinner />
+          ) : (
+            <>
+              <div className="mr-2 flex flex-col">
+                <div className="text-sm text-white">
+                  {loggedUser && shorteningFullName(loggedUser?.fullName)}
+                </div>
+                <div className="text-right	text-xs text-white">
+                  {loggedUser?.status === UserStatus.ADMIN
+                    ? t("Navbar.admin")
+                    : t("Navbar.user")}
+                </div>
               </div>
-              <div className="text-right	text-xs text-white">
-                {loggedUser?.status === UserStatus.ADMIN
-                  ? t("Navbar.admin")
-                  : t("Navbar.user")}
+              <div
+                role="button"
+                tabIndex={0}
+                className="cursor-pointer"
+                onClick={toggleProfileModal}
+                onKeyDown={toggleProfileModal}
+                aria-label="Toggle Profile Menu"
+              >
+                {loggedUser?.profileImage ? (
+                  <img
+                    src={loggedUser?.profileImage}
+                    alt="profile"
+                    className="h-[32px] w-[32px] rounded-[32px]"
+                  />
+                ) : (
+                  <AvatarIcon size={32} />
+                )}
               </div>
-            </div>
-            <div
-              role="button"
-              tabIndex={0}
-              className="cursor-pointer"
-              onClick={toggleProfileModal}
-              onKeyDown={toggleProfileModal}
-              aria-label="Toggle Profile Menu"
-            >
-              {loggedUser?.profileImage ? (
-                <img
-                  src={loggedUser?.profileImage}
-                  alt="profile"
-                  className="h-[32px] w-[32px] rounded-[32px]"
-                />
-              ) : (
-                <AvatarIcon size={32} />
-              )}
-            </div>
-          </>
+            </>
+          )
         ) : (
           <>
             <LoginButton />

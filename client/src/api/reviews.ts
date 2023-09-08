@@ -4,7 +4,6 @@ import {
   CreateNewReviewParams,
   LikeReviewParams,
   RateReviewParams,
-  UpdatedUserData,
 } from "@app/types/types";
 import axios from "axios";
 import { serverUrl } from "./apiClient";

@@ -49,6 +49,11 @@ export interface DnDUploadMultipleProps {
   setUrls: Dispatch<SetStateAction<string[]>>;
 }
 
+export interface CloudTags {
+  value: string;
+  count: number;
+}
+
 export interface Like {
   id: number;
   reviewId: number;
