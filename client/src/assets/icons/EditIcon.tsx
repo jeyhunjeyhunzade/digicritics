@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "@app/pages/App";
 import { AppContextShape } from "@app/types/types";
 
@@ -7,7 +6,6 @@ const EditIcon = ({ color, size }: { color?: string; size: number }) => {
   const { isDarkMode, setIsReviewEditorOpen } = useContext(
     AppContext
   ) as AppContextShape;
-  const navigate = useNavigate();
 
   return (
     <svg

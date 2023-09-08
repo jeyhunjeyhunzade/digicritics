@@ -7,7 +7,7 @@ import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
-import { ReviewsData } from "@app/types/types";
+import { CloudTags, ReviewsData } from "@app/types/types";
 import { useQuery } from "@tanstack/react-query";
 
 const Homepage = () => {
@@ -15,7 +15,7 @@ const Homepage = () => {
   const { onError } = useError();
   const [reviews, setReviews] = useState<ReviewsData[]>();
 
-  const { data: reviewsData, isLoading: isUsersDataLoading } = useQuery<
+  const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
     ReviewsData[]
   >(["reviews"], getReviews, {
     onError,
@@ -26,7 +26,7 @@ const Homepage = () => {
     reviewsData && setReviews(reviewsData);
   }, [reviewsData]);
 
-  const mockTags = [
+  const mockTags: CloudTags[] = [
     { value: "photo", count: 25 },
     { value: "movie", count: 18 },
     { value: "books", count: 38 },
@@ -47,7 +47,7 @@ const Homepage = () => {
     { value: "tech", count: 11 },
   ];
 
-  const customRenderer = (tag: any, size: any, color: any) => (
+  const customRenderer = (tag: CloudTags, size: number) => (
     <span
       key={tag.value}
       style={{
@@ -98,7 +98,7 @@ const Homepage = () => {
             tags={mockTags}
             renderer={customRenderer}
             className="cursor-pointer"
-            onClick={(tag: any) => alert(`'${tag.value}' was selected!`)}
+            onClick={(tag: CloudTags) => alert(`'${tag.value}' was selected!`)}
           />
         </div>
       </div>

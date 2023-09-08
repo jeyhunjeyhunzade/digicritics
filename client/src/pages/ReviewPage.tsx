@@ -21,9 +21,9 @@ import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
 import { LikeAction } from "@app/types/enums";
 import {
-  ActionsResponse,
   AppContextShape,
   Comment,
+  CommentsData,
   CommentsSocketData,
   ReviewsData,
 } from "@app/types/types";
@@ -51,16 +51,36 @@ const ReviewPage = () => {
   const [comments, setComments] = useState<Comment[]>([]);
 
   const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
-    useQuery<any>(["reviewById", id], () => id && getReviewById(id), {
-      onError,
-      retry: false,
-    });
+    useQuery<ReviewsData>(
+      ["reviewById", id],
+      () => {
+        if (id) {
+          return getReviewById(id);
+        } else {
+          return Promise.resolve([]);
+        }
+      },
+      {
+        onError,
+        retry: false,
+      }
+    );
 
   const { data: commentsForReviewData, isLoading: isCommentsForReviewLoading } =
-    useQuery<any>(["comments", id], () => id && getCommentsForReview(id), {
-      onError,
-      retry: false,
-    });
+    useQuery<CommentsData>(
+      ["comments", id],
+      () => {
+        if (id) {
+          return getCommentsForReview(id);
+        } else {
+          return Promise.resolve([]);
+        }
+      },
+      {
+        onError,
+        retry: false,
+      }
+    );
 
   const { mutate: likeReviewMutate, isLoading: isLikeReviewLoading } =
     useMutation(likeReview, {
@@ -81,7 +101,7 @@ const ReviewPage = () => {
 
   const { mutate: rateReviewMutate, isLoading: isRateReviewLoading } =
     useMutation(rateReview, {
-      onSuccess: (response: ActionsResponse) => {
+      onSuccess: () => {
         queryClient.invalidateQueries(["reviews"]);
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviewById"]);
@@ -92,7 +112,7 @@ const ReviewPage = () => {
 
   const { mutate: commentReviewMutate, isLoading: isCommentReviewLoading } =
     useMutation(commentReview, {
-      onSuccess: (response: ActionsResponse) => {
+      onSuccess: () => {
         setComment("");
         queryClient.invalidateQueries(["reviews"]);
         queryClient.invalidateQueries(["users"]);
@@ -130,7 +150,7 @@ const ReviewPage = () => {
   }, [commentsForReviewData]);
 
   useEffect(() => {
-    const getMessagesListener = (data: CommentsSocketData) => {
+    const getCommentsListener = (data: CommentsSocketData) => {
       const { newComment } = data;
 
       if (id && newComment.reviewId === +id) {
@@ -138,15 +158,15 @@ const ReviewPage = () => {
       }
     };
 
-    socket.on("getComments", getMessagesListener);
+    socket.on("getComments", getCommentsListener);
 
     return () => {
-      socket.off("getComments", getMessagesListener);
+      socket.off("getComments", getCommentsListener);
     };
   }, []);
 
   const handleLike = () => {
-    if (reviewData && loggedUserId && config) {
+    if (reviewData && loggedUserId && config && !isLikeReviewLoading) {
       likeReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData.id,
@@ -156,7 +176,7 @@ const ReviewPage = () => {
   };
 
   const handleRate = (rating: number) => {
-    if (loggedUserId && reviewData && config) {
+    if (loggedUserId && reviewData && config && !isRateReviewLoading) {
       rateReviewMutate({
         userId: loggedUserId,
         reviewId: reviewData?.id,
@@ -311,12 +331,14 @@ const ReviewPage = () => {
                         handleAddComment();
                       }
                     }}
+                    disabled={isCommentReviewLoading}
                     className="h-[115px] w-full rounded-[6px] border border-solid border-[#044D69] bg-[transparent] placeholder:text-black dark:border-[#DEDEDE] dark:text-white dark:placeholder:text-white"
                   ></textarea>
                 </div>
                 <div className="my-4 flex justify-end">
                   <button
                     type="button"
+                    disabled={isCommentReviewLoading}
                     onClick={handleAddComment}
                     className="flex h-[48px] w-[182px] items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >

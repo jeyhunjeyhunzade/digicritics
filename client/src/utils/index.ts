@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 import { Rate } from "@app/types/types";
 import { AxiosError } from "axios";
-import jwt_decode from "jwt-decode";
 
 export const errorHandler = (error: unknown) => {
   let message = "";
@@ -19,16 +18,6 @@ export const errorHandler = (error: unknown) => {
 
 export const successHandler = (response: { message: string }) => {
   toast.success(response.message);
-};
-
-export const checkAuth = (): boolean => {
-  const isExpired = checkJwtExpiration();
-  const accessToken = localStorage.getItem("token");
-  if (!accessToken || isExpired) {
-    return false;
-  }
-
-  return true;
 };
 
 export const dateFormatter = (
@@ -58,6 +47,7 @@ export const classNames = (...classes: Array<string | null>) => {
 };
 
 export const shorteningFullName = (fullName: string) => {
+  console.log("fullname", fullName);
   const nameParts = fullName?.split(" ");
 
   if (nameParts.length >= 2) {
@@ -69,19 +59,6 @@ export const shorteningFullName = (fullName: string) => {
     const firstName = fullName.substring(0, 10);
     return `${firstName}.`;
   }
-};
-
-export const checkJwtExpiration = (): boolean => {
-  let decodedToken: { exp: number; iat: number; userId: number };
-  const token = localStorage.getItem("token");
-  let isExpired = false;
-
-  if (token) {
-    decodedToken = jwt_decode(token);
-    isExpired = decodedToken.exp * 1000 < Date.now();
-  }
-
-  return isExpired;
 };
 
 export const getLoggedUserId = () => {
@@ -97,7 +74,7 @@ export const getUserStatus = () => {
   return status;
 };
 
-export const convertBase64 = (file: any) => {
+export const convertBase64 = (file: File) => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
