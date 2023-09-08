@@ -458,19 +458,22 @@ const Reviews = {
                 search: searchQuery,
               },
             },
+            {
+              comments: {
+                some: {
+                  content: {
+                    contains: searchQuery,
+                  },
+                },
+              },
+            },
           ],
         },
         include: {
           tags: true,
           likes: true,
           ratings: true,
-          comments: {
-            where: {
-              content: {
-                search: searchQuery,
-              },
-            },
-          },
+          comments: true,
           category: true,
           user: true,
         },
