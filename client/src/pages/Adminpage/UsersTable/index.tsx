@@ -26,7 +26,7 @@ import { queryClient } from "@app/index";
 import { Routes } from "@app/router/rooter";
 import { AdminTableAction, UserStatus } from "@app/types/enums";
 import { ActionsResponse, UsersData } from "@app/types/types";
-import { successHandler } from "@app/utils";
+import { classNames, successHandler } from "@app/utils";
 import { useRowSelectColumn } from "@lineup-lite/hooks";
 import { useMutation } from "@tanstack/react-query";
 
@@ -40,6 +40,8 @@ const UsersTable = (props: UsersTableProps) => {
   const { config } = useGetConfig();
   const { onError } = useError();
   const [tableAction, setTableAction] = useState<AdminTableAction | string>();
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const onSuccess = (response: ActionsResponse) => {
     queryClient.invalidateQueries(["users"]);
@@ -109,12 +111,18 @@ const UsersTable = (props: UsersTableProps) => {
     prepareRow,
     page,
     state,
+    setGlobalFilter,
+    gotoPage,
+    nextPage,
+    previousPage,
+    pageCount,
+    canNextPage,
+    canPreviousPage,
     setPageSize,
     selectedFlatRows,
     preGlobalFilteredRows,
-    setGlobalFilter,
   } = useTable(
-    { columns, data: tableData },
+    { columns, data: tableData, initialState: { pageIndex: 0, pageSize: 5 } },
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -122,9 +130,15 @@ const UsersTable = (props: UsersTableProps) => {
     useRowSelectColumn
   );
 
+  const { pageIndex } = state;
+
   useEffect(() => {
-    tableData?.length && setPageSize(tableData?.length);
-  }, [setPageSize, tableData?.length]);
+    if (pageNumber > pageCount || pageNumber < 1) {
+      setIsButtonDisabled(true);
+    } else {
+      setIsButtonDisabled(false);
+    }
+  }, [pageNumber, pageCount]);
 
   const handleActionApply = () => {
     const selectedIds = selectedFlatRows.map((item) => item.values?.id);
@@ -154,6 +168,18 @@ const UsersTable = (props: UsersTableProps) => {
           mutateDelete({ userIds: selectedIds, config });
           break;
       }
+    }
+  };
+
+  const handlePageInputChange = (e: any) => {
+    const inputPage = e.target.value;
+    setPageNumber(inputPage);
+  };
+
+  const handleGoToPage = () => {
+    if (pageNumber <= pageCount && pageNumber >= 1) {
+      console.log("go to page");
+      gotoPage(pageNumber - 1);
     }
   };
 
@@ -273,6 +299,77 @@ const UsersTable = (props: UsersTableProps) => {
           })}
         </tbody>
       </table>
+      <div className="pagination mt-4 flex items-center justify-start space-x-4">
+        <button
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+          className={`${
+            !canPreviousPage
+              ? "cursor-not-allowed bg-gray-300"
+              : "bg-gradientBtnBlue"
+          } rounded px-4 py-2 text-white`}
+        >
+          {"<<"}
+        </button>
+        <button
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+          className={`${
+            !canPreviousPage
+              ? "cursor-not-allowed bg-gray-300"
+              : "bg-gradientBtnBlue"
+          } rounded px-4 py-2 text-white`}
+        >
+          {"<"}
+        </button>
+        <span className="text-lg font-bold">
+          Page {pageIndex + 1} of {pageCount}
+        </span>
+        <button
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+          className={`${
+            !canNextPage
+              ? "cursor-not-allowed bg-gray-300"
+              : "bg-gradientBtnBlue"
+          } rounded px-4 py-2 text-white`}
+        >
+          {">"}
+        </button>
+        <button
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+          className={`${
+            !canNextPage
+              ? "cursor-not-allowed bg-gray-300"
+              : "bg-gradientBtnBlue"
+          } rounded px-4 py-2 text-white`}
+        >
+          {">>"}
+        </button>
+
+        <div className="flex items-center">
+          <span className="mr-2">Go to Page:</span>
+          <input
+            type="number"
+            value={pageNumber}
+            onChange={handlePageInputChange}
+            className="w-16 rounded border border-gray-300 px-2 py-1"
+          />
+          <button
+            disabled={isButtonDisabled}
+            onClick={handleGoToPage}
+            className={classNames(
+              "ml-2 flex h-[40px] w-[50px] items-center justify-center rounded-md bg-gradientBtnBlue px-2 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2",
+              isButtonDisabled
+                ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"
+                : null
+            )}
+          >
+            Go
+          </button>
+        </div>
+      </div>
     </>
   );
 };

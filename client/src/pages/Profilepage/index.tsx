@@ -42,7 +42,6 @@ const ProfilePage = () => {
     loggedUser,
     isDeleteReviewModalOpen,
     setIsDeleteReviewModalOpen,
-    selectedReviewId,
   } = useContext(AppContext) as AppContextShape;
 
   const { data: userByIdData, isLoading: isUserByIdLoading } =
