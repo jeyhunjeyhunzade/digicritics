@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Loader from "@app/components/Loader";
 
-const Callback = () => {
+const AuthCallback = () => {
   const { t } = useTranslation();
 
   return (
@@ -14,4 +14,4 @@ const Callback = () => {
   );
 };
 
-export default Callback;
+export default AuthCallback;

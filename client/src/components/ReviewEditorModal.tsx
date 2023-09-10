@@ -2,7 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
-import { createNewReview, getCategories, getTags } from "@app/api/reviews";
+import {
+  createNewReview,
+  editReview,
+  getCategories,
+  getReviewById,
+  getTags,
+} from "@app/api/reviews";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
@@ -11,6 +17,7 @@ import {
   AppContextShape,
   CategoriesData,
   Category,
+  ReviewsData,
   TagsData,
 } from "@app/types/types";
 import { successHandler } from "@app/utils";
@@ -30,6 +37,8 @@ const ReviewEditorModal = () => {
     isReviewEditorOpen,
     setIsReviewEditorOpen,
     loggedUserId,
+    selectedReviewId,
+    setSelectedReviewId,
   } = useContext(AppContext) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
   const [reviewTitle, setReviewTitle] = useState("");
@@ -49,6 +58,22 @@ const ReviewEditorModal = () => {
       retry: false,
     }
   );
+
+  const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
+    useQuery<ReviewsData | null>(
+      ["reviewById", selectedReviewId],
+      () => {
+        if (selectedReviewId) {
+          return getReviewById(selectedReviewId);
+        } else {
+          return null;
+        }
+      },
+      {
+        onError,
+        retry: false,
+      }
+    );
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useQuery<CategoriesData>(["categories"], getCategories, {
@@ -70,8 +95,25 @@ const ReviewEditorModal = () => {
       onError,
     });
 
+  const { mutate: editReviewMutate, isLoading: isEditReviewLoading } =
+    useMutation(editReview, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["tags"]);
+
+        successHandler(response);
+        closeReviewEditorModal();
+      },
+      onError,
+    });
+
   const isLoading =
-    isTagsLoading || isCategoriesLoading || isCreateNewReviewLoading;
+    isTagsLoading ||
+    isCategoriesLoading ||
+    isCreateNewReviewLoading ||
+    isEditReviewLoading;
 
   useEffect(() => {
     if (tagsData) {
@@ -85,6 +127,27 @@ const ReviewEditorModal = () => {
       setCategories(categoriesData.categories);
     }
   }, [categoriesData]);
+
+  useEffect(() => {
+    if (reviewByIdData) {
+      setReviewTitle(reviewByIdData.reviewTitle);
+      setReviewWorkName(reviewByIdData.workName);
+      reviewByIdData.category
+        ? setReviewCategory(reviewByIdData.category.name)
+        : "";
+      setReviewGrade(reviewByIdData.reviewGrade);
+
+      if (reviewByIdData.tags.length) {
+        const selectedTags: string[] = reviewByIdData.tags.map(
+          (tag) => tag.name
+        );
+        selectedTags.length && setSelectedTags(selectedTags);
+      }
+
+      setReviewContent(reviewByIdData.reviewContent);
+      setUrls(reviewByIdData.reviewImages);
+    }
+  }, [reviewByIdData]);
 
   const customReviewEditorModalStyles = {
     content: {
@@ -125,6 +188,7 @@ const ReviewEditorModal = () => {
       reviewGrade &&
       reviewCategory &&
       selectedTags.length &&
+      urls.length &&
       config
     ) {
       if (loggedUserId) {
@@ -146,7 +210,38 @@ const ReviewEditorModal = () => {
     }
   };
 
+  const handleEditReview = () => {
+    if (
+      selectedReviewId &&
+      reviewTitle &&
+      reviewWorkName &&
+      reviewContent &&
+      reviewGrade &&
+      reviewCategory &&
+      selectedTags.length &&
+      urls.length &&
+      config
+    ) {
+      editReviewMutate({
+        reviewId: selectedReviewId,
+        reviewTitle,
+        workName: reviewWorkName,
+        category: reviewCategory,
+        reviewGrade,
+        tags: selectedTags,
+        reviewContent,
+        reviewImages: urls,
+        //TODO: need condition for admin
+        config,
+      });
+    } else {
+      toast.error(t("Toast.allRequiredFields"));
+    }
+  };
+
   const resetFields = () => {
+    setSelectedReviewId(null);
+    setUrls([]);
     setReviewTitle("");
     setReviewWorkName("");
     setReviewCategory("");
@@ -294,10 +389,14 @@ const ReviewEditorModal = () => {
               {t("ReviewEditor.cancel")}
             </button>
             <button
-              onClick={handleShareReview}
+              onClick={selectedReviewId ? handleEditReview : handleShareReview}
               className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
             >
-              <span className="pr-2">{t("ReviewEditor.shareReview")}</span>
+              <span className="pr-2">
+                {selectedReviewId
+                  ? t("ReviewEditor.editReview")
+                  : t("ReviewEditor.shareReview")}
+              </span>
             </button>
           </div>
         </div>

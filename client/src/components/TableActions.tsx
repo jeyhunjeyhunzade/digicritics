@@ -1,11 +1,16 @@
 import DeleteIcon from "@app/assets/icons/DeleteIcon";
 import EditIcon from "@app/assets/icons/EditIcon";
+import { Review } from "@app/types/types";
 
-const TableActions = () => {
+interface TableActionsProps {
+  review: Review;
+}
+
+const TableActions = (props: TableActionsProps) => {
   return (
     <div className="flex justify-center space-x-2">
-      <DeleteIcon size={24} />
-      <EditIcon size={24} />
+      <DeleteIcon review={props.review} size={24} />
+      <EditIcon review={props.review} size={24} />
     </div>
   );
 };

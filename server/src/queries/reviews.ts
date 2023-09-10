@@ -62,8 +62,8 @@ const Reviews = {
             connect: { id: existingCategory.id },
           },
           tags: {
-            connect: existingTagIds.map((id) => ({ id })), // Connect to existing tags
-            create: tagAssociations.filter((tag: any) => !("id" in tag)), // Create new tags
+            connect: existingTagIds.map((id) => ({ id })),
+            create: tagAssociations.filter((tag: any) => !("id" in tag)),
           },
         },
       });
@@ -72,6 +72,152 @@ const Reviews = {
         message: "Review created successfully",
         review: newReview,
       });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
+  editReview: async (request: Request, response: Response) => {
+    try {
+      const {
+        reviewId,
+        reviewTitle,
+        workName,
+        category,
+        reviewGrade,
+        tags,
+        reviewContent,
+        reviewImages,
+      } = request.body;
+
+      const existingReview = await prisma.review.findUnique({
+        where: {
+          id: reviewId,
+        },
+      });
+
+      if (!existingReview) {
+        return response.status(404).json({ message: "Review not found" });
+      }
+
+      const existingCategory = await prisma.category.findUnique({
+        where: {
+          name: category,
+        },
+      });
+
+      if (!existingCategory) {
+        return response.status(400).json({ message: "Category not found" });
+      }
+
+      const existingTags = await prisma.tag.findMany({
+        where: {
+          name: {
+            in: tags,
+          },
+        },
+      });
+
+      const existingTagIds = existingTags.map((tag) => tag.id);
+
+      const newTagNames = tags.filter(
+        (tagName: string) => !existingTags.some((tag) => tag.name === tagName)
+      );
+
+      const createdTags = await Promise.all(
+        newTagNames.map(async (tagName: string) => {
+          const createdTag = await prisma.tag.create({
+            data: {
+              name: tagName,
+            },
+          });
+          return createdTag.id;
+        })
+      );
+
+      const allTagIds = [...existingTagIds, ...createdTags];
+
+      const updatedReview = await prisma.review.update({
+        where: {
+          id: reviewId,
+        },
+        data: {
+          reviewTitle,
+          workName,
+          reviewGrade,
+          reviewContent,
+          reviewImages,
+          category: {
+            connect: { id: existingCategory.id },
+          },
+          tags: {
+            set: allTagIds.map((id) => ({ id })),
+          },
+        },
+      });
+
+      response.json({
+        message: "Review updated successfully",
+        review: updatedReview,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
+  deleteReview: async (request: Request, response: Response) => {
+    try {
+      const { reviewId } = request.params;
+
+      if (!reviewId) {
+        return response
+          .status(400)
+          .send({ message: "Please provide a valid reviewId" });
+      }
+
+      const existingReview = await prisma.review.findUnique({
+        where: {
+          id: parseInt(reviewId),
+        },
+      });
+
+      if (!existingReview) {
+        return response.status(404).json({ message: "Review not found" });
+      }
+
+      await prisma.like.deleteMany({
+        where: {
+          reviewId: parseInt(reviewId),
+        },
+      });
+
+      await prisma.rating.deleteMany({
+        where: {
+          reviewId: parseInt(reviewId),
+        },
+      });
+
+      await prisma.comment.deleteMany({
+        where: {
+          reviewId: parseInt(reviewId),
+        },
+      });
+
+      await prisma.review.deleteMany({
+        where: {
+          id: parseInt(reviewId),
+        },
+      });
+
+      response.json({ message: "Review deleted successfully" });
     } catch (error) {
       if (error instanceof Error) {
         return response.status(500).send({ message: error.message });
@@ -118,6 +264,7 @@ const Reviews = {
           ratings: true,
           comments: true,
           user: true,
+          category: true,
         },
       });
 

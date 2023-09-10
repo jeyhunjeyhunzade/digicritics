@@ -47,7 +47,6 @@ export const classNames = (...classes: Array<string | null>) => {
 };
 
 export const shorteningFullName = (fullName: string) => {
-  console.log("fullname", fullName);
   const nameParts = fullName?.split(" ");
 
   if (nameParts.length >= 2) {

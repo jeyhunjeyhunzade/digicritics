@@ -9,7 +9,7 @@ const SignupButton = () => {
   const handleSignUp = async () => {
     await loginWithRedirect({
       appState: {
-        returnTo: Routes.welcomepage,
+        returnTo: Routes.loginCallback,
       },
       authorizationParams: {
         screen_hint: "signup",

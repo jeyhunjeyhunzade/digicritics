@@ -14,6 +14,10 @@ export interface AppContextShape {
   setConfig: Dispatch<SetStateAction<ApiConfig | undefined>>;
   isCategoryEditorOpen: boolean;
   setCategoryEditorOpen: Dispatch<SetStateAction<boolean>>;
+  selectedReviewId: number | null;
+  setSelectedReviewId: Dispatch<SetStateAction<number | null>>;
+  isDeleteReviewModalOpen: boolean;
+  setIsDeleteReviewModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface ApiConfig {
@@ -67,7 +71,7 @@ export interface Rate {
   rating: number;
 }
 
-export interface ReviewsTable {
+export interface Review {
   id: number;
   reviewTitle: string;
   workName: string;
@@ -189,6 +193,18 @@ export interface CommentReviewParams {
   userId: string | number;
   reviewId: string | number;
   content: string;
+  config: ApiConfig;
+}
+
+export interface EditReviewParams {
+  reviewId: number;
+  reviewTitle: string;
+  workName: string;
+  category: string;
+  reviewGrade: number;
+  tags: string[];
+  reviewContent: string;
+  reviewImages: string[];
   config: ApiConfig;
 }
 

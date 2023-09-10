@@ -2,6 +2,7 @@ import {
   ApiConfig,
   CommentReviewParams,
   CreateNewReviewParams,
+  EditReviewParams,
   LikeReviewParams,
   RateReviewParams,
 } from "@app/types/types";
@@ -107,6 +108,27 @@ export const commentReview = async (
 export const getFullTextSearch = async (searchQuery: string) => {
   const res = await axios.post(`${serverUrl}/getFullTextSearch`, {
     searchQuery,
+  });
+  return res?.data;
+};
+
+export const editReview = async (editReviewParams: EditReviewParams) => {
+  const { config } = editReviewParams;
+  const res = await axios.patch(
+    `${serverUrl}/reviews/updateReview`,
+    editReviewParams,
+    config
+  );
+  return res?.data;
+};
+
+export const deleteReview = async (deleteReviewParams: {
+  reviewId: number;
+  config: ApiConfig;
+}) => {
+  const { reviewId, config } = deleteReviewParams;
+  const res = await axios.delete(`${serverUrl}/reviews/${reviewId}/delete`, {
+    ...config,
   });
   return res?.data;
 };

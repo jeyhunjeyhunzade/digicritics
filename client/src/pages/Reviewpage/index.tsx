@@ -17,6 +17,7 @@ import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
+import { queryClient } from "@app/index";
 import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
 import { LikeAction } from "@app/types/enums";
@@ -31,8 +32,7 @@ import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "..";
-import { AppContext } from "./App";
+import { AppContext } from "../App";
 
 const ReviewPage = () => {
   const { id } = useParams();
@@ -200,12 +200,12 @@ const ReviewPage = () => {
   return (
     <Layout>
       {isReviewByIdLoading ? (
-        <div className="flex items-center justify-center">
+        <div className="flex h-[90vh] items-center justify-center">
           <Loader />
         </div>
       ) : (
         reviewData && (
-          <div className="p-20 dark:bg-[#1B1B1B]">
+          <div className="w-full p-20 dark:bg-[#1B1B1B]">
             <div>
               <ImageSlider images={reviewData.reviewImages} />
             </div>
@@ -308,7 +308,7 @@ const ReviewPage = () => {
                 {reviewData.reviewContent}
               </p>
             </div>
-            <div>
+            <div className="flex w-full">
               <div className="mt-40 flex items-start text-2xl dark:text-white">
                 {t("Review.similiarReviews")}
               </div>
