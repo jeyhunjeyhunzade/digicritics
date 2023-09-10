@@ -1,13 +1,12 @@
 import { ReactElement } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Auth0ProviderLayout from "@app/layout/AuthProviderLayout";
-import AdminPage from "@app/pages/AdminPage";
-import Callback from "@app/pages/Callback";
+import AdminPage from "@app/pages/Adminpage";
+import AuthCallback from "@app/pages/Callbackpages/AuthCallback";
+import LoginCallBack from "@app/pages/Callbackpages/LoginCallback";
 import Homepage from "@app/pages/Homepage";
-import LoginCallBack from "@app/pages/LoginCallback";
-import ProfilePage from "@app/pages/ProfilePage";
-import ReviewPage from "@app/pages/ReviewPage";
-import WelcomePage from "@app/pages/WelcomePage";
+import ProfilePage from "@app/pages/Profilepage";
+import ReviewPage from "@app/pages/Reviewpage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { UserStatus } from "@app/types/enums";
 import { getUserStatus } from "@app/utils";
@@ -68,13 +67,8 @@ export const router = createBrowserRouter([
         errorElement: <RouterErrorPage />,
       },
       {
-        path: Routes.welcomepage,
-        element: <WelcomePage />,
-        errorElement: <RouterErrorPage />,
-      },
-      {
         path: Routes.callback,
-        element: <Callback />,
+        element: <AuthCallback />,
         errorElement: <RouterErrorPage />,
       },
       {

@@ -10,10 +10,12 @@ export const AppContext = createContext<AppContextShape | null>(null);
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isReviewEditorOpen, setIsReviewEditorOpen] = useState(false);
+  const [isDeleteReviewModalOpen, setIsDeleteReviewModalOpen] = useState(false);
   const [isCategoryEditorOpen, setCategoryEditorOpen] = useState(false);
   const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
   const [config, setConfig] = useState<ApiConfig>();
+  const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
 
   useEffect(() => {
     const id = getLoggedUserId();
@@ -38,6 +40,10 @@ const App = () => {
         setConfig,
         isCategoryEditorOpen,
         setCategoryEditorOpen,
+        selectedReviewId,
+        setSelectedReviewId,
+        isDeleteReviewModalOpen,
+        setIsDeleteReviewModalOpen,
       }}
     >
       <div>

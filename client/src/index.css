@@ -116,3 +116,7 @@ button[data-name="fullscreen"] {
 .bodyTransition {
   transition: all .3s ease;
 }
+
+input[placeholder="Tags"] {
+  box-shadow: none !important;
+}

@@ -22,7 +22,6 @@ const SearchInput = () => {
   const { mutate: searchReviewMutate, isLoading: isSearchReviewLoading } =
     useMutation(getFullTextSearch, {
       onSuccess: (response) => {
-        console.log("response: ", response);
         setResults(response);
       },
       onError: errorHandler,

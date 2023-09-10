@@ -71,6 +71,9 @@ export default {
     cancel: "Cancel",
     delete: "Delete",
     provideProfileImg: "Please provide profile image",
+    notHaveReview: "User doesn't have any review",
+    deleteReview: "Delete review",
+    decideDeleteReview: "Are you sure you want to delete this review",
   },
   ProfileTable: {
     id: "Id",
@@ -107,6 +110,7 @@ export default {
     tags: "Tags",
     cancel: "Cancel",
     shareReview: "Share review",
+    editReview: "Edit review",
   },
   CategoryEditor: {
     newCategory: "New category",

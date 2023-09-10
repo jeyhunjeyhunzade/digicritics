@@ -8,14 +8,14 @@ import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import useLogout from "@app/hooks/useLogout";
+import { queryClient } from "@app/index";
 import { Routes } from "@app/router/rooter";
 import { AuthAction, UserStatus } from "@app/types/enums";
 import { AppContextShape } from "@app/types/types";
 import { errorHandler, successHandler } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "..";
-import { AppContext } from "./App";
+import { AppContext } from "../App";
 
 const LoginCallBack = () => {
   const { t } = useTranslation();
@@ -79,7 +79,10 @@ const LoginCallBack = () => {
   }, [user, config]);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-gradientBlue">
+    <div className="flex h-full w-full flex-col items-center justify-center space-y-10 bg-gradientBlue">
+      <div className="text-3xl font-semibold text-white">
+        {`${t("Loader.wait")}...`}
+      </div>
       <Loader />
     </div>
   );
