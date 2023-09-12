@@ -188,66 +188,68 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </select>
         </div>
       </div>
-      <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
-        <thead className="bg-gray-10">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="px-6 py-5 text-base font-medium text-[#636060]"
-                >
-                  <div className="flex">
-                    {column.render("Header")}
-                    {column.id === "selection" && column.render("Summary")}
-                    {typeof column.Header === "string" && (
-                      <span className="ml-1 self-center">
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <DownIcon size={14} />
+      <div className="mb-2 h-[388px]">
+        <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
+          <thead className="bg-gray-10">
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    className="px-6 py-5 text-base font-medium text-[#636060]"
+                  >
+                    <div className="flex">
+                      {column.render("Header")}
+                      {column.id === "selection" && column.render("Summary")}
+                      {typeof column.Header === "string" && (
+                        <span className="ml-1 self-center">
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <DownIcon size={14} />
+                            ) : (
+                              <UpIcon size={14} />
+                            )
                           ) : (
-                            <UpIcon size={14} />
-                          )
-                        ) : (
-                          <span className="flex">
-                            <DownIcon size={14} />
-                            <UpIcon size={14} />
-                          </span>
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody
-          {...getTableBodyProps()}
-          className="divide-y bg-white shadow-tableRowShadow dark:divide-[#1B1B1B]"
-        >
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                className="rounded-[8px] bg-white text-left dark:bg-[#2C2C2C]"
-              >
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className="whitespace-nowrap px-6 py-5 text-base dark:text-white"
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
+                            <span className="flex">
+                              <DownIcon size={14} />
+                              <UpIcon size={14} />
+                            </span>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody
+            {...getTableBodyProps()}
+            className="divide-y bg-white shadow-tableRowShadow dark:divide-[#1B1B1B]"
+          >
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  className="rounded-[8px] bg-white text-left dark:bg-[#2C2C2C]"
+                >
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className="whitespace-nowrap px-6 py-5 text-base dark:text-white"
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className="pagination mt-4 flex items-center justify-start space-x-4">
         <button
           onClick={() => gotoPage(0)}
