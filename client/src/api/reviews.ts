@@ -31,6 +31,11 @@ export const getReviewById = async (reviewId: number | string | null) => {
   return res?.data;
 };
 
+export const getReviewsByTag = async (tagName: string | null) => {
+  const res = await axios.get(`${serverUrl}/reviews/tags/${tagName}`);
+  return res?.data;
+};
+
 export const getTags = async () => {
   const res = await axios.get(`${serverUrl}/tags`);
   return res?.data;

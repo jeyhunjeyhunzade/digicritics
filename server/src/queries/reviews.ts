@@ -282,6 +282,44 @@ const Reviews = {
     }
   },
 
+  getReviewsByTag: async (request: Request, response: Response) => {
+    try {
+      const { tagName } = request.params;
+
+      const reviews = await prisma.review.findMany({
+        where: {
+          tags: {
+            some: {
+              name: tagName, // Filter by the tag name
+            },
+          },
+        },
+        include: {
+          tags: true,
+          likes: true,
+          ratings: true,
+          comments: true,
+          user: true,
+          category: true,
+        },
+      });
+
+      if (reviews.length === 0) {
+        return response
+          .status(404)
+          .send({ message: "No reviews found for this tag" });
+      }
+
+      response.json(reviews);
+    } catch (error) {
+      if (error instanceof Error) {
+        return response.status(500).send({ message: error.message });
+      } else {
+        return response.status(500).send({ message: "Unknown error" });
+      }
+    }
+  },
+
   getTags: async (request: Request, response: Response) => {
     try {
       const tags = await prisma.tag.findMany();
