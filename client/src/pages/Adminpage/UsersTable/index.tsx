@@ -325,7 +325,9 @@ const UsersTable = (props: UsersTableProps) => {
           {"<"}
         </button>
         <span className="text-lg font-bold">
-          Page {pageIndex + 1} of {pageCount}
+          {`${t("AdminPage.page")} ${pageIndex + 1} ${t(
+            "AdminPage.of"
+          )} ${pageCount}`}
         </span>
         <button
           onClick={() => nextPage()}
@@ -351,7 +353,7 @@ const UsersTable = (props: UsersTableProps) => {
         </button>
 
         <div className="flex items-center">
-          <span className="mr-2">Go to Page:</span>
+          <span className="mr-2">{t("AdminPage.goToPage")}</span>
           <input
             type="number"
             value={pageNumber}
@@ -368,7 +370,7 @@ const UsersTable = (props: UsersTableProps) => {
                 : null
             )}
           >
-            Go
+            {t("AdminPage.go")}
           </button>
         </div>
       </div>
