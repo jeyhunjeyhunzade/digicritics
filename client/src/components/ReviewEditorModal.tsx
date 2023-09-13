@@ -39,6 +39,8 @@ const ReviewEditorModal = () => {
     loggedUserId,
     selectedReviewId,
     setSelectedReviewId,
+    tags,
+    setTags,
   } = useContext(AppContext) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
   const [reviewTitle, setReviewTitle] = useState("");
@@ -47,7 +49,6 @@ const ReviewEditorModal = () => {
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(

@@ -16,6 +16,7 @@ const App = () => {
   const [loggedUserId, setLoggedUserId] = useState<number | null>(null);
   const [config, setConfig] = useState<ApiConfig>();
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     const id = getLoggedUserId();
@@ -44,6 +45,8 @@ const App = () => {
         setSelectedReviewId,
         isDeleteReviewModalOpen,
         setIsDeleteReviewModalOpen,
+        tags,
+        setTags,
       }}
     >
       <div>

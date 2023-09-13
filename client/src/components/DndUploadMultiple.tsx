@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import Loader from "./Loader";
 
 const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
-  const { width, height, urls, setUrls } = props;
+  const { width, urls, setUrls } = props;
   const { t } = useTranslation();
 
   const {

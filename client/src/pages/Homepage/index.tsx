@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { TagCloud } from "react-tagcloud";
 import { getReviews } from "@app/api/reviews";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
-import { CloudTags, ReviewsData } from "@app/types/types";
+import { ReviewsData } from "@app/types/types";
 import { useQuery } from "@tanstack/react-query";
+import Tags from "./TagCloud";
 
 const Homepage = () => {
   const { t } = useTranslation();
@@ -25,44 +25,6 @@ const Homepage = () => {
   useEffect(() => {
     reviewsData && setReviews(reviewsData);
   }, [reviewsData]);
-
-  const mockTags: CloudTags[] = [
-    { value: "photo", count: 25 },
-    { value: "movie", count: 18 },
-    { value: "books", count: 38 },
-    { value: "animals", count: 30 },
-    { value: "sport", count: 28 },
-    { value: "anime", count: 25 },
-    { value: "culture", count: 33 },
-    { value: "foods", count: 20 },
-    { value: "history", count: 22 },
-    { value: "healthy", count: 7 },
-    { value: "gaming", count: 25 },
-    { value: "nature", count: 15 },
-    { value: "cities", count: 17 },
-    { value: "programming", count: 27 },
-    { value: "fashion", count: 30 },
-    { value: "science", count: 15 },
-    { value: "cars", count: 30 },
-    { value: "tech", count: 11 },
-  ];
-
-  const customRenderer = (tag: CloudTags, size: number) => (
-    <span
-      key={tag.value}
-      style={{
-        animation: "blinker 3s linear infinite",
-        animationDelay: `${Math.random() * 2}s`,
-        fontSize: `${size / 2}em`,
-        margin: "3px",
-        padding: "3px",
-        display: "inline-block",
-        color: "#0483B6",
-      }}
-    >
-      {tag.value}
-    </span>
-  );
 
   return (
     <Layout>
@@ -92,14 +54,7 @@ const Homepage = () => {
           {t("Homepage.popularTags")}
         </div>
         <div className="mt-6">
-          <TagCloud
-            minSize={2}
-            maxSize={5}
-            tags={mockTags}
-            renderer={customRenderer}
-            className="cursor-pointer"
-            onClick={(tag: CloudTags) => alert(`'${tag.value}' was selected!`)}
-          />
+          <Tags />
         </div>
       </div>
     </Layout>

@@ -100,6 +100,10 @@ export default {
     block: "Block",
     unBlock: "Unblock",
     delete: "Delete",
+    page: "Page",
+    of: "of",
+    go: "Go",
+    goToPage: "Go to Page",
   },
   ReviewEditor: {
     title: "Review editor",
