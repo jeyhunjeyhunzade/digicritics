@@ -7,6 +7,7 @@ import LoginCallBack from "@app/pages/Callbackpages/LoginCallback";
 import Homepage from "@app/pages/Homepage";
 import ProfilePage from "@app/pages/Profilepage";
 import ReviewPage from "@app/pages/Reviewpage";
+import Tagpage from "@app/pages/Tagpage";
 import RouterErrorPage from "@app/router/RouterErrorPage";
 import { UserStatus } from "@app/types/enums";
 import { getUserStatus } from "@app/utils";
@@ -22,6 +23,8 @@ export enum Routes {
   welcomepage = "/welcome",
   callback = "/callback",
   loginCallback = "/loginCallback",
+  tagpage = "/tags",
+  tagpageByTag = "tags/:tagName",
 }
 
 interface PrivateRoute {
@@ -55,6 +58,11 @@ export const router = createBrowserRouter([
       {
         path: Routes.profileById,
         element: <ProfilePage />,
+        errorElement: <RouterErrorPage />,
+      },
+      {
+        path: Routes.tagpageByTag,
+        element: <Tagpage />,
         errorElement: <RouterErrorPage />,
       },
       {

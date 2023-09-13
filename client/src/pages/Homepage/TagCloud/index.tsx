@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TagCloud } from "react-tagcloud";
 import { AppContext } from "@app/pages/App";
+import { Routes } from "@app/router/rooter";
 import { AppContextShape, CloudTags } from "@app/types/types";
 
 const Tags = () => {
+  const navigate = useNavigate();
   const { tags } = useContext(AppContext) as AppContextShape;
   const [cloudTags, setCloudTags] = useState<CloudTags[]>([]);
 
@@ -43,7 +46,9 @@ const Tags = () => {
       tags={cloudTags}
       renderer={customRenderer}
       className="cursor-pointer"
-      onClick={(tag: CloudTags) => alert(`'${tag.value}' was selected!`)}
+      onClick={(tag: CloudTags) => {
+        navigate(`${Routes.tagpage}/${tag.value}`);
+      }}
     />
   );
 };
