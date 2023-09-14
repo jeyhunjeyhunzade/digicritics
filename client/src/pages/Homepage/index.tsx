@@ -7,6 +7,7 @@ import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
 import { ReviewsData } from "@app/types/types";
+import { calculateAverageRate } from "@app/utils";
 import { useQuery } from "@tanstack/react-query";
 import Tags from "./TagCloud";
 
@@ -25,7 +26,7 @@ const Homepage = () => {
 
   useEffect(() => {
     const popularReviews = reviewsData?.filter(
-      (review) => review.likes.length >= 2
+      (review) => calculateAverageRate(review.ratings) >= 4
     );
     setPopularReviews(popularReviews);
 
