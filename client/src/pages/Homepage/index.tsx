@@ -13,7 +13,8 @@ import Tags from "./TagCloud";
 const Homepage = () => {
   const { t } = useTranslation();
   const { onError } = useError();
-  const [reviews, setReviews] = useState<ReviewsData[]>();
+  const [popularReviews, setPopularReviews] = useState<ReviewsData[]>();
+  const [recentReviews, setRecentReviews] = useState<ReviewsData[]>();
 
   const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
     ReviewsData[]
@@ -23,8 +24,29 @@ const Homepage = () => {
   });
 
   useEffect(() => {
-    reviewsData && setReviews(reviewsData);
+    const popularReviews = reviewsData?.filter(
+      (review) => review.likes.length >= 2
+    );
+    setPopularReviews(popularReviews);
+
+    const recentReviews = reviewsData?.filter((review) =>
+      isRecentReview(review.createdTime)
+    );
+
+    setRecentReviews(recentReviews);
   }, [reviewsData]);
+
+  const isRecentReview = (dateToCheck: Date | string) => {
+    const currentDate: Date = new Date();
+    const threeDaysAgo: Date = new Date();
+    threeDaysAgo.setDate(currentDate.getDate() - 3);
+
+    if (dateToCheck >= threeDaysAgo.toISOString()) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <Layout>
@@ -33,7 +55,7 @@ const Homepage = () => {
           {t("Homepage.popularReviews")}
         </div>
         <div className="mt-6 grid grid-cols-4 gap-4">
-          {reviews?.map((review: ReviewsData) => (
+          {popularReviews?.map((review: ReviewsData) => (
             <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
               <ReviewCard review={review} />
             </Link>
@@ -44,7 +66,7 @@ const Homepage = () => {
           {t("Homepage.recentlyAdded")}
         </div>
         <div className="mt-6 grid grid-cols-4 gap-4">
-          {reviews?.map((review: ReviewsData) => (
+          {recentReviews?.map((review: ReviewsData) => (
             <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
               <ReviewCard review={review} />
             </Link>
