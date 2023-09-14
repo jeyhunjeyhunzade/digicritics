@@ -68,7 +68,7 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .w-md-editor-toolbar {
-  background-color: transparent;
+  background-color: white;
 }
 
 button[data-name="fullscreen"] {
@@ -120,3 +120,4 @@ button[data-name="fullscreen"] {
 input[placeholder="Tags"] {
   box-shadow: none !important;
 }
+
