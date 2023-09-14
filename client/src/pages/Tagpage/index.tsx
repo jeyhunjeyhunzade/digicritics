@@ -36,7 +36,7 @@ const Tagpage = () => {
 
   return (
     <Layout>
-      <div className="flex min-h-[90vh] w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
+      <div className="flex min-h-[91vh] w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
         <div className="text-4xl font-semibold text-[#013549] dark:text-white">
           #{tagName}
         </div>

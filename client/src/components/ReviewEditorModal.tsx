@@ -20,8 +20,8 @@ import {
   ReviewsData,
   TagsData,
 } from "@app/types/types";
-import { successHandler } from "@app/utils";
-import { Autocomplete, TextField } from "@mui/material";
+import { classNames, successHandler } from "@app/utils";
+import { Autocomplete, Chip, TextField } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
 import { queryClient } from "..";
@@ -173,6 +173,7 @@ const ReviewEditorModal = () => {
   const previewStyles = {
     style: {
       backgroundColor: "inherit",
+      color: isDarkMode ? "#C2C1BE" : "#000",
     },
   };
 
@@ -250,6 +251,33 @@ const ReviewEditorModal = () => {
     setSelectedTags([]);
     setReviewContent("");
   };
+
+  const renderTags = (
+    value: string[],
+    getTagProps: ({ index }: { index: number }) => Record<string, any>
+  ) =>
+    value.map((tag: string, index: number) => (
+      <Chip
+        key={index}
+        label={tag}
+        {...getTagProps({ index })}
+        style={
+          isDarkMode
+            ? {
+                backgroundColor: "#3F3F3F",
+                color: "white",
+                margin: "4px",
+                borderRadius: "4px",
+              }
+            : {
+                backgroundColor: "#EFEFEF",
+                color: "#000000",
+                margin: "4px",
+                borderRadius: "4px",
+              }
+        }
+      />
+    ));
 
   return (
     <Modal
@@ -342,7 +370,16 @@ const ReviewEditorModal = () => {
             <div className="flex">
               {/* //TODO: get tags dynamically and max 3 tag*/}
               <Autocomplete
-                className="w-[548px] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                style={
+                  isDarkMode
+                    ? {
+                        border: "1px solid #DEDEDE",
+                        borderRadius: "6px",
+                        boxShadow: "none",
+                      }
+                    : {}
+                }
+                className="w-[548px] outline-none focus:outline-none dark:border-red-300 dark:text-red-300"
                 multiple
                 freeSolo
                 options={tags}
@@ -350,13 +387,22 @@ const ReviewEditorModal = () => {
                 value={selectedTags}
                 renderInput={(params) => (
                   <TextField
-                    className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                    // className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                     {...params}
                     fullWidth
                     InputLabelProps={{ children: null }}
+                    InputProps={{
+                      ...params.InputProps,
+                      style: isDarkMode
+                        ? {
+                            color: "#C2C1BE",
+                          }
+                        : {},
+                    }}
                     placeholder={`${t("ReviewEditor.tags")}`}
                   />
                 )}
+                renderTags={renderTags}
                 onChange={(_, value) => {
                   setSelectedTags(value);
                 }}

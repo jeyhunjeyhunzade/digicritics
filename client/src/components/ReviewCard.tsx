@@ -125,6 +125,7 @@ const ReviewCard = (props: ReviewCardProps) => {
               value={ratingValue ? ratingValue : 0}
               size="small"
               readOnly
+              className="text-gray-500 dark:text-yellow-500"
             />
           </div>
         </div>
