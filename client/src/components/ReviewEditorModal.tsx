@@ -16,11 +16,10 @@ import { AppContext } from "@app/pages/App";
 import {
   AppContextShape,
   CategoriesData,
-  Category,
   ReviewsData,
   TagsData,
 } from "@app/types/types";
-import { classNames, successHandler } from "@app/utils";
+import { successHandler } from "@app/utils";
 import { Autocomplete, Chip, TextField } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import MDEditor from "@uiw/react-md-editor";
@@ -49,7 +48,6 @@ const ReviewEditorModal = () => {
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
 
   const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
     ["tags"],
@@ -114,7 +112,8 @@ const ReviewEditorModal = () => {
     isTagsLoading ||
     isCategoriesLoading ||
     isCreateNewReviewLoading ||
-    isEditReviewLoading;
+    isEditReviewLoading ||
+    isReviewByIdLoading;
 
   useEffect(() => {
     if (tagsData) {
@@ -122,12 +121,6 @@ const ReviewEditorModal = () => {
       setTags(tagNames);
     }
   }, [tagsData]);
-
-  useEffect(() => {
-    if (categoriesData) {
-      setCategories(categoriesData.categories);
-    }
-  }, [categoriesData]);
 
   useEffect(() => {
     if (reviewByIdData) {
@@ -339,7 +332,7 @@ const ReviewEditorModal = () => {
                     <option className="text-[#636060]" value="">
                       {t("ReviewEditor.category")}
                     </option>
-                    {categories.map((category) => (
+                    {categoriesData?.categories.map((category) => (
                       <option key={category.id} value={category.name}>
                         {category.name}
                       </option>

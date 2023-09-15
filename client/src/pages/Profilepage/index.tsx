@@ -30,7 +30,6 @@ const ProfilePage = () => {
   const { t } = useTranslation();
   const { onError } = useError();
   const { config } = useGetConfig();
-  const [profileData, setProfileData] = useState<UsersData>();
   const [isOwnPage, setIsOwnPage] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [tableData, setTableData] = useState<Review[]>([]);
@@ -61,10 +60,6 @@ const ProfilePage = () => {
     );
 
   useEffect(() => {
-    userByIdData && setProfileData(userByIdData);
-  }, [userByIdData]);
-
-  useEffect(() => {
     if (loggedUser) {
       if (`${loggedUser?.id}` === id) {
         setIsOwnPage(true);
@@ -80,11 +75,11 @@ const ProfilePage = () => {
         }
       }
     }
-  }, [loggedUser, profileData]);
+  }, [loggedUser, userByIdData]);
 
   useEffect(() => {
-    if (profileData?.reviews) {
-      const formatDataForTable: Review[] = profileData.reviews.map(
+    if (userByIdData?.reviews) {
+      const formatDataForTable: Review[] = userByIdData.reviews.map(
         (review: Omit<ReviewsData, "user">) => {
           return {
             id: review.id,
@@ -102,7 +97,7 @@ const ProfilePage = () => {
       );
       setTableData(formatDataForTable);
     }
-  }, [profileData]);
+  }, [userByIdData]);
 
   const openEditProfileModal = () => {
     setIsEditProfileModalOpen(true);
@@ -124,12 +119,12 @@ const ProfilePage = () => {
           <Loader />
         </div>
       ) : (
-        profileData && (
+        userByIdData && (
           <div className="flex min-h-[91vh] w-full flex-col px-20 py-6 dark:bg-[#1B1B1B]">
             <div className="mb-10 flex w-full justify-start">
-              {profileData.profileImage ? (
+              {userByIdData?.profileImage ? (
                 <img
-                  src={profileData.profileImage}
+                  src={userByIdData.profileImage}
                   alt="profile"
                   className="max-h-[215px] w-[160px] rounded-[8px]"
                 />
@@ -142,7 +137,7 @@ const ProfilePage = () => {
                 <div>
                   <div className="mb-2 flex items-center">
                     <span className="text-4xl font-medium dark:text-white">
-                      {profileData.fullName}
+                      {userByIdData?.fullName}
                     </span>
                   </div>
                   <div className="mb-2 flex items-center dark:text-white">
@@ -151,13 +146,13 @@ const ProfilePage = () => {
                         <tr className="mb-2">
                           <td className="font-medium">{t("Profile.email")}</td>
                           <td className="pl-6 font-normal">
-                            {profileData.email}
+                            {userByIdData?.email}
                           </td>
                         </tr>
                         <tr className="mb-2">
                           <td className="font-medium">{t("Profile.likes")}</td>
                           <td className="pl-6 font-normal">
-                            {profileData?.Like?.length}
+                            {userByIdData?.Like?.length}
                           </td>
                         </tr>
                         <tr>
@@ -165,8 +160,8 @@ const ProfilePage = () => {
                             {t("Profile.created")}
                           </td>
                           <td className="pl-6 font-normal">
-                            {profileData.createdTime &&
-                              dateFormatter(profileData.createdTime)}
+                            {userByIdData?.createdTime &&
+                              dateFormatter(userByIdData.createdTime)}
                           </td>
                         </tr>
                       </tbody>
@@ -212,7 +207,7 @@ const ProfilePage = () => {
             <EditProfileModal
               isEditProfileModalOpen={isEditProfileModalOpen}
               setIsEditProfileModalOpen={setIsEditProfileModalOpen}
-              profileData={profileData}
+              profileData={userByIdData}
               handleDeleteUser={handleDeleteUser}
             />
             <DeleteProfileModal

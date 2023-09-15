@@ -42,15 +42,16 @@ const ReviewPage = () => {
   const { config } = useGetConfig();
   const { isAuthenticated } = useAuth0();
 
-  const { loggedUserId } = useContext(AppContext) as AppContextShape;
+  const { loggedUserId, isDarkMode } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const [ratingValue, setRatingValue] = useState<number>(0);
-  const [reviewData, setReviewData] = useState<ReviewsData>();
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
+  const { data: reviewData, isLoading: isReviewByIdLoading } =
     useQuery<ReviewsData>(
       ["reviewById", id],
       () => {
@@ -124,14 +125,12 @@ const ReviewPage = () => {
     });
 
   useEffect(() => {
-    reviewByIdData && setReviewData(reviewByIdData);
-  }, [reviewByIdData]);
-
-  useEffect(() => {
     if (reviewData) {
+      console.log("reviewData: ", reviewData.likes);
       if (reviewData.likes.length) {
         reviewData.likes.forEach((like) => {
           if (like.userId === loggedUserId) {
+            console.log("LIKE");
             setLiked(true);
           } else {
             setLiked(false);
@@ -143,7 +142,7 @@ const ReviewPage = () => {
 
       setRatingValue(calculateAverageRate(reviewData.ratings));
     }
-  }, [reviewData]);
+  });
 
   useEffect(() => {
     commentsForReviewData && setComments(commentsForReviewData.comments);
@@ -242,7 +241,7 @@ const ReviewPage = () => {
                     size={24}
                     liked={liked}
                     setLiked={setLiked}
-                    color={"#2C2C2C"}
+                    color={isDarkMode ? "white" : "#2C2C2C"}
                   />
                 </div>
               </div>
@@ -287,6 +286,7 @@ const ReviewPage = () => {
               </div>
               <div className="flex h-8">
                 <Rating
+                  sx={isDarkMode ? { stroke: "#eab305" } : {}}
                   name="simple-controlled"
                   value={ratingValue}
                   size="large"
