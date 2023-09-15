@@ -22,16 +22,18 @@ const CategoryEditorModal = () => {
   const { onError } = useError();
   const { config } = useGetConfig();
   const [newCategory, setNewCategory] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
 
   const { isDarkMode, isCategoryEditorOpen, setCategoryEditorOpen } =
     useContext(AppContext) as AppContextShape;
 
-  const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useQuery<CategoriesData>(["categories"], getCategories, {
+  const { data, isLoading: isCategoriesLoading } = useQuery<CategoriesData>(
+    ["categories"],
+    getCategories,
+    {
       onError,
       retry: false,
-    });
+    }
+  );
 
   const { mutate: createCategoryMutate, isLoading: isCreateCategoryLoading } =
     useMutation(createNewCategory, {
@@ -53,10 +55,6 @@ const CategoryEditorModal = () => {
 
   const isLoading =
     isCategoriesLoading || isCreateCategoryLoading || isDeleteCategoryLoading;
-
-  useEffect(() => {
-    categoriesData && setCategories(categoriesData.categories);
-  }, [categoriesData]);
 
   const closeCategoryEditorModal = () => {
     setCategoryEditorOpen(false);
@@ -141,7 +139,7 @@ const CategoryEditorModal = () => {
                 <Loader />
               </div>
             ) : (
-              categories.map((category, i) => (
+              data?.categories.map((category, i) => (
                 <div
                   key={i}
                   className="mr-4 flex h-fit w-fit rounded-[4px] bg-[#EFEFEF] px-4 py-2 dark:bg-[#3F3F3F]"

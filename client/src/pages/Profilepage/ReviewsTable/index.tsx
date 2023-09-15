@@ -32,7 +32,6 @@ const ReviewsTable = (props: ReviewsTableProps) => {
   const { tableData, isAdmin, isOwnPage } = props;
   const { t } = useTranslation();
   const { onError } = useError();
-  const [categories, setCategories] = useState<Category[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -137,10 +136,6 @@ const ReviewsTable = (props: ReviewsTableProps) => {
     }
   }, [pageNumber, pageCount]);
 
-  useEffect(() => {
-    categoriesData && setCategories(categoriesData.categories);
-  }, [categoriesData]);
-
   const handlePageInputChange = (e: any) => {
     const inputPage = e.target.value;
     setPageNumber(inputPage);
@@ -180,7 +175,7 @@ const ReviewsTable = (props: ReviewsTableProps) => {
             onChange={(e) => setGlobalFilter(e.target.value)}
           >
             <option value="">{t("Review.category")}</option>
-            {categories.map((category) => (
+            {categoriesData?.categories.map((category) => (
               <option key={category.id} value={category.name}>
                 {category.name}
               </option>

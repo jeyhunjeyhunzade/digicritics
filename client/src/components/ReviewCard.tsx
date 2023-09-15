@@ -32,7 +32,9 @@ const ReviewCard = (props: ReviewCardProps) => {
   const [ratingValue, setRatingValue] = useState<number>();
   const [liked, setLiked] = useState(false);
 
-  const { loggedUserId } = useContext(AppContext) as AppContextShape;
+  const { loggedUserId, isDarkMode } = useContext(
+    AppContext
+  ) as AppContextShape;
 
   const { mutate: likeReviewMutate, isLoading: isLikeReviewLoading } =
     useMutation(likeReview, {
@@ -121,6 +123,7 @@ const ReviewCard = (props: ReviewCardProps) => {
           <div className="flex items-center">
             {/* TODO: fix dark mode color  */}
             <Rating
+              sx={isDarkMode ? { stroke: "#eab305" } : {}}
               name="simple-controlled"
               value={ratingValue ? ratingValue : 0}
               size="small"
