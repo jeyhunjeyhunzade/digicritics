@@ -121,7 +121,6 @@ const ReviewCard = (props: ReviewCardProps) => {
             {shortenString(review?.reviewTitle, 20)}
           </div>
           <div className="flex items-center">
-            {/* TODO: fix dark mode color  */}
             <Rating
               sx={isDarkMode ? { stroke: "#eab305" } : {}}
               name="simple-controlled"

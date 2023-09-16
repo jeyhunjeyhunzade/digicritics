@@ -23,7 +23,6 @@ const EditIcon = (props: EditIconProps) => {
       fill="none"
       className="cursor-pointer"
       onClick={() => {
-        console.log("review PROPS: ", review);
         if (review) {
           setSelectedReviewId(review.id);
           setIsReviewEditorOpen(true);
