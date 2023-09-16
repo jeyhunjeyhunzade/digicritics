@@ -41,6 +41,7 @@ const ProfilePage = () => {
     loggedUser,
     isDeleteReviewModalOpen,
     setIsDeleteReviewModalOpen,
+    setSelectedUserId,
   } = useContext(AppContext) as AppContextShape;
 
   const { data: userByIdData, isLoading: isUserByIdLoading } =
@@ -171,14 +172,24 @@ const ProfilePage = () => {
                 {(isOwnPage || isAdmin) && (
                   <div className="flex">
                     <button
-                      onClick={openReviewEditorModal}
+                      onClick={() => {
+                        if (id && !isOwnPage) {
+                          setSelectedUserId(+id);
+                        }
+                        openReviewEditorModal();
+                      }}
                       className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
                     >
                       <span className="pr-2">{t("Profile.newReview")}</span>
                       <PlusIcon size={20} color={"white"} />
                     </button>
                     <button
-                      onClick={openEditProfileModal}
+                      onClick={() => {
+                        if (id && !isOwnPage) {
+                          setSelectedUserId(+id);
+                        }
+                        openEditProfileModal();
+                      }}
                       className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
                     >
                       <span className="pr-2">{t("Profile.editProfile")}</span>

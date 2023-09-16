@@ -40,6 +40,8 @@ const ReviewEditorModal = () => {
     setSelectedReviewId,
     tags,
     setTags,
+    selectedUserId,
+    setSelectedUserId,
   } = useContext(AppContext) as AppContextShape;
   const [reviewContent, setReviewContent] = useState<any>("");
   const [reviewTitle, setReviewTitle] = useState("");
@@ -172,6 +174,7 @@ const ReviewEditorModal = () => {
 
   const closeReviewEditorModal = () => {
     setIsReviewEditorOpen(false);
+    setSelectedUserId(null);
     resetFields();
   };
 
@@ -195,8 +198,7 @@ const ReviewEditorModal = () => {
           tags: selectedTags,
           reviewContent,
           reviewImages: urls,
-          //TODO: need condition for admin
-          userId: loggedUserId,
+          userId: selectedUserId ? selectedUserId : loggedUserId,
           config,
         });
       }

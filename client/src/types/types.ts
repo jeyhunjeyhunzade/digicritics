@@ -20,6 +20,8 @@ export interface AppContextShape {
   setIsDeleteReviewModalOpen: Dispatch<SetStateAction<boolean>>;
   tags: string[];
   setTags: Dispatch<SetStateAction<string[]>>;
+  selectedUserId: number | null;
+  setSelectedUserId: Dispatch<SetStateAction<number | null>>;
 }
 
 export interface ApiConfig {

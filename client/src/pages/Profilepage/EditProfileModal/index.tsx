@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { useParams } from "react-router-dom";
@@ -34,16 +40,18 @@ const EditProfileModal = (props: EditProfileModalProps) => {
   const [url, setUrl] = useState<string>();
   const [newFullName, setNewFullName] = useState<string>("");
 
-  const { setLoggedUser, isDarkMode } = useContext(
-    AppContext
-  ) as AppContextShape;
+  const { setLoggedUser, isDarkMode, selectedUserId, setSelectedUserId } =
+    useContext(AppContext) as AppContextShape;
 
   const { mutate: updateUserMutate, isLoading: isUpdateUserMutateLoading } =
     useMutation(updateUser, {
       onSuccess: (response) => {
-        setLoggedUser(response);
+        !selectedUserId && setLoggedUser(response);
         closeEditProfileModal();
         queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["reviewById"]);
       },
       onError: errorHandler,
     });
@@ -51,13 +59,14 @@ const EditProfileModal = (props: EditProfileModalProps) => {
   const closeEditProfileModal = () => {
     setNewFullName("");
     setUrl("");
+    setSelectedUserId(null);
     setIsEditProfileModalOpen(false);
   };
 
   const handleUpdateUser = () => {
     if (id) {
       updateUserMutate({
-        id: +id,
+        id: selectedUserId ? selectedUserId : +id,
         fullName: newFullName,
         profileImage: url ? url : profileData?.profileImage,
         config,
