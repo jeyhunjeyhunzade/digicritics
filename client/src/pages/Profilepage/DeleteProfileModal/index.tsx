@@ -33,6 +33,8 @@ const DeleteProfileModal = (props: DeleteProfileModalProps) => {
     useMutation(deleteAccounts, {
       onSuccess: (response) => {
         queryClient.invalidateQueries(["users"]);
+        queryClient.invalidateQueries(["reviews"]);
+
         successHandler(response);
         handleLogout();
         navigate(Routes.homepage);

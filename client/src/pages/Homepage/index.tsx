@@ -41,7 +41,7 @@ const Homepage = () => {
   const isRecentReview = (dateToCheck: Date | string) => {
     const currentDate: Date = new Date();
     const threeDaysAgo: Date = new Date();
-    threeDaysAgo.setDate(currentDate.getDate() - 3);
+    threeDaysAgo.setDate(currentDate.getDate() - 7);
 
     if (dateToCheck >= threeDaysAgo.toISOString()) {
       return true;
