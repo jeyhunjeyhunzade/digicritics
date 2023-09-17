@@ -183,7 +183,7 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </select>
         </div>
       </div>
-      <div className="mb-2 h-[388px]">
+      <div className="h-[388px]">
         <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
           <thead className="bg-gray-10">
             {headerGroups.map((headerGroup) => (
@@ -245,7 +245,7 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </tbody>
         </table>
       </div>
-      <div className="pagination mt-4 flex items-center justify-start space-x-4">
+      <div className="pagination mt-2 flex items-center justify-start space-x-4">
         <button
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}

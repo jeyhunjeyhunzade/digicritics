@@ -228,7 +228,6 @@ const ReviewEditorModal = () => {
         tags: selectedTags,
         reviewContent,
         reviewImages: urls,
-        //TODO: need condition for admin
         config,
       });
     } else {
@@ -363,7 +362,6 @@ const ReviewEditorModal = () => {
               </div>
             </div>
             <div className="flex">
-              {/* //TODO: get tags dynamically and max 3 tag*/}
               <Autocomplete
                 style={
                   isDarkMode
@@ -382,7 +380,6 @@ const ReviewEditorModal = () => {
                 value={selectedTags}
                 renderInput={(params) => (
                   <TextField
-                    // className="text-[#636060] outline-none focus:outline-none dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                     {...params}
                     fullWidth
                     InputLabelProps={{ children: null }}
@@ -399,7 +396,7 @@ const ReviewEditorModal = () => {
                 )}
                 renderTags={renderTags}
                 onChange={(_, value) => {
-                  setSelectedTags(value);
+                  selectedTags.length < 3 && setSelectedTags(value);
                 }}
               />
             </div>

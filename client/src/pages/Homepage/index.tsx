@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { getReviews } from "@app/api/reviews";
+import CardSpinner from "@app/components/CardSpinner";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
@@ -56,22 +57,30 @@ const Homepage = () => {
           {t("Homepage.popularReviews")}
         </div>
         <div className="mt-6 grid grid-cols-4 gap-4">
-          {popularReviews?.map((review: ReviewsData) => (
-            <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
-              <ReviewCard review={review} />
-            </Link>
-          ))}
+          {isReviewsLoading
+            ? Array.from({ length: 4 }).map((item, index) => (
+                <CardSpinner key={index} />
+              ))
+            : popularReviews?.map((review: ReviewsData) => (
+                <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
+                  <ReviewCard review={review} />
+                </Link>
+              ))}
         </div>
 
         <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.recentlyAdded")}
         </div>
         <div className="mt-6 grid grid-cols-4 gap-4">
-          {recentReviews?.map((review: ReviewsData) => (
-            <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
-              <ReviewCard review={review} />
-            </Link>
-          ))}
+          {isReviewsLoading
+            ? Array.from({ length: 4 }).map((item, index) => (
+                <CardSpinner key={index} />
+              ))
+            : recentReviews?.map((review: ReviewsData) => (
+                <Link key={review.id} to={`${Routes.reviewpage}/${review.id}`}>
+                  <ReviewCard review={review} />
+                </Link>
+              ))}
         </div>
         <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.popularTags")}
