@@ -1,6 +1,6 @@
-import "dotenv/config";
 import http from "http";
 import express from "express";
+import { config } from "dotenv";
 import cors from "cors";
 var helmet = require("helmet");
 var compression = require("compression");
