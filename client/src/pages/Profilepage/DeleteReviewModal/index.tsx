@@ -34,6 +34,8 @@ const DeleteReviewModal = (props: DeleteReviewModalProps) => {
         setSelectedReviewId(null);
         queryClient.invalidateQueries(["userById"]);
         queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["similarReviews"]);
+
         successHandler(response);
         clodeDeleteReviewModal();
       },

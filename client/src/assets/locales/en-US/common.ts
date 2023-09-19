@@ -48,7 +48,7 @@ export default {
     createdby: "Created by",
     yourComment: "Your comment",
     postComment: "Post comment",
-    similiarReviews: "Similar reviews",
+    similarReviews: "Similar reviews",
     ratings: "ratings",
     comments: "Comments",
     noComments: {

@@ -48,7 +48,7 @@ export default {
     createdby: "Обозреватель",
     yourComment: "Ваш комментарий",
     postComment: "Оставить комментарий",
-    similiarReviews: "Похожие отзывы",
+    similarReviews: "Похожие отзывы",
     ratings: "Рейтинги",
     comments: "Комментарии",
     noComments: {

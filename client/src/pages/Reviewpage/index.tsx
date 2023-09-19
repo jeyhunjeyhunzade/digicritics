@@ -6,15 +6,18 @@ import {
   commentReview,
   getCommentsForReview,
   getReviewById,
+  getSimilarReviews,
   likeReview,
   rateReview,
 } from "@app/api/reviews";
 import socket from "@app/api/socket";
 import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import HeartIcon from "@app/assets/icons/HeartIcon";
+import CardSpinner from "@app/components/CardSpinner";
 import CommentsSpinner from "@app/components/CommentsSpinner";
 import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
+import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { queryClient } from "@app/index";
@@ -83,6 +86,22 @@ const ReviewPage = () => {
       }
     );
 
+  const { data: similarReviewsData, isLoading: isSimilarReviewsLoading } =
+    useQuery<ReviewsData[]>(
+      ["similarReviews", id],
+      () => {
+        if (id) {
+          return getSimilarReviews(+id);
+        } else {
+          return Promise.resolve([]);
+        }
+      },
+      {
+        onError,
+        retry: false,
+      }
+    );
+
   const { mutate: likeReviewMutate, isLoading: isLikeReviewLoading } =
     useMutation(likeReview, {
       onSuccess: (response: { message: string; action: LikeAction }) => {
@@ -90,6 +109,7 @@ const ReviewPage = () => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviewById"]);
         queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["similarReviews"]);
 
         if (response.action === LikeAction.LIKED) {
           setLiked(true);
@@ -107,6 +127,8 @@ const ReviewPage = () => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviewById"]);
         queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["similarReviews"]);
+        queryClient.invalidateQueries(["similarReviews"]);
       },
       onError,
     });
@@ -127,7 +149,7 @@ const ReviewPage = () => {
   useEffect(() => {
     if (reviewData) {
       console.log("reviewData: ", reviewData.likes);
-      if (reviewData.likes.length) {
+      if (reviewData?.likes.length) {
         reviewData.likes.forEach((like) => {
           if (like.userId === loggedUserId) {
             console.log("LIKE");
@@ -299,8 +321,8 @@ const ReviewPage = () => {
                   {ratingValue ? ratingValue : null}
                 </span>
                 <div className="ml-6 self-center text-base text-[#717171] dark:text-[#9C9C9C]">
-                  {reviewData.ratings.length
-                    ? `${reviewData.ratings.length} ${t("Review.ratings")}`
+                  {reviewData?.ratings.length
+                    ? `${reviewData?.ratings.length} ${t("Review.ratings")}`
                     : null}
                 </div>
               </div>
@@ -308,12 +330,23 @@ const ReviewPage = () => {
                 {reviewData.reviewContent}
               </p>
             </div>
-            <div className="flex w-full">
+            <div className="flex w-full flex-col">
               <div className="mt-40 flex items-start text-2xl dark:text-white">
-                {t("Review.similiarReviews")}
+                {t("Review.similarReviews")}
               </div>
-              <div className="mt-6 flex justify-between">
-                {/* TODO:  add similiar reviews*/}
+              <div className="mt-6 mt-6 grid grid-cols-4 gap-4">
+                {isSimilarReviewsLoading
+                  ? Array.from({ length: 4 }).map((item, index) => (
+                      <CardSpinner key={index} />
+                    ))
+                  : similarReviewsData?.map((review: ReviewsData) => (
+                      <Link
+                        key={review.id}
+                        to={`${Routes.reviewpage}/${review.id}`}
+                      >
+                        <ReviewCard review={review} />
+                      </Link>
+                    ))}
               </div>
             </div>
             <div className="mb-20 mt-20 flex items-start text-2xl dark:text-white">
@@ -353,8 +386,8 @@ const ReviewPage = () => {
                   <CommentsSpinner />
                   <CommentsSpinner />
                 </>
-              ) : comments.length ? (
-                comments.map((comment) => (
+              ) : comments?.length ? (
+                comments?.map((comment) => (
                   <div
                     key={comment.id}
                     className="mb-10 border-b border-[#DEDEDE] py-6"

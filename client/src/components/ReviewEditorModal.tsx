@@ -89,6 +89,7 @@ const ReviewEditorModal = () => {
         queryClient.invalidateQueries(["reviews"]);
         queryClient.invalidateQueries(["userById"]);
         queryClient.invalidateQueries(["tags"]);
+        queryClient.invalidateQueries(["similarReviews"]);
 
         successHandler(response);
         closeReviewEditorModal();
@@ -103,6 +104,7 @@ const ReviewEditorModal = () => {
         queryClient.invalidateQueries(["reviews"]);
         queryClient.invalidateQueries(["userById"]);
         queryClient.invalidateQueries(["tags"]);
+        queryClient.invalidateQueries(["similarReviews"]);
 
         successHandler(response);
         closeReviewEditorModal();

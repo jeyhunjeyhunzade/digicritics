@@ -44,6 +44,7 @@ const ReviewCard = (props: ReviewCardProps) => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviewById"]);
         queryClient.invalidateQueries(["userById"]);
+        queryClient.invalidateQueries(["similarReviews"]);
 
         if (response.action === LikeAction.LIKED) {
           setLiked(true);
@@ -55,7 +56,7 @@ const ReviewCard = (props: ReviewCardProps) => {
     });
 
   useEffect(() => {
-    if (review.likes.length) {
+    if (review?.likes?.length) {
       review.likes.forEach((like) => {
         if (like.userId === loggedUserId) {
           setLiked(true);
@@ -67,7 +68,7 @@ const ReviewCard = (props: ReviewCardProps) => {
       setLiked(false);
     }
 
-    if (review.ratings.length) {
+    if (review?.ratings?.length) {
       setRatingValue(calculateAverageRate(review.ratings));
     }
   }, [review]);
@@ -111,7 +112,9 @@ const ReviewCard = (props: ReviewCardProps) => {
               isAuthenticated ? "cursor-pointer" : "cursor-default"
             )}
           >
-            <span className="mr-1 text-white">{review?.likes.length}</span>
+            <span className="mr-1 text-white">
+              {review?.likes?.length ? review?.likes.length : null}
+            </span>
             <HeartIcon size={16} liked={liked} setLiked={setLiked} />
           </div>
         </div>
@@ -147,7 +150,7 @@ const ReviewCard = (props: ReviewCardProps) => {
           <span className="font-medium leading-[18px] dark:text-white">
             {`${t("Review.tags")}:`}
           </span>
-          {review?.tags.map((tag) => (
+          {review?.tags?.map((tag) => (
             <span
               key={tag.id}
               className="ml-1 leading-[18px] dark:text-white"
@@ -168,7 +171,7 @@ const ReviewCard = (props: ReviewCardProps) => {
               "Review.createdby"
             )}:`}</span>
             <span className="ml-1 leading-[18px] dark:text-white">
-              {shorteningFullName(review?.user.fullName)}
+              {shorteningFullName(review?.user?.fullName)}
             </span>
           </div>
           <div className="self-end text-xs leading-[18px] text-[#717171] dark:text-[#9C9C9C]">

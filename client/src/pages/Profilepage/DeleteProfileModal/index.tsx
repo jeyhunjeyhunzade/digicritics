@@ -34,6 +34,7 @@ const DeleteProfileModal = (props: DeleteProfileModalProps) => {
       onSuccess: (response) => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviews"]);
+        queryClient.invalidateQueries(["similarReviews"]);
 
         successHandler(response);
         handleLogout();
