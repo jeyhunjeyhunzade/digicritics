@@ -41,7 +41,7 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
     <div className="flex w-full items-center justify-center">
       {urls.length ? (
         <div className="relative">
-          <div className="absolute right-[-5%] top-[-5%]">
+          <div className="absolute right-[-3%] top-[-5%]">
             <button
               className="flex h-[34px] w-[34px] items-center justify-center rounded-[17px] bg-[#D20F0F]"
               onClick={() => setUrls([])}
