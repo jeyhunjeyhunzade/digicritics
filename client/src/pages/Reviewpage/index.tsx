@@ -331,23 +331,27 @@ const ReviewPage = () => {
               </p>
             </div>
             <div className="flex w-full flex-col">
-              <div className="mt-40 flex items-start text-2xl dark:text-white">
-                {t("Review.similarReviews")}
-              </div>
-              <div className="mt-6 mt-6 grid grid-cols-4 gap-4">
-                {isSimilarReviewsLoading
-                  ? Array.from({ length: 4 }).map((item, index) => (
-                      <CardSpinner key={index} />
-                    ))
-                  : similarReviewsData?.map((review: ReviewsData) => (
-                      <Link
-                        key={review.id}
-                        to={`${Routes.reviewpage}/${review.id}`}
-                      >
-                        <ReviewCard review={review} />
-                      </Link>
-                    ))}
-              </div>
+              {similarReviewsData?.length ? (
+                <>
+                  <div className="mt-40 flex items-start text-2xl dark:text-white">
+                    {t("Review.similarReviews")}
+                  </div>
+                  <div className="mt-6 mt-6 grid grid-cols-4 gap-4">
+                    {isSimilarReviewsLoading
+                      ? Array.from({ length: 4 }).map((item, index) => (
+                          <CardSpinner key={index} />
+                        ))
+                      : similarReviewsData?.map((review: ReviewsData) => (
+                          <Link
+                            key={review.id}
+                            to={`${Routes.reviewpage}/${review.id}`}
+                          >
+                            <ReviewCard review={review} />
+                          </Link>
+                        ))}
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="mb-20 mt-20 flex items-start text-2xl dark:text-white">
               {t("Review.comments")}
