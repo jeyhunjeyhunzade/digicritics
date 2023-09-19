@@ -423,15 +423,15 @@ const ReviewEditorModal = () => {
           <div className="mt-10 flex justify-end">
             <button
               onClick={closeReviewEditorModal}
-              className="flex h-[44px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#DEDEDE] dark:text-white"
+              className="flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#DEDEDE] dark:text-white"
             >
               {t("ReviewEditor.cancel")}
             </button>
             <button
               onClick={selectedReviewId ? handleEditReview : handleShareReview}
-              className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] bg-[#209239] text-white"
+              className="ml-4 flex h-[40px] w-fit items-center justify-center rounded-[6px] bg-[#209239] px-4 py-[10px] text-white"
             >
-              <span className="pr-2">
+              <span className="w">
                 {selectedReviewId
                   ? t("ReviewEditor.editReview")
                   : t("ReviewEditor.shareReview")}

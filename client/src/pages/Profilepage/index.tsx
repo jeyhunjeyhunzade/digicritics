@@ -190,7 +190,7 @@ const ProfilePage = () => {
                         }
                         openEditProfileModal();
                       }}
-                      className="ml-4 flex h-[40px] w-[160px] items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
+                      className="ml-4 flex h-[40px] w-fit items-center justify-center rounded-[6px] border-2 border-solid border-[#DEDEDE] bg-[transparent] px-4 py-[10px] text-[#2C2C2C] dark:border-[#2C2C2C] dark:text-white"
                     >
                       <span className="pr-2">{t("Profile.editProfile")}</span>
                       <EditIcon size={20} color={"#2C2C2C"} />
