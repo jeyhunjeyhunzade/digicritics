@@ -221,7 +221,7 @@ const ReviewPage = () => {
   return (
     <Layout>
       {isReviewByIdLoading ? (
-        <div className="flex h-[90vh] items-center justify-center">
+        <div className="flex h-[90vh] items-center justify-center dark:bg-[#1B1B1B]">
           <Loader />
         </div>
       ) : (
@@ -353,12 +353,12 @@ const ReviewPage = () => {
                 </>
               ) : null}
             </div>
-            <div className="mb-20 mt-20 flex items-start text-2xl dark:text-white">
+            <div className="mt-20 flex items-start text-2xl dark:text-white">
               {t("Review.comments")}
             </div>
             {isAuthenticated && (
               <>
-                <div className="mt-20">
+                <div className="mt-6">
                   <textarea
                     placeholder={t("Review.yourComment")}
                     value={comment}
