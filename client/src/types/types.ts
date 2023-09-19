@@ -47,7 +47,7 @@ export interface DndUploadProps {
   width?: string;
   height?: string;
   url: string | undefined;
-  setUrl: Dispatch<SetStateAction<string | undefined>>;
+  setUrl: Dispatch<SetStateAction<string>>;
 }
 
 export interface DnDUploadMultipleProps {

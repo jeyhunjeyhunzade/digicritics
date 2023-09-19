@@ -187,8 +187,8 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </select>
         </div>
       </div>
-      <div className="h-[388px]">
-        <table {...getTableProps()} className="mt-8 min-w-full table-fixed">
+      <div className="relative mt-2">
+        <table {...getTableProps()} className="min-w-full table-fixed">
           <thead className="bg-gray-10">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -249,93 +249,95 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </tbody>
         </table>
       </div>
-      <div className="pagination mt-[20px] flex items-center justify-center">
-        <button
-          onClick={() => gotoPage(0)}
-          disabled={!canPreviousPage}
-          className={`${
-            !canPreviousPage
-              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
-              : "bg-gradientBtnBlue"
-          } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
-        >
-          <DoubleLeftIcon
-            size={16}
-            color={!canPreviousPage ? "#2C2C2C" : "white"}
-          />
-        </button>
-        <button
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-          className={`${
-            !canPreviousPage
-              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
-              : "bg-gradientBtnBlue"
-          } ml-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
-        >
-          <LeftArrowIcon
-            size={16}
-            color={!canPreviousPage ? "#2C2C2C" : "white"}
-          />
-        </button>
-        <span className="mx-6 text-base font-medium text-[#2C2C2C] dark:text-white">
-          {`${t("AdminPage.page")} ${pageIndex + 1} ${t(
-            "AdminPage.of"
-          )} ${pageCount}`}
-        </span>
-        <button
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-          className={`${
-            !canNextPage
-              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
-              : "bg-gradientBtnBlue"
-          } mr-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
-        >
-          <RightArrowIcon
-            size={16}
-            color={!canNextPage ? "#2C2C2C" : "white"}
-          />
-        </button>
-        <button
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-          className={`${
-            !canNextPage
-              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
-              : "bg-gradientBtnBlue"
-          } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
-        >
-          <DoubleRightIcon
-            size={16}
-            color={!canNextPage ? "#2C2C2C" : "white"}
-          />
-        </button>
-
-        <div className="flex items-center">
-          <span className="ml-6 mr-2 text-base font-medium text-[#2C2C2C] dark:text-white">
-            {t("AdminPage.goToPage")}
-          </span>
-          <input
-            type="number"
-            value={pageNumber}
-            onChange={handlePageInputChange}
-            className="h-[40px] w-[64px] rounded-[4px] border border-gray-300 px-2 py-1"
-          />
+      {pageCount !== 1 ? (
+        <div className="pagination mt-2 flex items-center justify-center self-center">
           <button
-            disabled={isButtonDisabled}
-            onClick={handleGoToPage}
-            className={classNames(
-              "ml-2 flex h-[40px] w-fit items-center justify-center rounded-md bg-gradientBtnBlue px-4 py-[10px] text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2",
-              isButtonDisabled
-                ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"
-                : null
-            )}
+            onClick={() => gotoPage(0)}
+            disabled={!canPreviousPage}
+            className={`${
+              !canPreviousPage
+                ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
+                : "bg-gradientBtnBlue"
+            } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
           >
-            {t("AdminPage.go")}
+            <DoubleLeftIcon
+              size={16}
+              color={!canPreviousPage ? "#2C2C2C" : "white"}
+            />
           </button>
+          <button
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+            className={`${
+              !canPreviousPage
+                ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
+                : "bg-gradientBtnBlue"
+            } ml-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
+          >
+            <LeftArrowIcon
+              size={16}
+              color={!canPreviousPage ? "#2C2C2C" : "white"}
+            />
+          </button>
+          <span className="mx-6 text-base font-medium text-[#2C2C2C] dark:text-white">
+            {`${t("AdminPage.page")} ${pageIndex + 1} ${t(
+              "AdminPage.of"
+            )} ${pageCount}`}
+          </span>
+          <button
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+            className={`${
+              !canNextPage
+                ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
+                : "bg-gradientBtnBlue"
+            } mr-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
+          >
+            <RightArrowIcon
+              size={16}
+              color={!canNextPage ? "#2C2C2C" : "white"}
+            />
+          </button>
+          <button
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+            className={`${
+              !canNextPage
+                ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
+                : "bg-gradientBtnBlue"
+            } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
+          >
+            <DoubleRightIcon
+              size={16}
+              color={!canNextPage ? "#2C2C2C" : "white"}
+            />
+          </button>
+
+          <div className="flex items-center">
+            <span className="ml-6 mr-2 text-base font-medium text-[#2C2C2C] dark:text-white">
+              {t("AdminPage.goToPage")}
+            </span>
+            <input
+              type="number"
+              value={pageNumber}
+              onChange={handlePageInputChange}
+              className="h-[40px] w-[64px] rounded-[4px] border border-gray-300 px-2 py-1"
+            />
+            <button
+              disabled={isButtonDisabled}
+              onClick={handleGoToPage}
+              className={classNames(
+                "ml-2 flex h-[40px] w-fit items-center justify-center rounded-md bg-gradientBtnBlue px-4 py-[10px] text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2",
+                isButtonDisabled
+                  ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"
+                  : null
+              )}
+            >
+              {t("AdminPage.go")}
+            </button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </>
   );
 };

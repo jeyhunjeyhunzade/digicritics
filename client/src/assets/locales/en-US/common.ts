@@ -115,6 +115,7 @@ export default {
     cancel: "Cancel",
     shareReview: "Share review",
     editReview: "Edit review",
+    maxTag: "You can enter a maximum of 3 tags",
   },
   CategoryEditor: {
     newCategory: "New category",
