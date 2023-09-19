@@ -116,7 +116,7 @@ const ProfilePage = () => {
   return (
     <Layout>
       {isUserByIdLoading ? (
-        <div className="flex h-[90vh] items-center justify-center dark:bg-[#1B1B1B]">
+        <div className="flex h-[91vh] w-full items-center justify-center dark:bg-[#1B1B1B]">
           <Loader />
         </div>
       ) : (
