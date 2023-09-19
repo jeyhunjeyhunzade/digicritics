@@ -50,6 +50,7 @@ const ReviewEditorModal = () => {
   const [reviewGrade, setReviewGrade] = useState<number | undefined>();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
+  const [isMaximumTagsError, setIsMaximumTagsError] = useState(false);
 
   const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
     ["tags"],
@@ -275,6 +276,15 @@ const ReviewEditorModal = () => {
       />
     ));
 
+  const handleTagsChange = (newTags: string[]) => {
+    if (newTags.length <= 3) {
+      setSelectedTags(newTags);
+      setIsMaximumTagsError(false);
+    } else {
+      setIsMaximumTagsError(true);
+    }
+  };
+
   return (
     <Modal
       isOpen={isReviewEditorOpen}
@@ -363,7 +373,7 @@ const ReviewEditorModal = () => {
                 </select>
               </div>
             </div>
-            <div className="flex">
+            <div className="flex flex-col">
               <Autocomplete
                 style={
                   isDarkMode
@@ -398,9 +408,14 @@ const ReviewEditorModal = () => {
                 )}
                 renderTags={renderTags}
                 onChange={(_, value) => {
-                  selectedTags.length < 3 && setSelectedTags(value);
+                  handleTagsChange(value);
                 }}
               />
+              {isMaximumTagsError && (
+                <span className="self-start text-[#D20F0F]">
+                  {t("ReviewEditor.maxTag")}
+                </span>
+              )}
             </div>
           </div>
           <div className="flex justify-between">

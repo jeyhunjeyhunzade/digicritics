@@ -37,7 +37,7 @@ const EditProfileModal = (props: EditProfileModalProps) => {
   const { config } = useGetConfig();
   const { t } = useTranslation();
 
-  const [url, setUrl] = useState<string>();
+  const [url, setUrl] = useState<string>("");
   const [newFullName, setNewFullName] = useState<string>("");
 
   const { setLoggedUser, isDarkMode, selectedUserId, setSelectedUserId } =
@@ -68,7 +68,7 @@ const EditProfileModal = (props: EditProfileModalProps) => {
     if (id) {
       updateUserMutate({
         id: selectedUserId ? selectedUserId : +id,
-        fullName: newFullName,
+        fullName: newFullName ? newFullName : profileData?.fullName,
         profileImage: url ? url : profileData?.profileImage,
         config,
       });

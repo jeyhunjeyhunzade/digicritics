@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { uploadProfileImage } from "@app/api/users";
+import CloseIcon from "@app/assets/icons/CloseIcon";
 import { DndUploadProps } from "@app/types/types";
 import { classNames, convertBase64, errorHandler } from "@app/utils";
 import { useMutation } from "@tanstack/react-query";
@@ -29,7 +30,17 @@ const DndUploadSingle = (props: DndUploadProps) => {
   return (
     <div className="flex w-full items-center justify-center">
       {url ? (
-        <img src={url} alt="profile" className="h-[292px] rounded-[10px]" />
+        <div className="relative">
+          <div className="absolute right-[-5%] top-[-5%]">
+            <button
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-[17px] bg-[#D20F0F]"
+              onClick={() => setUrl("")}
+            >
+              <CloseIcon size={17} color={"white"} />
+            </button>
+          </div>
+          <img src={url} alt="profile" className="h-[292px] rounded-[8px]" />
+        </div>
       ) : (
         <label
           htmlFor="dropzone-file"

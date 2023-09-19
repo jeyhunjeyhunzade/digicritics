@@ -115,6 +115,7 @@ export default {
     cancel: "Отменить",
     shareReview: "Поделиться обзором",
     editReview: "Редактировать обзор",
+    maxTag: "Вы можете ввести максимум 3 тега.",
   },
   CategoryEditor: {
     newCategory: "Новая категория",
