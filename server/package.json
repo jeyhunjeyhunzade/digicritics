@@ -7,9 +7,10 @@
     "build": "rimraf ./dist && tsc",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
-    "postinstall": "prisma generate",
     "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist"
+    "add-build": "git add dist",
+    "dev": "tsc && node dist/index.js",
+    "postinstall": "tsc"
   },
   "pre-commit": [
     "ts.check",
