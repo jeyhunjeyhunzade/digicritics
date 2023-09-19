@@ -52,6 +52,7 @@ const EditProfileModal = (props: EditProfileModalProps) => {
         queryClient.invalidateQueries(["users"]);
         queryClient.invalidateQueries(["reviews"]);
         queryClient.invalidateQueries(["reviewById"]);
+        queryClient.invalidateQueries(["similarReviews"]);
       },
       onError: errorHandler,
     });

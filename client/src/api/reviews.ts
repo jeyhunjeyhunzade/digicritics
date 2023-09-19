@@ -137,3 +137,8 @@ export const deleteReview = async (deleteReviewParams: {
   });
   return res?.data;
 };
+
+export const getSimilarReviews = async (reviewId: number) => {
+  const res = await axios.get(`${serverUrl}/reviews/similarReview/${reviewId}`);
+  return res?.data;
+};
