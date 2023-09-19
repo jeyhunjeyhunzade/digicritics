@@ -19,7 +19,7 @@ const SignupButton = () => {
 
   return (
     <button
-      className="ml-4 flex h-5 h-[32px] w-[80px] items-center justify-center whitespace-nowrap rounded bg-white  px-1 py-2 text-base text-[#013549]"
+      className="ml-4 flex h-5 h-[32px] w-fit items-center justify-center whitespace-nowrap rounded bg-white  px-2 py-1 text-base text-[#013549]"
       onClick={handleSignUp}
     >
       {t("Navbar.signup")}
