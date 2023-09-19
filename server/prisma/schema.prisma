@@ -5,8 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // TODO: DEV only?
-  url      = env("POSTGRES_URL_DEV")
+  url      = ""
 }
 
 // schema.prisma
