@@ -1,6 +1,6 @@
+require("dotenv").config();
 import http from "http";
 import express from "express";
-import { config } from "dotenv";
 import cors from "cors";
 var helmet = require("helmet");
 var compression = require("compression");
@@ -10,7 +10,7 @@ import { jwtCheck } from "./helpers/auth";
 import { io, initSocketServer } from "./socket";
 
 //port
-const port = 8000;
+const port = process.env.PORT || 3000;
 
 //middleware
 const app = express();
