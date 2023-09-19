@@ -52,7 +52,7 @@ const Homepage = () => {
 
   return (
     <Layout>
-      <div className="flex h-full w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
+      <div className="flex h-full min-h-[91vh] w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
         <div className="flex items-start text-2xl dark:text-white">
           {t("Homepage.popularReviews")}
         </div>

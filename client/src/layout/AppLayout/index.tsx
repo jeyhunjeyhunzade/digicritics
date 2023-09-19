@@ -20,14 +20,16 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Loader />
         </div>
       ) : (
-        <>
+        <div className="h-full">
           <header>
             <Navbar />
           </header>
-          <main className="flex items-center justify-center">{children}</main>
+          <main className="flex h-fit items-center justify-center">
+            {children}
+          </main>
           <ReviewEditorModal />
           <CategoryEditorModal />
-        </>
+        </div>
       )}
     </>
   );

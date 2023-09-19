@@ -11,6 +11,7 @@ import {
   calculateAverageRate,
   classNames,
   dateFormatter,
+  shorteningFullName,
   shortenString,
 } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -162,12 +163,12 @@ const ReviewCard = (props: ReviewCardProps) => {
           </span>
         </div>
         <div className="flex justify-between">
-          <div className="flex justify-start text-sm">
+          <div className="flex w-fit justify-start text-sm">
             <span className="font-medium dark:text-white">{`${t(
               "Review.createdby"
             )}:`}</span>
             <span className="ml-1 leading-[18px] dark:text-white">
-              {review?.user.fullName}
+              {shorteningFullName(review?.user.fullName)}
             </span>
           </div>
           <div className="self-end text-xs leading-[18px] text-[#717171] dark:text-[#9C9C9C]">

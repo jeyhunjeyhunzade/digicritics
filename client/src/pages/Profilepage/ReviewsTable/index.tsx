@@ -11,7 +11,11 @@ import {
   useTable,
 } from "react-table";
 import { getCategories } from "@app/api/reviews";
+import DoubleLeftIcon from "@app/assets/icons/DoubleLeftIcon";
+import DoubleRightIcon from "@app/assets/icons/DoubleRightIcon";
 import DownIcon from "@app/assets/icons/DownIcon";
+import LeftArrowIcon from "@app/assets/icons/LeftArrowIcon";
+import RightArrowIcon from "@app/assets/icons/RightArrowIcon";
 import SearchIcon from "@app/assets/icons/SearchIcon";
 import UpIcon from "@app/assets/icons/UpIcon";
 import Loader from "@app/components/Loader";
@@ -245,74 +249,90 @@ const ReviewsTable = (props: ReviewsTableProps) => {
           </tbody>
         </table>
       </div>
-      <div className="pagination mt-2 flex items-center justify-start space-x-4">
+      <div className="pagination mt-[20px] flex items-center justify-center">
         <button
           onClick={() => gotoPage(0)}
           disabled={!canPreviousPage}
           className={`${
             !canPreviousPage
-              ? "cursor-not-allowed bg-gray-300"
+              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
               : "bg-gradientBtnBlue"
-          } rounded px-4 py-2 text-white`}
+          } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
         >
-          {"<<"}
+          <DoubleLeftIcon
+            size={16}
+            color={!canPreviousPage ? "#2C2C2C" : "white"}
+          />
         </button>
         <button
           onClick={() => previousPage()}
           disabled={!canPreviousPage}
           className={`${
             !canPreviousPage
-              ? "cursor-not-allowed bg-gray-300"
+              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
               : "bg-gradientBtnBlue"
-          } rounded px-4 py-2 text-white`}
+          } ml-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
         >
-          {"<"}
+          <LeftArrowIcon
+            size={16}
+            color={!canPreviousPage ? "#2C2C2C" : "white"}
+          />
         </button>
-        <span className="text-lg font-bold">
-          Page {pageIndex + 1} of {pageCount}
+        <span className="mx-6 text-base font-medium text-[#2C2C2C] dark:text-white">
+          {`${t("AdminPage.page")} ${pageIndex + 1} ${t(
+            "AdminPage.of"
+          )} ${pageCount}`}
         </span>
         <button
           onClick={() => nextPage()}
           disabled={!canNextPage}
           className={`${
             !canNextPage
-              ? "cursor-not-allowed bg-gray-300"
+              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
               : "bg-gradientBtnBlue"
-          } rounded px-4 py-2 text-white`}
+          } mr-2 flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
         >
-          {">"}
+          <RightArrowIcon
+            size={16}
+            color={!canNextPage ? "#2C2C2C" : "white"}
+          />
         </button>
         <button
           onClick={() => gotoPage(pageCount - 1)}
           disabled={!canNextPage}
           className={`${
             !canNextPage
-              ? "cursor-not-allowed bg-gray-300"
+              ? "cursor-not-allowed border border-[#275C7E] bg-transparent"
               : "bg-gradientBtnBlue"
-          } rounded px-4 py-2 text-white`}
+          } flex h-10 w-10 items-center justify-center rounded-[4px] p-2`}
         >
-          {">>"}
+          <DoubleRightIcon
+            size={16}
+            color={!canNextPage ? "#2C2C2C" : "white"}
+          />
         </button>
 
         <div className="flex items-center">
-          <span className="mr-2">Go to Page:</span>
+          <span className="ml-6 mr-2 text-base font-medium text-[#2C2C2C] dark:text-white">
+            {t("AdminPage.goToPage")}
+          </span>
           <input
             type="number"
             value={pageNumber}
             onChange={handlePageInputChange}
-            className="w-16 rounded border border-gray-300 px-2 py-1"
+            className="h-[40px] w-[64px] rounded-[4px] border border-gray-300 px-2 py-1"
           />
           <button
             disabled={isButtonDisabled}
             onClick={handleGoToPage}
             className={classNames(
-              "ml-2 flex h-[40px] w-[50px] items-center justify-center rounded-md bg-gradientBtnBlue px-2 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2",
+              "ml-2 flex h-[40px] w-fit items-center justify-center rounded-md bg-gradientBtnBlue px-4 py-[10px] text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2",
               isButtonDisabled
                 ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"
                 : null
             )}
           >
-            Go
+            {t("AdminPage.go")}
           </button>
         </div>
       </div>

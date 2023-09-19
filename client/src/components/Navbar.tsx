@@ -31,7 +31,9 @@ const Navbar = () => {
   const { handleLogout } = useLogout();
   const { isAuthenticated } = useAuth0();
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState(Languages.EN);
+  const [selectedLanguage, setSelectedLanguage] = useState<
+    Languages | string
+  >();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const {
@@ -59,10 +61,12 @@ const Navbar = () => {
       }
     );
 
-  const handleLanguageChange = (language: Languages) => {
-    setSelectedLanguage(language);
-    i18n.changeLanguage(language);
-    setIsLangModalOpen(false);
+  const handleLanguageChange = (language: string | null) => {
+    if (language) {
+      setSelectedLanguage(language);
+      i18n.changeLanguage(language);
+      setIsLangModalOpen(false);
+    }
   };
 
   const closeProfileModal = () => {
@@ -101,10 +105,19 @@ const Navbar = () => {
     }
   }, [userByIdData]);
 
+  useEffect(() => {
+    selectedLanguage && localStorage.setItem("language", selectedLanguage);
+  }, [selectedLanguage]);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    handleLanguageChange(savedLanguage);
+  }, []);
+
   const customProfileModalStyles = {
     content: {
       padding: "0px",
-      width: "150px",
+      width: "170px",
       height: "fit-content",
       top: "8%",
       left: "88%",

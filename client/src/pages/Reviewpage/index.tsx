@@ -204,11 +204,11 @@ const ReviewPage = () => {
         </div>
       ) : (
         reviewData && (
-          <div className="w-full p-20 dark:bg-[#1B1B1B]">
+          <div className="h-full min-h-[91vh] w-full p-20 dark:bg-[#1B1B1B]">
             <div>
               <ImageSlider images={reviewData.reviewImages} />
             </div>
-            <div className="">
+            <div>
               <div className="relative flex justify-between">
                 <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold	leading-[52px] dark:text-white">
                   {reviewData.reviewTitle}
@@ -340,7 +340,7 @@ const ReviewPage = () => {
                     type="button"
                     disabled={isCommentReviewLoading}
                     onClick={handleAddComment}
-                    className="flex h-[48px] w-[182px] items-center justify-center rounded-md bg-gradientBtnBlue px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="flex h-[48px] w-fit items-center justify-center rounded-md bg-gradientBtnBlue px-4 py-[10px] text-base font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     {t("Review.postComment")}
                   </button>
