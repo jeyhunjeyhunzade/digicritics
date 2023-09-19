@@ -50,7 +50,7 @@ const AdminPage = () => {
     <Layout>
       <div className="flex h-full min-h-[91vh] w-full flex-col px-20 pt-20 dark:bg-[#1B1B1B]">
         {isUsersDataLoading ? (
-          <div className="flex h-[50vh] items-center justify-center">
+          <div className="flex h-[50vh] w-full items-center justify-center">
             <Loader />
           </div>
         ) : (
