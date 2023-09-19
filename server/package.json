@@ -4,11 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "rimraf ./dist && tsc",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -36,7 +43,9 @@
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.5.3",
     "nodemon": "^3.0.1",
+    "pre-commit": "^1.2.2",
     "prisma": "^5.2.0",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   }
