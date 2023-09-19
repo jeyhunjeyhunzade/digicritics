@@ -10,7 +10,7 @@ export default {
   Navbar: {
     login: "Вход",
     logout: "Выход",
-    signup: "Зарегистрироваться",
+    signup: "Регистрация",
     english: "Английский",
     russian: "Русский",
     profile: "Профиль",
