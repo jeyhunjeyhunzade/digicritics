@@ -57,7 +57,7 @@ const ReviewPdf = (props: ReviewPdfProps) => {
                 paddingRight: "10px",
               }}
             >
-              {`${t("Review.category")}:`}
+              Category:
             </Text>
             <Text style={{ fontSize: "16px", color: "#686868" }}>
               {pdfDocumentData?.category?.name}
@@ -78,7 +78,7 @@ const ReviewPdf = (props: ReviewPdfProps) => {
                 paddingRight: "10px",
               }}
             >
-              {`${t("Review.tags")}:`}
+              Tags:
             </Text>
             <Text
               style={{ fontSize: "16px", fontWeight: 400, color: "#686868" }}
@@ -113,7 +113,7 @@ const ReviewPdf = (props: ReviewPdfProps) => {
                 paddingRight: "10px",
               }}
             >
-              {`${t("Review.createdby")}:`}
+              Created by:
             </Text>
             <Text
               style={{ fontSize: "16px", fontWeight: 400, color: "#686868" }}
@@ -147,7 +147,7 @@ const ReviewPdf = (props: ReviewPdfProps) => {
                 paddingRight: "10px",
               }}
             >
-              {`${t("Review.likes")}:`}
+              Likes:
             </Text>
             <Text style={{ fontSize: "16px", color: "#686868" }}>
               {pdfDocumentData?.likes?.length}
@@ -167,7 +167,7 @@ const ReviewPdf = (props: ReviewPdfProps) => {
                 paddingRight: "10px",
               }}
             >
-              {`${t("Review.rating")}:`}
+              Rating:
             </Text>
             <Text style={{ fontSize: "16px", color: "#686868" }}>
               {ratingValue}
