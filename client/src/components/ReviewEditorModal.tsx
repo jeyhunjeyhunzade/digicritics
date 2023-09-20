@@ -380,7 +380,7 @@ const ReviewEditorModal = () => {
                     ? {
                         border: "1px solid #DEDEDE",
                         borderRadius: "6px",
-                        boxShadow: "none",
+                        // boxShadow: "none",
                       }
                     : {}
                 }
