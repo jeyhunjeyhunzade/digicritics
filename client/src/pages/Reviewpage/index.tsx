@@ -52,6 +52,7 @@ const ReviewPage = () => {
   ) as AppContextShape;
 
   const [ratingValue, setRatingValue] = useState<number>(0);
+  const [currentUserRating, setCurrentUserRating] = useState<number | null>();
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
@@ -313,15 +314,22 @@ const ReviewPage = () => {
                   <Rating
                     sx={isDarkMode ? { stroke: "#eab305" } : {}}
                     name="simple-controlled"
-                    value={ratingValue}
+                    value={currentUserRating ? currentUserRating : ratingValue}
                     size="large"
                     disabled={!isAuthenticated}
                     onChange={(e, newValue) => {
-                      newValue && handleRate(newValue);
+                      if (newValue) {
+                        setCurrentUserRating(newValue);
+                        handleRate(newValue);
+                      }
                     }}
                   />
                   <span className="ml-4 self-center dark:text-white">
-                    {ratingValue ? ratingValue : null}
+                    {currentUserRating
+                      ? currentUserRating
+                      : ratingValue
+                      ? ratingValue
+                      : null}
                   </span>
                   <div className="ml-6 self-center text-base text-[#717171] dark:text-[#9C9C9C]">
                     {reviewData?.ratings.length
@@ -339,7 +347,7 @@ const ReviewPage = () => {
                   }
                   fileName={reviewData.workName}
                 >
-                  {({ blob, url, loading, error }) =>
+                  {({ loading }) =>
                     loading ? t("Review.pdfLoading") : t("Review.saveAsPdf")
                   }
                 </PDFDownloadLink>
