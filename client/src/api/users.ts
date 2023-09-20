@@ -43,11 +43,9 @@ export const uploadProfileImage = async (image: { image: Blob | unknown }) => {
   return res?.data;
 };
 
-export const uploadReviewImages = async (
-  images: {
-    images: Blob[] | unknown;
-  }[]
-) => {
+export const uploadReviewImages = async (images: {
+  images: Blob[] | unknown;
+}) => {
   const res = await axios.post(`${serverUrl}/uploadMultipleMedia`, images);
   return res?.data;
 };
