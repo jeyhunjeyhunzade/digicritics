@@ -56,14 +56,9 @@ const ReviewCard = (props: ReviewCardProps) => {
     });
 
   useEffect(() => {
-    if (review?.likes?.length) {
-      review.likes.forEach((like) => {
-        if (like.userId === loggedUserId) {
-          setLiked(true);
-        } else {
-          setLiked(false);
-        }
-      });
+    if (review?.likes?.length && loggedUserId) {
+      const likeUserList = review.likes.map((like) => like.userId);
+      likeUserList.includes(loggedUserId) && setLiked(true);
     } else {
       setLiked(false);
     }
