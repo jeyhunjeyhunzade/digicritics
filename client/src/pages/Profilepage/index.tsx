@@ -113,6 +113,16 @@ const ProfilePage = () => {
     setIsDeleteProfileModaOpen(true);
   };
 
+  const calculateUserTotalLikes = () => {
+    if (tableData.length) {
+      let totalLikes = 0;
+      tableData.forEach((review) => {
+        totalLikes += review.likes;
+      });
+      return totalLikes;
+    }
+  };
+
   return (
     <Layout>
       {isUserByIdLoading ? (
@@ -153,7 +163,7 @@ const ProfilePage = () => {
                         <tr className="mb-2">
                           <td className="font-medium">{t("Profile.likes")}</td>
                           <td className="pl-6 font-normal">
-                            {userByIdData?.Like?.length}
+                            {calculateUserTotalLikes()}
                           </td>
                         </tr>
                         <tr>
