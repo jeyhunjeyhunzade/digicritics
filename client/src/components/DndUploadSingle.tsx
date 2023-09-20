@@ -20,11 +20,14 @@ const DndUploadSingle = (props: DndUploadProps) => {
     onError: errorHandler,
   });
 
-  const uploadImage = async (e: any) => {
-    const file = e.target.files[0];
-    const base64 = await convertBase64(file);
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileInput = e.target;
 
-    uploadProfileImageMutate({ image: base64 });
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      const base64: Blob | unknown = await convertBase64(file);
+      uploadProfileImageMutate({ image: base64 });
+    }
   };
 
   return (

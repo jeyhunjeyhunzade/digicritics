@@ -55,6 +55,10 @@ export default {
       title: "No comments yet",
       description: "Be the first to share your thoughts!",
     },
+    saveAsPdf: "Save as PDF",
+    pdfLoading: "Loading document...",
+    likes: "Likes",
+    rating: "Rating",
   },
   Profile: {
     email: "Email",

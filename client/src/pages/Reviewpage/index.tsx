@@ -18,6 +18,7 @@ import CommentsSpinner from "@app/components/CommentsSpinner";
 import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
 import ReviewCard from "@app/components/ReviewCard";
+import ReviewPdf from "@app/components/ReviewPdf";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { queryClient } from "@app/index";
@@ -34,6 +35,7 @@ import {
 import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AppContext } from "../App";
 
@@ -148,11 +150,9 @@ const ReviewPage = () => {
 
   useEffect(() => {
     if (reviewData) {
-      console.log("reviewData: ", reviewData.likes);
       if (reviewData?.likes.length) {
         reviewData.likes.forEach((like) => {
           if (like.userId === loggedUserId) {
-            console.log("LIKE");
             setLiked(true);
           } else {
             setLiked(false);
@@ -267,8 +267,10 @@ const ReviewPage = () => {
                   />
                 </div>
               </div>
-              <div className="mb-4 flex justify-start text-[32px] font-medium dark:text-white">
-                {reviewData.workName}
+              <div className="mb-4 flex justify-between">
+                <span className="text-[32px] font-medium dark:text-white">
+                  {reviewData.workName}
+                </span>
               </div>
               <div className="mb-3 flex justify-start text-2xl">
                 <span className="font-medium	 dark:text-white">
@@ -306,25 +308,41 @@ const ReviewPage = () => {
                   {dateFormatter(reviewData?.createdTime)}
                 </div>
               </div>
-              <div className="flex h-8">
-                <Rating
-                  sx={isDarkMode ? { stroke: "#eab305" } : {}}
-                  name="simple-controlled"
-                  value={ratingValue}
-                  size="large"
-                  disabled={!isAuthenticated}
-                  onChange={(e, newValue) => {
-                    newValue && handleRate(newValue);
-                  }}
-                />
-                <span className="ml-4 self-center dark:text-white">
-                  {ratingValue ? ratingValue : null}
-                </span>
-                <div className="ml-6 self-center text-base text-[#717171] dark:text-[#9C9C9C]">
-                  {reviewData?.ratings.length
-                    ? `${reviewData?.ratings.length} ${t("Review.ratings")}`
-                    : null}
+              <div className="flex justify-between">
+                <div className="flex">
+                  <Rating
+                    sx={isDarkMode ? { stroke: "#eab305" } : {}}
+                    name="simple-controlled"
+                    value={ratingValue}
+                    size="large"
+                    disabled={!isAuthenticated}
+                    onChange={(e, newValue) => {
+                      newValue && handleRate(newValue);
+                    }}
+                  />
+                  <span className="ml-4 self-center dark:text-white">
+                    {ratingValue ? ratingValue : null}
+                  </span>
+                  <div className="ml-6 self-center text-base text-[#717171] dark:text-[#9C9C9C]">
+                    {reviewData?.ratings.length
+                      ? `${reviewData?.ratings.length} ${t("Review.ratings")}`
+                      : null}
+                  </div>
                 </div>
+                <PDFDownloadLink
+                  className="text-medium w-fit rounded-[8px] bg-[#CA1414] px-4 py-2 text-base text-white"
+                  document={
+                    <ReviewPdf
+                      pdfDocumentData={reviewData}
+                      ratingValue={ratingValue ? ratingValue : 0}
+                    />
+                  }
+                  fileName={reviewData.workName}
+                >
+                  {({ blob, url, loading, error }) =>
+                    loading ? t("Review.pdfLoading") : t("Review.saveAsPdf")
+                  }
+                </PDFDownloadLink>
               </div>
               <p className="mt-[38px] text-left dark:text-white">
                 {reviewData.reviewContent}

@@ -140,14 +140,16 @@ const ReviewsTable = (props: ReviewsTableProps) => {
     }
   }, [pageNumber, pageCount]);
 
-  const handlePageInputChange = (e: any) => {
+  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputPage = e.target.value;
-    setPageNumber(inputPage);
+    const pageNumber = parseInt(inputPage, 10);
+    if (!isNaN(pageNumber)) {
+      setPageNumber(pageNumber);
+    }
   };
 
   const handleGoToPage = () => {
     if (pageNumber <= pageCount && pageNumber >= 1) {
-      console.log("go to page");
       gotoPage(pageNumber - 1);
     }
   };
