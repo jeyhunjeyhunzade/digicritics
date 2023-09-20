@@ -1,3 +1,4 @@
+import { SyntheticEvent } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { uploadReviewImages } from "@app/api/users";
@@ -21,16 +22,17 @@ const DndUploadMiltiple = (props: DnDUploadMultipleProps) => {
     onError: errorHandler,
   });
 
-  const uploadImages = async (e: any) => {
-    const files = e.target.files;
+  const uploadImages = async (e: SyntheticEvent<HTMLInputElement>) => {
+    const inputElement = e.target as HTMLInputElement;
+    const files = inputElement.files;
 
-    if (files.length > 3) {
+    if (!files || files.length > 3) {
       return toast.error(t("Toast.filesCountLimit"));
     }
 
     const base64s = [];
     for (let i = 0; i < files.length; i++) {
-      const base = await convertBase64(files[i]);
+      const base: Blob | unknown = await convertBase64(files[i]);
       base64s.push(base);
     }
 

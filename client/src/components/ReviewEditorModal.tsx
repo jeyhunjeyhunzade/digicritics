@@ -43,7 +43,7 @@ const ReviewEditorModal = () => {
     selectedUserId,
     setSelectedUserId,
   } = useContext(AppContext) as AppContextShape;
-  const [reviewContent, setReviewContent] = useState<any>("");
+  const [reviewContent, setReviewContent] = useState<string | undefined>("");
   const [reviewTitle, setReviewTitle] = useState("");
   const [reviewWorkName, setReviewWorkName] = useState("");
   const [reviewCategory, setReviewCategory] = useState("");
@@ -251,7 +251,7 @@ const ReviewEditorModal = () => {
 
   const renderTags = (
     value: string[],
-    getTagProps: ({ index }: { index: number }) => Record<string, any>
+    getTagProps: ({ index }: { index: number }) => Record<string, unknown>
   ) =>
     value.map((tag: string, index: number) => (
       <Chip

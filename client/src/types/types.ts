@@ -57,6 +57,10 @@ export interface DnDUploadMultipleProps {
   setUrls: Dispatch<SetStateAction<string[]>>;
 }
 
+export interface Row {
+  original: Omit<UsersData, "Like" | "Rating" | "reviews" | "profileImage">;
+}
+
 export interface CloudTags {
   value: string;
   count: number;

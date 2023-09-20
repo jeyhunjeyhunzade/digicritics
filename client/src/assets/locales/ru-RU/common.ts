@@ -55,6 +55,10 @@ export default {
       title: "Пока нет коментариев",
       description: "Будьте первым, кто поделится своими мыслями!",
     },
+    saveAsPdf: "Сохранить как PDF",
+    pdfLoading: "Загрузка документа...",
+    likes: "Лайки",
+    rating: "Рейтинг",
   },
   Profile: {
     email: "Электронная почта",

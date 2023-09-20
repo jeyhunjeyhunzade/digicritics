@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../config";
 import { io } from "../socket";
 import { LikeAction } from "../types/enums";
+import { Tag } from "../types/types";
 
 const Reviews = {
   createReview: async (request: Request, response: Response) => {
@@ -61,7 +62,7 @@ const Reviews = {
           },
           tags: {
             connect: existingTagIds.map((id) => ({ id })),
-            create: tagAssociations.filter((tag: any) => !("id" in tag)),
+            create: tagAssociations.filter((tag: Tag) => !("id" in tag)),
           },
         },
       });
@@ -288,7 +289,7 @@ const Reviews = {
         where: {
           tags: {
             some: {
-              name: tagName, // Filter by the tag name
+              name: tagName,
             },
           },
         },
@@ -690,6 +691,11 @@ const Reviews = {
           },
         },
         include: {
+          tags: true,
+          likes: true,
+          ratings: true,
+          comments: true,
+          category: true,
           user: true,
         },
         orderBy: {
