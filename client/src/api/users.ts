@@ -38,18 +38,12 @@ export const updateUser = async (updatedUserData: UpdatedUserData) => {
   return res?.data;
 };
 
-export const uploadProfileImage = async ({
-  image,
-}: {
-  image: Blob | unknown;
-}) => {
+export const uploadProfileImage = async (image: { image: Blob | unknown }) => {
   const res = await axios.post(`${serverUrl}/uploadMedia`, image);
   return res?.data;
 };
 
-export const uploadReviewImages = async ({
-  images,
-}: {
+export const uploadReviewImages = async (images: {
   images: Blob[] | unknown;
 }) => {
   const res = await axios.post(`${serverUrl}/uploadMultipleMedia`, images);
