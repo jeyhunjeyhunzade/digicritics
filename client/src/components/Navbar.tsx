@@ -47,10 +47,10 @@ const Navbar = () => {
 
   const { data: userByIdData, isLoading: isUserByIdLoading } =
     useQuery<LoggedUser | null>(
-      ["userById", loggedUserId, config],
+      ["userById", loggedUserId],
       () => {
-        if (loggedUserId && config) {
-          return getUserById({ id: loggedUserId, config });
+        if (loggedUserId) {
+          return getUserById({ id: loggedUserId });
         } else {
           return null;
         }
