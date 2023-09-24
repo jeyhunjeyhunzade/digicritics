@@ -52,11 +52,11 @@ const Homepage = () => {
 
   return (
     <Layout>
-      <div className="flex h-full min-h-[91vh] w-full flex-col px-20 py-16 dark:bg-[#1B1B1B]">
+      <div className="flex h-full min-h-[91vh] w-full flex-col px-20 py-16 dark:bg-[#1B1B1B] max-[600px]:p-6">
         <div className="flex items-start text-2xl dark:text-white">
           {t("Homepage.popularReviews")}
         </div>
-        <div className="mt-6 grid grid-cols-4 gap-4">
+        <div className="mt-6 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
           {isReviewsLoading
             ? Array.from({ length: 4 }).map((item, index) => (
                 <CardSpinner key={index} />
@@ -71,7 +71,7 @@ const Homepage = () => {
         <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.recentlyAdded")}
         </div>
-        <div className="mt-6 grid grid-cols-4 gap-4">
+        <div className="mt-6 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
           {isReviewsLoading
             ? Array.from({ length: 4 }).map((item, index) => (
                 <CardSpinner key={index} />

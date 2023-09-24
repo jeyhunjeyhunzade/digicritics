@@ -13,11 +13,15 @@ const ImageSlider = ({ images }: { images: string[] }) => {
       }}
       navigation={true}
       modules={[Pagination, Navigation]}
-      className="float-left mb-12 mr-8 h-[720px] w-[620px] select-none rounded-[20px] bg-black bg-opacity-5 shadow-cardShadow dark:bg-white dark:bg-opacity-5"
+      className="select-none rounded-[20px] bg-black bg-opacity-5 shadow-cardShadow dark:bg-white dark:bg-opacity-5 sm:mb-4 sm:h-[620px] sm:w-[420px] md:h-[720px] md:w-[620px] xl:float-left xl:mb-12 xl:mr-8"
     >
       {images.map((image: string, i) => (
         <SwiperSlide key={i}>
-          <img src={image} alt="review" className="h-[720px] w-[620px]" />
+          <img
+            src={image}
+            alt="review"
+            className="sm:h-[620px] sm:w-[420px] md:h-[720px] md:w-[620px]"
+          />
         </SwiperSlide>
       ))}
     </Swiper>
