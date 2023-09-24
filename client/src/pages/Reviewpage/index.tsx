@@ -232,10 +232,7 @@ const ReviewPage = () => {
               <ImageSlider images={reviewData.reviewImages} />
             </div>
             <div>
-              <div className="relative flex justify-between">
-                <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold	leading-[52px] dark:text-white">
-                  {reviewData.reviewTitle}
-                </div>
+              <div className="relative flex justify-between max-[600px]:flex-col">
                 <div
                   role="button"
                   tabIndex={0}
@@ -253,11 +250,11 @@ const ReviewPage = () => {
                     }
                   }}
                   className={classNames(
-                    "absolute right-0 top-4 flex items-center",
+                    "absolute right-0 top-4 flex items-center max-[450px]:static",
                     isAuthenticated ? "cursor-pointer" : "cursor-default"
                   )}
                 >
-                  <span className="mr-1 text-2xl text-[#2C2C2C] dark:text-white">
+                  <span className="mr-1 text-2xl text-[#2C2C2C] dark:text-white max-[600px]:text-[20px]">
                     {reviewData?.likes.length}
                   </span>
                   <HeartIcon
@@ -267,21 +264,24 @@ const ReviewPage = () => {
                     color={isDarkMode ? "white" : "#2C2C2C"}
                   />
                 </div>
+                <div className="flex max-w-[90%] break-all text-left text-[40px] font-semibold leading-[52px]	dark:text-white max-[600px]:text-[24px]">
+                  {reviewData.reviewTitle}
+                </div>
               </div>
               <div className="mb-4 flex justify-between">
-                <span className="text-[32px] font-medium dark:text-white">
+                <span className="text-[32px] font-medium dark:text-white max-[600px]:text-[20px]">
                   {reviewData.workName}
                 </span>
               </div>
-              <div className="mb-3 flex justify-start text-2xl">
+              <div className="mb-3 flex justify-start text-2xl max-[600px]:text-base">
                 <span className="font-medium	 dark:text-white">
                   {`${t("Review.category")}:`}
                 </span>
-                <span className="ml-1 dark:text-white">
+                <span className="ml-1 dark:text-white max-[600px]:text-base">
                   {reviewData?.category?.name}
                 </span>
               </div>
-              <div className="mb-3 flex justify-start text-2xl">
+              <div className="mb-3 flex justify-start text-2xl max-[600px]:text-base">
                 <span className="font-medium	 dark:text-white">
                   {`${t("Review.tags")}:`}
                 </span>
@@ -295,7 +295,7 @@ const ReviewPage = () => {
                 </span>
               </div>
               <div className="mb-2 flex">
-                <div className="flex justify-start text-2xl">
+                <div className="flex justify-start text-2xl max-[600px]:text-base">
                   <span className="font-medium dark:text-white">
                     {`${t("Review.createdby")}:`}
                   </span>
@@ -305,11 +305,11 @@ const ReviewPage = () => {
                     </span>
                   </Link>
                 </div>
-                <div className="ml-4 self-end text-base text-[#717171] dark:text-[#9C9C9C]">
+                <div className="ml-4 self-end text-base text-[#717171] dark:text-[#9C9C9C] max-[600px]:text-[10px]">
                   {dateFormatter(reviewData?.createdTime)}
                 </div>
               </div>
-              <div className="flex justify-between">
+              <div className="flex flex min-[320px]:flex-col min-[320px]:space-y-3 sm:justify-between">
                 <div className="flex">
                   <Rating
                     sx={isDarkMode ? { stroke: "#eab305" } : {}}
@@ -352,7 +352,7 @@ const ReviewPage = () => {
                   }
                 </PDFDownloadLink>
               </div>
-              <p className="mt-[38px] text-left dark:text-white">
+              <p className="mt-[38px] text-left dark:text-white max-[600px]:text-[14px]">
                 {reviewData.reviewContent}
               </p>
             </div>
