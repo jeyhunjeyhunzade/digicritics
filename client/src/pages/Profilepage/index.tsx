@@ -46,10 +46,10 @@ const ProfilePage = () => {
 
   const { data: userByIdData, isLoading: isUserByIdLoading } =
     useQuery<UsersData>(
-      ["userById", id, config],
+      ["userById", id],
       () => {
-        if (id && config) {
-          return getUserById({ id: +id, config });
+        if (id) {
+          return getUserById({ id: +id });
         } else {
           return Promise.resolve([]);
         }

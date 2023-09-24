@@ -624,29 +624,31 @@ const Reviews = {
           .send({ message: "Search query is required." });
       }
 
+      const formattedSearchQuery = searchQuery.trim().replace(" ", " & ");
+
       const reviews = await prisma.review.findMany({
         where: {
           OR: [
             {
               reviewTitle: {
-                search: searchQuery,
+                search: formattedSearchQuery,
               },
             },
             {
               workName: {
-                search: searchQuery,
+                search: formattedSearchQuery,
               },
             },
             {
               reviewContent: {
-                search: searchQuery,
+                search: formattedSearchQuery,
               },
             },
             {
               comments: {
                 some: {
                   content: {
-                    contains: searchQuery,
+                    contains: formattedSearchQuery,
                   },
                 },
               },

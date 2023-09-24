@@ -13,8 +13,8 @@ export const getUsers = async (config: ApiConfig) => {
 };
 
 export const getUserById = async (getUserByIdParams: GetUserByIdParams) => {
-  const { id, config } = getUserByIdParams;
-  const res = await axios.get(`${serverUrl}/users/${id}`, config);
+  const { id } = getUserByIdParams;
+  const res = await axios.get(`${serverUrl}/users/${id}`);
   return res?.data;
 };
 

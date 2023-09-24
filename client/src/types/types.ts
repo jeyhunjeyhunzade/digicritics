@@ -230,5 +230,4 @@ export interface CreateNewReviewParams {
 
 export interface GetUserByIdParams {
   id: number;
-  config: ApiConfig;
 }

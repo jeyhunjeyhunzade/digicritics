@@ -26,7 +26,7 @@ app.use(compression());
 app.post("/login", queries.Users.loginUser);
 app.post("/signUp", queries.Users.createUser);
 app.post("/users/email", queries.Users.getUserIdByEmail);
-app.get("/users/:id", jwtCheck, queries.Users.getUserById);
+app.get("/users/:id", queries.Users.getUserById);
 app.get("/users", jwtCheck, queries.Users.getUsers);
 app.delete("/users", jwtCheck, queries.Users.deleteUser);
 app.patch("/users/block", queries.Users.blockUser);
