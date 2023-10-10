@@ -100,7 +100,7 @@ cd Digicritics/client
 npm run dev
 ```
 
-1. Starting server:
+2. Starting server:
 ```sh
 cd Digicritics/server
 ```
