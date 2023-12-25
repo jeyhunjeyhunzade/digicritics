@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import CardSpinner from "./CardSpinner";
+import ToggleTheme from "./ToggleTheme";
 
 const Button = ({
   children,
