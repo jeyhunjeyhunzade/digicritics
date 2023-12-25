@@ -11,10 +11,6 @@ const Tags = () => {
   const [cloudTags, setCloudTags] = useState<CloudTags[]>([]);
 
   useEffect(() => {
-    console.log("Tags:", tags);
-  }, [tags]);
-
-  useEffect(() => {
     let cloudTags: CloudTags[];
     if (tags.length) {
       cloudTags = tags.map((tag) => {
