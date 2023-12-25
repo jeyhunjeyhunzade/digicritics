@@ -3,6 +3,7 @@ export * from "./classNames";
 export * from "./convertBase64";
 export * from "./dateFormatter";
 export * from "./getUserData";
+export * from "./optimizeImg";
 export * from "./requestHandlers";
 export * from "./shorteningFullName";
 export * from "./shortenString";

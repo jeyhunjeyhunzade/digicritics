@@ -6,6 +6,7 @@ import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { AppContext } from "@app/pages/App";
 import { LikeAction } from "@app/types/enums";
+import { Transformation } from "@app/types/enums";
 import { AppContextShape, ReviewsData } from "@app/types/types";
 import {
   calculateAverageRate,
@@ -14,11 +15,11 @@ import {
   shorteningFullName,
   shortenString,
 } from "@app/utils";
+import { optimizeImg } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "..";
-
 interface ReviewCardProps {
   review: ReviewsData;
 }
@@ -78,19 +79,15 @@ const ReviewCard = (props: ReviewCardProps) => {
     }
   };
 
-  const optimizeImg = (url: string): string => {
-    const transformation = "w_500,f_auto";
-    const parts = url.split("/upload/");
-    const newUrl = parts[0] + "/upload/" + transformation + "/" + parts[1];
-    return newUrl;
-  };
-
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
       <div className="relative">
         <div
           style={{
-            backgroundImage: `url(${optimizeImg(review?.reviewImages[0])})`,
+            backgroundImage: `url(${optimizeImg(
+              review?.reviewImages[0],
+              Transformation.AUTO_W500_QLTY50
+            )})`,
           }}
           className={`h-[194px] w-full bg-cover bg-center`}
         ></div>
