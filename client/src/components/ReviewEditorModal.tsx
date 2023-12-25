@@ -7,7 +7,6 @@ import {
   editReview,
   getCategories,
   getReviewById,
-  getTags,
 } from "@app/api/reviews";
 import CloseIcon from "@app/assets/icons/CloseIcon";
 import useError from "@app/hooks/useError";
@@ -17,7 +16,6 @@ import {
   AppContextShape,
   CategoriesData,
   ReviewsData,
-  TagsData,
 } from "@app/types/types";
 import { successHandler } from "@app/utils";
 import { Autocomplete, Chip, TextField } from "@mui/material";
