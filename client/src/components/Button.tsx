@@ -1,5 +1,4 @@
 import { PropsWithChildren } from "react";
-import ToggleTheme from "./ToggleTheme";
 
 const Button = ({
   children,
