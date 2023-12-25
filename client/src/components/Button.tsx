@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import usePagination from "@mui/material/usePagination/usePagination";
+import Loader from "./Loader";
 
 const Button = ({
   children,
