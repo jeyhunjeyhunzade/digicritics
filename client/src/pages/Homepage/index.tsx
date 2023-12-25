@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { getReviews } from "@app/api/reviews";
+import { getReviews, getTags } from "@app/api/reviews";
 import CardSpinner from "@app/components/CardSpinner";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
 import { Routes } from "@app/router/rooter";
-import { ReviewsData } from "@app/types/types";
+import { AppContextShape, ReviewsData, TagsData } from "@app/types/types";
 import { calculateAverageRate } from "@app/utils";
 import { useQuery } from "@tanstack/react-query";
+import { AppContext } from "../App";
 import Tags from "./TagCloud";
+import Loader from "@app/components/Loader";
 
 const Homepage = () => {
   const { t } = useTranslation();
   const { onError } = useError();
   const [popularReviews, setPopularReviews] = useState<ReviewsData[]>();
   const [recentReviews, setRecentReviews] = useState<ReviewsData[]>();
+  const { setTags } = useContext(AppContext) as AppContextShape;
 
   const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
     ReviewsData[]
@@ -24,6 +27,15 @@ const Homepage = () => {
     onError,
     retry: false,
   });
+
+  const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
+    ["tags"],
+    getTags,
+    {
+      onError,
+      retry: false,
+    }
+  );
 
   useEffect(() => {
     const popularReviews = reviewsData?.filter(
@@ -37,6 +49,13 @@ const Homepage = () => {
 
     setRecentReviews(recentReviews);
   }, [reviewsData]);
+
+  useEffect(() => {
+    if (tagsData) {
+      const tagNames = tagsData.tags.map((tag) => tag.name);
+      setTags(tagNames);
+    }
+  }, [tagsData]);
 
   const isRecentReview = (dateToCheck: Date | string) => {
     const currentDate: Date = new Date();
@@ -85,9 +104,13 @@ const Homepage = () => {
         <div className="mt-10 flex items-start text-2xl dark:text-white">
           {t("Homepage.popularTags")}
         </div>
-        <div className="mt-6">
-          <Tags />
-        </div>
+        {isTagsLoading ? (
+          <Loader />
+        ) : (
+          <div className="mt-6">
+            <Tags />
+          </div>
+        )}
       </div>
     </Layout>
   );

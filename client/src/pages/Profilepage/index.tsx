@@ -8,7 +8,6 @@ import EditIcon from "@app/assets/icons/EditIcon";
 import PlusIcon from "@app/assets/icons/PlusIcon";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
-import useGetConfig from "@app/hooks/useGetConfig";
 import Layout from "@app/layout/AppLayout";
 import { AppContext } from "@app/pages/App";
 import { UserStatus } from "@app/types/enums";
@@ -29,7 +28,6 @@ const ProfilePage = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const { onError } = useError();
-  const { config } = useGetConfig();
   const [isOwnPage, setIsOwnPage] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [tableData, setTableData] = useState<Review[]>([]);
@@ -225,20 +223,26 @@ const ProfilePage = () => {
                 </div>
               )}
             </div>
-            <EditProfileModal
-              isEditProfileModalOpen={isEditProfileModalOpen}
-              setIsEditProfileModalOpen={setIsEditProfileModalOpen}
-              profileData={userByIdData}
-              handleDeleteUser={handleDeleteUser}
-            />
-            <DeleteProfileModal
-              isDeleteProfileModaOpen={isDeleteProfileModaOpen}
-              setIsDeleteProfileModaOpen={setIsDeleteProfileModaOpen}
-            />
-            <DeleteReviewModal
-              isDeleteReviewModalOpen={isDeleteReviewModalOpen}
-              setIsDeleteReviewModalOpen={setIsDeleteReviewModalOpen}
-            />
+            {isEditProfileModalOpen && (
+              <EditProfileModal
+                isEditProfileModalOpen={isEditProfileModalOpen}
+                setIsEditProfileModalOpen={setIsEditProfileModalOpen}
+                profileData={userByIdData}
+                handleDeleteUser={handleDeleteUser}
+              />
+            )}
+            {isDeleteProfileModaOpen && (
+              <DeleteProfileModal
+                isDeleteProfileModaOpen={isDeleteProfileModaOpen}
+                setIsDeleteProfileModaOpen={setIsDeleteProfileModaOpen}
+              />
+            )}
+            {isDeleteReviewModalOpen && (
+              <DeleteReviewModal
+                isDeleteReviewModalOpen={isDeleteReviewModalOpen}
+                setIsDeleteReviewModalOpen={setIsDeleteReviewModalOpen}
+              />
+            )}
           </div>
         )
       )}

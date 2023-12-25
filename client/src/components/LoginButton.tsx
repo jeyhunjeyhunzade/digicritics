@@ -16,7 +16,7 @@ const LoginButton = () => {
 
   return (
     <button
-      className="flex h-5 h-[32px] w-fit items-center justify-center whitespace-nowrap rounded border-2 border-white px-2 py-1 text-base text-white"
+      className="flex h-8 w-fit items-center justify-center whitespace-nowrap rounded border-2 border-white px-2 py-1 text-base text-white"
       onClick={handleLogin}
     >
       {t("Navbar.login")}

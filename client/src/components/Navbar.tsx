@@ -7,7 +7,6 @@ import AvatarIcon from "@app/assets/icons/AvatarIcon";
 import WorldIcon from "@app/assets/icons/WorldIcon";
 import useCurrentPath from "@app/hooks/useCurrentPath";
 import useError from "@app/hooks/useError";
-import useGetConfig from "@app/hooks/useGetConfig";
 import useLogout from "@app/hooks/useLogout";
 import { AppContext } from "@app/pages/App";
 import { Routes } from "@app/router/rooter";
@@ -25,7 +24,6 @@ import ToggleTheme from "./ToggleTheme";
 const Navbar = () => {
   const { onError } = useError();
   const navigate = useNavigate();
-  const { config } = useGetConfig();
   const currentPath = useCurrentPath();
   const { t, i18n } = useTranslation();
   const { handleLogout } = useLogout();

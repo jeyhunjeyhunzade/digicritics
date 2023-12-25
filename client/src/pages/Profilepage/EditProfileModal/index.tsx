@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { useParams } from "react-router-dom";
@@ -114,7 +108,7 @@ const EditProfileModal = (props: EditProfileModalProps) => {
             onKeyDown={closeEditProfileModal}
             className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
-            <CloseIcon size={24} />
+            <CloseIcon size={24} color="#9D9D9D" />
           </span>
           <div className="flex flex-col p-10">
             <div className="flex justify-center text-3xl text-[#2C2C2C] dark:text-white">

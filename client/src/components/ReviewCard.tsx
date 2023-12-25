@@ -78,11 +78,24 @@ const ReviewCard = (props: ReviewCardProps) => {
     }
   };
 
+  useEffect(() => {
+    console.log("Optimize image: ", review?.reviewImages[0]);
+  }, [review]);
+
+  const optimizeImg = (url: string): string => {
+    const transformation = "w_500,f_auto";
+    const parts = url.split("/upload/");
+    const newUrl = parts[0] + "/upload/" + transformation + "/" + parts[1];
+    return newUrl;
+  };
+
   return (
     <div className="delay-30 w-[320px] transform cursor-pointer overflow-hidden rounded-[8px] shadow-cardShadow transition ease-in hover:scale-105 dark:bg-[#2C2C2C]">
       <div className="relative">
         <div
-          style={{ backgroundImage: `url(${review?.reviewImages[0]})` }}
+          style={{
+            backgroundImage: `url(${optimizeImg(review?.reviewImages[0])})`,
+          }}
           className={`h-[194px] w-full bg-cover bg-center`}
         ></div>
         <div className="absolute right-[18px] top-[12px]">

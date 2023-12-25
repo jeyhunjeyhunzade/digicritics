@@ -2,7 +2,7 @@ const SearchBarSpinner = () => {
   return (
     <div
       role="status"
-      className="mt-4 flex w-full animate-pulse flex-col flex-col items-center justify-start py-4"
+      className="mt-4 flex w-full animate-pulse flex-col items-center justify-start py-4"
     >
       <div className="mb-2 flex w-full">
         <div className="flex flex-col">

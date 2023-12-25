@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import {
@@ -11,7 +11,7 @@ import DeleteIcon from "@app/assets/icons/DeleteIcon";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { AppContext } from "@app/pages/App";
-import { AppContextShape, CategoriesData, Category } from "@app/types/types";
+import { AppContextShape, CategoriesData } from "@app/types/types";
 import { errorHandler } from "@app/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "..";

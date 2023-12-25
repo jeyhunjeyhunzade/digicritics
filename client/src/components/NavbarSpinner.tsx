@@ -2,7 +2,7 @@ const NavbarSpinner = () => {
   return (
     <div
       role="status"
-      className="flex h-full animate-pulse flex-col flex-col items-center justify-start"
+      className="f flex h-full animate-pulse flex-col items-center justify-start"
     >
       <div className="flex w-full items-center">
         <div className="mr-1 flex flex-col space-y-2">

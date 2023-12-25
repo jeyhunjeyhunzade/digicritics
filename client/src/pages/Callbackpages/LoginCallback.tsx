@@ -28,19 +28,18 @@ const LoginCallBack = () => {
     AppContext
   ) as AppContextShape;
 
-  const { mutate: createAccountMutate, isLoading: isCreateAccountLoading } =
-    useMutation(createAccount, {
-      onSuccess: (response) => {
-        setLoggedUser(response.newUser);
-        setLoggedUserId(response.newUser.id);
-        localStorage.setItem("loggedUserId", response.newUser.id);
-        queryClient.invalidateQueries(["userById"]);
-        queryClient.invalidateQueries(["users"]);
-        successHandler(response);
-        navigate(Routes.homepage);
-      },
-      onError: errorHandler,
-    });
+  const { mutate: createAccountMutate } = useMutation(createAccount, {
+    onSuccess: (response) => {
+      setLoggedUser(response.newUser);
+      setLoggedUserId(response.newUser.id);
+      localStorage.setItem("loggedUserId", response.newUser.id);
+      queryClient.invalidateQueries(["userById"]);
+      queryClient.invalidateQueries(["users"]);
+      successHandler(response);
+      navigate(Routes.homepage);
+    },
+    onError: errorHandler,
+  });
 
   const { mutate: getUserByEmailMutate } = useMutation(getUserByEmail, {
     onSuccess: (response) => {

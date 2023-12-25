@@ -18,7 +18,6 @@ import CommentsSpinner from "@app/components/CommentsSpinner";
 import ImageSlider from "@app/components/ImageSlider";
 import Loader from "@app/components/Loader";
 import ReviewCard from "@app/components/ReviewCard";
-import ReviewPdf from "@app/components/ReviewPdf";
 import useError from "@app/hooks/useError";
 import useGetConfig from "@app/hooks/useGetConfig";
 import { queryClient } from "@app/index";
@@ -35,7 +34,6 @@ import {
 import { calculateAverageRate, classNames, dateFormatter } from "@app/utils";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Rating } from "@mui/material";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AppContext } from "../App";
 
@@ -309,7 +307,7 @@ const ReviewPage = () => {
                   {dateFormatter(reviewData?.createdTime)}
                 </div>
               </div>
-              <div className="flex flex min-[320px]:flex-col min-[320px]:space-y-3 sm:justify-between">
+              <div className="flex min-[320px]:flex-col min-[320px]:space-y-3 sm:justify-between">
                 <div className="flex">
                   <Rating
                     sx={isDarkMode ? { stroke: "#eab305" } : {}}
@@ -337,20 +335,6 @@ const ReviewPage = () => {
                       : null}
                   </div>
                 </div>
-                <PDFDownloadLink
-                  className="text-medium w-fit rounded-[8px] bg-[#CA1414] px-4 py-2 text-base text-white"
-                  document={
-                    <ReviewPdf
-                      pdfDocumentData={reviewData}
-                      ratingValue={ratingValue ? ratingValue : 0}
-                    />
-                  }
-                  fileName={reviewData.workName}
-                >
-                  {({ loading }) =>
-                    loading ? t("Review.pdfLoading") : t("Review.saveAsPdf")
-                  }
-                </PDFDownloadLink>
               </div>
               <p className="mt-[38px] text-left dark:text-white max-[600px]:text-[14px]">
                 {reviewData.reviewContent}
@@ -362,7 +346,7 @@ const ReviewPage = () => {
                   <div className="mt-40 flex items-start text-2xl dark:text-white">
                     {t("Review.similarReviews")}
                   </div>
-                  <div className="mt-6 mt-6 grid grid-cols-4 gap-4">
+                  <div className="mt-6 grid grid-cols-4 gap-4">
                     {isSimilarReviewsLoading
                       ? Array.from({ length: 4 }).map((item, index) => (
                           <CardSpinner key={index} />
