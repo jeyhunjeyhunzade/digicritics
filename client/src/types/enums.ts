@@ -29,3 +29,8 @@ export enum LikeAction {
 export enum AuthAction {
   REGISTER_REQUIRED = "REGISTER_REQUIRED",
 }
+
+export enum Transformation {
+  AUTO_500 = "w_500,f_auto",
+  AUTO_W500_QLTY50 = "w_500,f_auto,q_50",
+}
