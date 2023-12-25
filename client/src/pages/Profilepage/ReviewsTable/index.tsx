@@ -22,7 +22,7 @@ import Loader from "@app/components/Loader";
 import TableActions from "@app/components/TableActions";
 import useError from "@app/hooks/useError";
 import { Routes } from "@app/router/rooter";
-import { CategoriesData, Category, Review } from "@app/types/types";
+import { CategoriesData, Review } from "@app/types/types";
 import { classNames } from "@app/utils";
 import { useQuery } from "@tanstack/react-query";
 
@@ -176,7 +176,7 @@ const ReviewsTable = (props: ReviewsTableProps) => {
         <div className="h-[44px] w-[302px]">
           <select
             name="category"
-            className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+            className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
             value={state.globalFilter || ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
           >

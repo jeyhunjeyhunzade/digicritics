@@ -39,7 +39,6 @@ const ReviewEditorModal = () => {
     selectedReviewId,
     setSelectedReviewId,
     tags,
-    setTags,
     selectedUserId,
     setSelectedUserId,
   } = useContext(AppContext) as AppContextShape;
@@ -51,15 +50,6 @@ const ReviewEditorModal = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
   const [isMaximumTagsError, setIsMaximumTagsError] = useState(false);
-
-  const { data: tagsData, isLoading: isTagsLoading } = useQuery<TagsData>(
-    ["tags"],
-    getTags,
-    {
-      onError,
-      retry: false,
-    }
-  );
 
   const { data: reviewByIdData, isLoading: isReviewByIdLoading } =
     useQuery<ReviewsData | null>(
@@ -114,18 +104,10 @@ const ReviewEditorModal = () => {
     });
 
   const isLoading =
-    isTagsLoading ||
     isCategoriesLoading ||
     isCreateNewReviewLoading ||
     isEditReviewLoading ||
     isReviewByIdLoading;
-
-  useEffect(() => {
-    if (tagsData) {
-      const tagNames = tagsData.tags.map((tag) => tag.name);
-      setTags(tagNames);
-    }
-  }, [tagsData]);
 
   useEffect(() => {
     if (reviewByIdData) {
@@ -299,7 +281,7 @@ const ReviewEditorModal = () => {
         onKeyDown={closeReviewEditorModal}
         className="absolute right-2 top-2 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-800"
       >
-        <CloseIcon size={24} />
+        <CloseIcon size={24} color="#9D9D9D" />
       </span>
       {isLoading ? (
         <div className="flex h-full items-center justify-center">
@@ -336,7 +318,7 @@ const ReviewEditorModal = () => {
                 <div className="h-[48px] w-[262px]">
                   <select
                     name="category"
-                    className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm dark:border-[#2C2C2C] dark:border-[#2C2C2C] dark:border-[#DEDEDE] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
+                    className="block h-full w-full rounded-md border-gray-300 bg-[transparent] px-3 text-[#2C2C2C] shadow-sm  dark:border-[#2C2C2C] dark:text-[#9D9D9D] dark:placeholder-[#9D9D9D]"
                     value={reviewCategory}
                     onChange={(e) => {
                       setReviewCategory(e.target.value);

@@ -2,7 +2,7 @@ const CommentsSpinner = () => {
   return (
     <div
       role="status"
-      className="mt-4 flex w-full animate-pulse flex-col flex-col items-center justify-start"
+      className="mt-4 flex w-full animate-pulse flex-col items-center justify-start"
     >
       <div className="mb-10 flex w-full space-y-1">
         <svg

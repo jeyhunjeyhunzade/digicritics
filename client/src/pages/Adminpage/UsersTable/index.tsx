@@ -29,7 +29,7 @@ import useGetConfig from "@app/hooks/useGetConfig";
 import { queryClient } from "@app/index";
 import { Routes } from "@app/router/rooter";
 import { AdminTableAction, UserStatus } from "@app/types/enums";
-import { ActionsResponse, Row, UsersData } from "@app/types/types";
+import { ActionsResponse, UsersData } from "@app/types/types";
 import { classNames, successHandler } from "@app/utils";
 import { useRowSelectColumn } from "@lineup-lite/hooks";
 import { useMutation } from "@tanstack/react-query";

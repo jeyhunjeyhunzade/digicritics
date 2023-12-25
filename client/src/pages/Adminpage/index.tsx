@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { getUsers } from "@app/api/users";
 import Loader from "@app/components/Loader";
 import useError from "@app/hooks/useError";
