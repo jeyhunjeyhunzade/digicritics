@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { getReviews, getTags } from "@app/api/reviews";
 import CardSpinner from "@app/components/CardSpinner";
+import Loader from "@app/components/Loader";
 import ReviewCard from "@app/components/ReviewCard";
 import useError from "@app/hooks/useError";
 import Layout from "@app/layout/AppLayout";
@@ -12,7 +13,6 @@ import { calculateAverageRate } from "@app/utils";
 import { useQuery } from "@tanstack/react-query";
 import { AppContext } from "../App";
 import Tags from "./TagCloud";
-import Loader from "@app/components/Loader";
 
 const Homepage = () => {
   const { t } = useTranslation();
@@ -88,7 +88,7 @@ const Homepage = () => {
         </div>
 
         <div className="mt-10 flex items-start text-2xl dark:text-white">
-          {t("Homepage.recentlyAdded")}
+          {!!recentReviews?.length && t("Homepage.recentlyAdded")}
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
           {isReviewsLoading
