@@ -1,0 +1,3 @@
+# client/.husky/pre-commit
+#!/bin/sh
+npm run precommit
