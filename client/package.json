@@ -9,7 +9,14 @@
     "preview": "vite preview",
     "lint": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
     "type-check": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "precommit": "npm run lint && npm run check-unused-variables",
+    "check-unused-variables": "eslint . --quiet --no-error-on-unmatched-pattern --no-ignore --no-fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.2.1",
@@ -55,13 +62,15 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "@types/react-router-dom": "^5.3.3",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.32.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react": "^7.32.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom": "^29.6.4",
     "jest-svg-transformer": "^1.0.0",
