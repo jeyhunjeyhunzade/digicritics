@@ -78,10 +78,6 @@ const ReviewCard = (props: ReviewCardProps) => {
     }
   };
 
-  useEffect(() => {
-    console.log("Optimize image: ", review?.reviewImages[0]);
-  }, [review]);
-
   const optimizeImg = (url: string): string => {
     const transformation = "w_500,f_auto";
     const parts = url.split("/upload/");
